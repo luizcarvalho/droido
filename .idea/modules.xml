@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/droidotorpedos.iml" filepath="$PROJECT_DIR$/droidotorpedos.iml" />
-      <module fileurl="file://$PROJECT_DIR$/torpedos/torpedos.iml" filepath="$PROJECT_DIR$/torpedos/torpedos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/droido.torpedos.iml" filepath="$PROJECT_DIR$/droido.torpedos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/droido.torpedos/droido.torpedos-droido.torpedos.iml" filepath="$PROJECT_DIR$/droido.torpedos/droido.torpedos-droido.torpedos.iml" />
     </modules>
   </component>
 </project>
