@@ -5,6 +5,7 @@
     <string name="action_settings">Configurações</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_search">Buscar</string>
+    <string name="action_search_hint">Pesquisar por mensagem</string>
     <string name="action_refresh">Recarregar</string>
 
 

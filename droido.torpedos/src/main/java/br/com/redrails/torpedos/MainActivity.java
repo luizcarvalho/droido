@@ -3,14 +3,15 @@ package br.com.redrails.torpedos;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity  {
-
+public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
+    private SearchView mSearchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +25,8 @@ public class MainActivity extends ActionBarActivity  {
         getMenuInflater().inflate(R.menu.main, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -32,6 +35,7 @@ public class MainActivity extends ActionBarActivity  {
         switch(item.getItemId()){
 
             case R.id.action_search:
+                mSearchView.setIconified(false);
                 return true;
 
         }
@@ -39,4 +43,14 @@ public class MainActivity extends ActionBarActivity  {
         return false;
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
+    }
 }
