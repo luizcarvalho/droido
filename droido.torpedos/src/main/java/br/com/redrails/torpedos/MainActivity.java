@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener {
@@ -43,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         setContentView(R.layout.main);
 
 
-        header = (TextView) findViewById(R.id.header);
+        //header = (TextView) findViewById(R.id.header);
         lista = (ListView) findViewById(R.id.lista);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footer = (TextView) inflater.inflate(R.layout.footer, null);
@@ -140,13 +141,19 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     class MyTask extends AsyncTask<Void, Void, Void>
     {
+        String[] mensagens = getResources().getStringArray(R.array.mensagens);
+
+
         @Override
         protected Void doInBackground(Void... params) {
             if(TOTAL_ITEMS > number){
                 SystemClock.sleep(1000);
                 isloading = true;
                 for (int i = 1; i <= MAX_ITEMS_PER_PAGE; i++) {
-                    mArrayList.add("Item "+number);
+                    int idx = new Random().nextInt(mensagens.length);
+                    String random_mensagem = (mensagens[idx]);
+
+                    mArrayList.add(random_mensagem);
                     number += 1;
                 }
             }
@@ -157,14 +164,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         protected void onPostExecute(Void result) {
             adapter.notifyDataSetChanged();
             isloading = false;
-
+            //Se carregou todos os itens
             if(adapter.getCount() == TOTAL_ITEMS){
-                header.setText("All "+adapter.getCount()+" Items are loaded.");
-                lista.setOnScrollListener(null);
-                lista.removeFooterView(footer);
+                //header.setText("All "+adapter.getCount()+" Items are loaded.");
+                lista.setOnScrollListener(null);//Para a escuta do scroll
+                lista.removeFooterView(footer);// remove o footer
             }
             else{
-                header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
+                //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
             }
         }
     }
