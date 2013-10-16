@@ -1,21 +1,60 @@
 package br.com.redrails.torpedos;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
+import android.os.SystemClock;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
+
+public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener {
     private SearchView mSearchView;
+
+    //Dynamic Load
+    private ArrayList<String> mArrayList = new ArrayList<String>();
+    private ListView lista;
+    private int number = 1;
+    private final int MAX_ITEMS_PER_PAGE = 10;
+    private boolean isloading = false;
+    private MyAdapter adapter;
+    private MyTask task;
+    private TextView footer;
+    private int TOTAL_ITEMS = 100;
+    private TextView header;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+
+        header = (TextView) findViewById(R.id.header);
+        lista = (ListView) findViewById(R.id.lista);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        footer = (TextView) inflater.inflate(R.layout.footer, null);
+        lista.addFooterView(footer);
+
+        adapter = new MyAdapter(this, R.layout.row);
+        lista.setAdapter(adapter);
+        lista.setOnScrollListener(this);
+
+        task = new MyTask();
+        task.execute();
     }
 
 
@@ -37,7 +76,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             case R.id.action_search:
                 mSearchView.setIconified(false);
                 return true;
-
         }
 
         return false;
@@ -52,5 +90,82 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextChange(String s) {
         return false;
+    }
+
+
+    //DYNAMIC LOAD MESSAGES
+    class MyAdapter extends ArrayAdapter<String> {
+        LayoutInflater inflater;
+
+        public MyAdapter(Context context, int rowResourceId) {
+            super(context, rowResourceId);
+
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return mArrayList.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return mArrayList.get(position);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = inflater.inflate(R.layout.row, null);
+            TextView row = (TextView) convertView.findViewById(R.id.item);
+            row.setText(mArrayList.get(position).toString());
+
+            return convertView;
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int loadedItems = firstVisibleItem + visibleItemCount;
+        if((loadedItems == totalItemCount) && !isloading){
+            if(task != null && (task.getStatus() == AsyncTask.Status.FINISHED)){
+                task = new MyTask();
+                task.execute();
+            }
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    class MyTask extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... params) {
+            if(TOTAL_ITEMS > number){
+                SystemClock.sleep(1000);
+                isloading = true;
+                for (int i = 1; i <= MAX_ITEMS_PER_PAGE; i++) {
+                    mArrayList.add("Item "+number);
+                    number += 1;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            adapter.notifyDataSetChanged();
+            isloading = false;
+
+            if(adapter.getCount() == TOTAL_ITEMS){
+                header.setText("All "+adapter.getCount()+" Items are loaded.");
+                lista.setOnScrollListener(null);
+                lista.removeFooterView(footer);
+            }
+            else{
+                header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
+            }
+        }
     }
 }
