@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    style="@style/nowCardStyle" >
 
     <TextView
         android:id="@+id/item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dip"
-        style="@style/nowCardStyle"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/imagemview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/abc_ic_menu_moreoverflow_normal_holo_light"
+        android:contentDescription="@string/row_options"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leonardo H."
+        android:textSize="12dp"
+        android:textColor="#505050"
+        android:paddingLeft="20dp"
+        android:textStyle="italic"
+        android:id="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

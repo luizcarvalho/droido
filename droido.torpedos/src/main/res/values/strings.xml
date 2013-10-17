@@ -8,7 +8,7 @@
     <string name="action_search_hint">Pesquisar por mensagem</string>
     <string name="action_refresh">Recarregar</string>
     <string name="footer_loading">Carregando...</string>
-
+    <string name="row_options">Opções</string>
 
 
 </resources>
