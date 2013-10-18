@@ -12,5 +12,8 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:icon="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+
+
+        />
 </menu>

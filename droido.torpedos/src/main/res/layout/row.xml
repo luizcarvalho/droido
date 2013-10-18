@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dip"
+        android:layout_marginRight="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         />
@@ -22,6 +23,7 @@
         android:contentDescription="@string/row_options"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:padding="10dp"
          />
 
     <TextView

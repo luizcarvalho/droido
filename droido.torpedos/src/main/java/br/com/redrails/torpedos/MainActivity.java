@@ -9,6 +9,8 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +61,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     }
 
 
+    public void openMainMenu(View v){
+        PopupMenu opcoesMenu = new PopupMenu(this, v);
+        MenuInflater inflater = opcoesMenu.getMenuInflater();
+        inflater.inflate(R.menu.opcoes_menu, opcoesMenu.getMenu());
+        opcoesMenu.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -76,6 +85,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
             case R.id.action_search:
                 mSearchView.setIconified(false);
+                return true;
+
+            case R.id.action_settings:
+                View actionSettingsView = findViewById(R.id.action_settings);
+                openMainMenu(actionSettingsView);
                 return true;
         }
 

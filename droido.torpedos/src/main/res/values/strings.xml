@@ -4,11 +4,18 @@
     <string name="app_name">Droido - Torpedos</string>
     <string name="action_settings">Configurações</string>
     <string name="hello_world">Hello world!</string>
+    <string name="footer_loading">Carregando...</string>
+    <string name="row_options">Opções</string>
+    <!-- ACTION BAR -->
     <string name="action_search">Buscar</string>
     <string name="action_search_hint">Pesquisar por mensagem</string>
     <string name="action_refresh">Recarregar</string>
-    <string name="footer_loading">Carregando...</string>
-    <string name="row_options">Opções</string>
+
+    <!-- MENU DE OPçÔES PRINCIPAL -->
+    <string name="option_rate">Avaliar</string>
+    <string name="option_ordenar">Ordenar</string>
+    <string name="option_send">Envie a sua</string>
+    <string name="option_more">Mais Aplicativos</string>
 
 
 </resources>
