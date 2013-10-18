@@ -68,6 +68,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         opcoesMenu.show();
     }
 
+    public void openMessageMenu(View v){
+        PopupMenu opcoesMenu = new PopupMenu(this, v);
+        MenuInflater inflater = opcoesMenu.getMenuInflater();
+        inflater.inflate(R.menu.opcoes_menu, opcoesMenu.getMenu());
+        opcoesMenu.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -185,6 +192,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 lista.removeFooterView(footer);// remove o footer
             }
             else{
+                //SHOW MORE APPS
                 //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
             }
         }
