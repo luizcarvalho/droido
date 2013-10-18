@@ -4,4 +4,4 @@
     android:layout_height="wrap_content"
     android:src="@drawable/logo_bg"
     android:tileMode="repeat" />
-    <!-- Add in main.xml android:background="@drawable/background" -->
+    <!-- Add in action_baron_bar.xml android:background="@drawable/background" -->
