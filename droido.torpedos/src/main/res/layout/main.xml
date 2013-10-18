@@ -4,7 +4,8 @@
     android:layout_height="fill_parent"
     android:background="#e3e3e3"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity"
+    >
 
     <TextView
         android:id="@+id/header"
