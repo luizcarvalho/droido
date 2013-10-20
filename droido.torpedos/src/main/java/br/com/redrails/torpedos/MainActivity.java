@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
@@ -14,10 +13,7 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +31,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private int number = 1;
     private final int MAX_ITEMS_PER_PAGE = 10;
     private boolean isloading = false;
-    private MyAdapter adapter;
-    private MyTask task;
+    private MessageAdapter adapter;
+    private MessageLoadTask task;
     private TextView footer;
     private int TOTAL_ITEMS = 100;
     private TextView header;
@@ -54,11 +50,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         footer = (TextView) inflater.inflate(R.layout.footer, null);
         lista.addFooterView(footer);
 
-        adapter = new MyAdapter(this, R.layout.row);
+        adapter = new MessageAdapter(this, R.layout.row);
+        adapter.messageArrayList = mArrayList;
         lista.setAdapter(adapter);
         lista.setOnScrollListener(this);
 
-        task = new MyTask();
+        task = new MessageLoadTask();
         task.execute();
     }
 
@@ -117,52 +114,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     }
 
 
-    //DYNAMIC LOAD MESSAGES
-    class MyAdapter extends ArrayAdapter<String> {
-        LayoutInflater inflater;
-
-        public MyAdapter(Context context, int rowResourceId) {
-            super(context, rowResourceId);
-
-            inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public int getCount() {
-            return mArrayList.size();
-        }
-
-        @Override
-        public String getItem(int position) {
-            return mArrayList.get(position);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = inflater.inflate(R.layout.row, null);
-            TextView mensagem = (TextView) convertView.findViewById(R.id.mensagem);
-            ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
-            mensagem.setText(mArrayList.get(position).toString());
-            final int message_position = position;
-
-
-            mensagemOption.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openMessageMenu(v);
-                }
-            });
-
-            return convertView;
-        }
-    }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         int loadedItems = firstVisibleItem + visibleItemCount;
         if((loadedItems == totalItemCount) && !isloading){
             if(task != null && (task.getStatus() == AsyncTask.Status.FINISHED)){
-                task = new MyTask();
+                task = new MessageLoadTask();
                 task.execute();
             }
         }
@@ -172,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
 
-    class MyTask extends AsyncTask<Void, Void, Void>
+    class MessageLoadTask extends AsyncTask<Void, Void, Void>
     {
         String[] mensagens = getResources().getStringArray(R.array.mensagens);
 
