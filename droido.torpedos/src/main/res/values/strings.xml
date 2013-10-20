@@ -5,6 +5,8 @@
     <string name="action_settings">Configurações</string>
     <string name="hello_world">Hello world!</string>
     <string name="footer_loading">Carregando...</string>
+    <string name="message_author">Leonardo H.</string>
+
     <string name="row_options">Opções</string>
     <!-- ACTION BAR -->
     <string name="action_search">Buscar</string>
@@ -16,7 +18,14 @@
     <string name="option_ordenar">Ordenar</string>
     <string name="option_send">Envie a sua</string>
     <string name="option_more">Mais Aplicativos</string>
-    <string name="message_author">Leonardo H.</string>
+
+
+    <!-- MENU MENSAGEMS -->
+    <string name="mensagem_avaliar">Avaliar</string>
+    <string name="mensagem_compartilhar">Compartilhar</string>
+    <string name="mensagem_editar">Editar</string>
+    <string name="mensagem_favorito">Addicionar aos Favoritos</string>
+
 
 
 </resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mensagem_share"
+        android:title="@string/mensagem_compartilhar"
+        />
+
+    <item
+        android:id="@+id/mensgem_editar"
+        android:title="@string/mensagem_editar"
+        />
+
+    <item
+        android:id="@+id/mensagem_favorito"
+        android:title="@string/mensagem_favorito"
+        />
+
+    <item
+        android:id="@+id/mensagem_avaliar"
+        android:title="@string/mensagem_avaliar"
+        />
+</menu>

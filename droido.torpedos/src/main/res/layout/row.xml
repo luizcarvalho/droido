@@ -6,7 +6,7 @@
     style="@style/nowCardStyle" >
 
     <TextView
-        android:id="@+id/item"
+        android:id="@+id/mensagem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dip"
@@ -16,17 +16,19 @@
         />
 
     <ImageView
-        android:id="@+id/imagemview"
+        android:id="@+id/mensagem_option"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/abc_ic_menu_moreoverflow_normal_holo_light"
+        android:src="@drawable/ic_menu_more_stand"
         android:contentDescription="@string/row_options"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:padding="10dp"
+        android:state_pressed="true" android:drawable="@drawable/ic_menu_more_pressed"
          />
 
     <TextView
+        android:id="@+id/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/message_author"
@@ -34,7 +36,6 @@
         android:textColor="#AAA0A0"
         android:paddingLeft="20dp"
         android:textStyle="italic"
-        android:id="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
 

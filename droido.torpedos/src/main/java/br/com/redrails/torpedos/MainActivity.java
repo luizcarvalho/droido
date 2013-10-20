@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +73,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public void openMessageMenu(View v){
         PopupMenu opcoesMenu = new PopupMenu(this, v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
-        inflater.inflate(R.menu.opcoes_menu, opcoesMenu.getMenu());
+        inflater.inflate(R.menu.mensagem_menu, opcoesMenu.getMenu());
         opcoesMenu.show();
     }
 
@@ -138,8 +140,18 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = inflater.inflate(R.layout.row, null);
-            TextView row = (TextView) convertView.findViewById(R.id.item);
-            row.setText(mArrayList.get(position).toString());
+            TextView mensagem = (TextView) convertView.findViewById(R.id.mensagem);
+            ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
+            mensagem.setText(mArrayList.get(position).toString());
+            final int message_position = position;
+
+
+            mensagemOption.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMessageMenu(v);
+                }
+            });
 
             return convertView;
         }
