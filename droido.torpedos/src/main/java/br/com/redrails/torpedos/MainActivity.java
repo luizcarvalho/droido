@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public void openMainMenu(View v){
         PopupMenu opcoesMenu = new PopupMenu(this, v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
-        inflater.inflate(R.menu.opcoes_menu, opcoesMenu.getMenu());
+        inflater.inflate(R.menu.filtros, opcoesMenu.getMenu());
         opcoesMenu.show();
     }
 
@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 return true;
 
             case R.id.action_menu:
-                View actionSettingsView = findViewById(R.id.action_settings);
+                View actionSettingsView = findViewById(R.id.action_menu);
                 openMainMenu(actionSettingsView);
                 return true;
         }

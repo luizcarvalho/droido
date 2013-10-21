@@ -11,9 +11,8 @@
     <!-- ACTION BAR -->
     <string name="action_search">Buscar</string>
     <string name="action_search_hint">Pesquisar por mensagem</string>
-    <string name="action_refresh">Recarregar</string>
     <string name="action_menu">Menu</string>
-    <string name="action_settings">Configurações</string>
+
 
     <!-- MENU DE OPçÔES PRINCIPAL -->
     <string name="option_rate">Avaliar</string>
@@ -27,6 +26,20 @@
     <string name="mensagem_compartilhar">Compartilhar</string>
     <string name="mensagem_editar">Editar</string>
     <string name="mensagem_favorito">Addicionar aos Favoritos</string>
+
+    <!-- Filtros -->
+    <string name="categoria_piada">Piadas</string>
+    <string name="categoria_romantica">Românticas</string>
+    <string name="categoria_engracada">Engraçadas</string>
+    <string name="categoria_religiosa">Religiosas</string>
+    <string name="categoria_aniversario">Aniversário</string>
+    <string name="categoria_artes">Artes</string>
+
+    <!-- Menu Inferior (Actionbar) -->
+    <string name="menu_mais_apps">Mais Aplicativos</string>
+    <string name="menu_avaliar">Avaliar</string>
+    <string name="menu_configuracoes">Configurações</string>
+    <string name="menu_sobre">Sobre</string>
 
 
 

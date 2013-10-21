@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/categoria_engracada"
+        android:title="@string/categoria_engracada"
+        />
+
+    <item
+        android:id="@+id/categoria_romantica"
+        android:title="@string/categoria_romantica"
+        />
+
+    <item
+        android:id="@+id/categoria_piada"
+        android:title="@string/categoria_piada"
+        />
+
+    <item
+        android:id="@+id/categoria_aniversario"
+        android:title="@string/categoria_aniversario"
+        />
+
+    <item
+        android:id="@+id/categoria_artes"
+        android:title="@string/categoria_artes"
+        />
+
+    <item
+        android:id="@+id/categoria_religiosa"
+        android:title="@string/categoria_religiosa"
+        />
+    <item
+        android:id="@+id/categoria_engracada"
+        android:title="@string/categoria_engracada"
+        />
+
+    <item
+        android:id="@+id/categoria_romantica"
+        android:title="@string/categoria_romantica"
+        />
+
+    <item
+        android:id="@+id/categoria_piada"
+        android:title="@string/categoria_piada"
+        />
+
+    <item
+        android:id="@+id/categoria_aniversario"
+        android:title="@string/categoria_aniversario"
+        />
+
+    <item
+        android:id="@+id/categoria_artes"
+        android:title="@string/categoria_artes"
+        />
+
+    <item
+        android:id="@+id/categoria_religiosa"
+        android:title="@string/categoria_religiosa"
+        />
+</menu>

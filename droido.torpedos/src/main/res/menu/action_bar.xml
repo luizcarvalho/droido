@@ -17,11 +17,27 @@
 
 <!-- menu inferiro -->
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:id="@+id/menu_mais_apps"
+        android:title="@string/menu_mais_apps"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/menu_configuracoes"
+        android:title="@string/menu_configuracoes"
         app:showAsAction="never"
         />
 
+    <item
+        android:id="@+id/menu_avaliar"
+        android:title="@string/menu_avaliar"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/menu_sobre"
+        android:title="@string/menu_sobre"
+        app:showAsAction="never"
+        />
 
 
 </menu>
