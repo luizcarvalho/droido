@@ -67,8 +67,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         opcoesMenu.show();
     }
 
-    public void openMessageMenu(View v){
-        PopupMenu opcoesMenu = new PopupMenu(this, v);
+    public static void openMessageMenu(View v){
+        PopupMenu opcoesMenu = new PopupMenu(v.getContext(), v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
         inflater.inflate(R.menu.mensagem_menu, opcoesMenu.getMenu());
         opcoesMenu.show();
@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 mSearchView.setIconified(false);
                 return true;
 
-            case R.id.action_settings:
+            case R.id.action_menu:
                 View actionSettingsView = findViewById(R.id.action_settings);
                 openMainMenu(actionSettingsView);
                 return true;

@@ -48,7 +48,7 @@ class MessageAdapter extends ArrayAdapter<String> {
         mensagemOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //openMessageMenu(v);
+                MainActivity.openMessageMenu(v);
                 boolean a = true;
             }
         });
