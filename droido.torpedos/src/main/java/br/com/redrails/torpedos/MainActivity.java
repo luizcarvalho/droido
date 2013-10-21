@@ -74,6 +74,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         opcoesMenu.show();
     }
 
+    //------------- ACTIONBAR MENU CONTROLL -------------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -102,6 +103,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         return false;
     }
 
+    //---------- QUERY CALLBACKS ---------
     @Override
     public boolean onQueryTextSubmit(String s) {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
@@ -114,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     }
 
 
-
+    //---------- SCROLL CALLBACKS ---------
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         int loadedItems = firstVisibleItem + visibleItemCount;
@@ -129,6 +131,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
+
+    //------------------------------------------------------------------------------------------
+    // -----------     CLASSE TASK -------------------------------------------------------------
+    //------------------------------------------------------------------------------------------
 
     class MessageLoadTask extends AsyncTask<Void, Void, Void>
     {
