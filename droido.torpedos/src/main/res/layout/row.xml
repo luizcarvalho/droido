@@ -19,12 +19,11 @@
         android:id="@+id/mensagem_option"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu_more_stand"
+        android:src="@drawable/icon_menu_animation"
         android:contentDescription="@string/row_options"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:padding="10dp"
-        android:state_pressed="true" android:drawable="@drawable/ic_menu_more_pressed"
          />
 
     <TextView
