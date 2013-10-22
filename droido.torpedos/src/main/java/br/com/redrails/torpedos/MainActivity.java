@@ -65,9 +65,17 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         task.execute();
     }
 
-     public void openMainMenu(View v){
+     public void openMainMenu(final View v){
         PopupMenu mainMenu = new PopupMenu(this, v);
         MenuInflater inflater = mainMenu.getMenuInflater();
+
+        mainMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast.makeText(v.getContext(), "Filtrando por mensagens do tipo: "+menuItem.getTitle() , Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
         inflater.inflate(R.menu.filtros, mainMenu.getMenu());
         mainMenu.show();
     }
