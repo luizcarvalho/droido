@@ -34,7 +34,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private ArrayList<String> mArrayList = new ArrayList<String>();
     private ListView lista;
     private int number = 1;
-    private final int MAX_ITEMS_PER_PAGE = 10;
     private boolean isloading = false;
     private MessageAdapter adapter;
     private MessageLoadTask task;
@@ -65,6 +64,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         task.execute();
     }
 
+    //--------------------------------------------------------------------------------------------
+    // **************** *** Call and Listeners Methods
+    //--------------------------------------------------------------------------------------------
      public void openMainMenu(final View v){
         PopupMenu mainMenu = new PopupMenu(this, v);
         MenuInflater inflater = mainMenu.getMenuInflater();
@@ -80,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mainMenu.show();
     }
 
-    public void openMessageMenu(final View v, final TextView mensagem, int position){
+    public void openMessageMenu(final View v, final TextView mensagem, final int position){
         PopupMenu opcoesMenu = new PopupMenu(v.getContext(), v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
         opcoesMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -89,16 +91,16 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
                     switch (menuItem.getItemId()) {
                         case R.id.mensagem_favorito:
-                            addFavorite(menuItem);
+                            toggleFavorite(v, position);
                             return true;
                         case R.id.mensagem_share:
                             shareMessage(v, mensagem);
                             return true;
                         case R.id.mensagem_avaliar:
-                            avaliar(menuItem);
+                            avaliar(v, position);
                             return true;
                         case R.id.mensagem_editar:
-                            editar(menuItem);
+                            editar(v, position);
                         case R.id.mensagem_copiar:
                             copiarMensagem((String) mensagem.getText());
                             return true;
@@ -112,16 +114,41 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         opcoesMenu.show();
     }
 
-    public void addFavorite(MenuItem menuItem){
-        Toast.makeText(this, "favorite: "+menuItem.getItemId(), Toast.LENGTH_LONG).show();
+    public void toggleFavorite(View v, int position){
+        ImageView favIcon = (ImageView) v.findViewById(R.id.btn_favstar);
+        int alfa = favIcon.getImageAlpha();
+        if(alfa==255){
+            favIcon.setImageResource(R.drawable.btn_unfav);
+            favIcon.setImageAlpha(254);
+        }else{
+            favIcon.setImageResource(R.drawable.btn_fav);
+            favIcon.setImageAlpha(255);
+        }
+
+
+        //Toast.makeText(this, "Mensagem marcada/desmarcada como favorita: "+alfa, Toast.LENGTH_LONG).show();
     }
 
-    public void avaliar(MenuItem menuItem){
-        Toast.makeText(this, "avaliar: "+menuItem.getItemId(), Toast.LENGTH_LONG).show();
+    public void toggleSend(View v, int position){
+        ImageView sendIcon = (ImageView) v.findViewById(R.id.btn_sended);
+        int alfa = sendIcon.getImageAlpha();
+        if(alfa==255){
+            sendIcon.setImageResource(R.drawable.btn_unsended);
+            sendIcon.setImageAlpha(254);
+        }else{
+            sendIcon.setImageResource(R.drawable.btn_sended);
+            sendIcon.setImageAlpha(255);
+        }
+
+        Toast.makeText(this, "Mensagem marcada/desmarcada como enviada : "+position, Toast.LENGTH_LONG).show();
     }
 
-    public void editar(MenuItem menuItem){
-        Toast.makeText(this, "editar: "+menuItem.getItemId(), Toast.LENGTH_LONG).show();
+    public void avaliar(View v, int position){
+        Toast.makeText(this, "avaliar: "+adapter.getItem(position), Toast.LENGTH_LONG).show();
+    }
+
+    public void editar(View v, int position){
+        Toast.makeText(this, "editar: "+adapter.getItem(position), Toast.LENGTH_LONG).show();
     }
 
     public void shareMessage(View v, TextView mensagem){
@@ -129,7 +156,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getText());
         sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "via Droido ( http://goo.gl/5fN2N )");
-
 
         copiarMensagem(mensagem.getText() + "\n\n via Droido ( http://goo.gl/5fN2N )");
 
@@ -215,8 +241,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
 
-
-
     //------------------------------------------------------------------------------------------
     // -----------####    MESSGES ADAPTER ------------------------------------------------------
     //------------------------------------------------------------------------------------------
@@ -243,18 +267,20 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = inflater.inflate(R.layout.row, null);
             final TextView mensagem = (TextView) convertView.findViewById(R.id.mensagem);
             ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
+            ImageView favButton = (ImageView) convertView.findViewById(R.id.btn_favstar);
+            ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sended);
             mensagem.setText(messageArrayList.get(position).toString());
-            final int message_position = position;
+
 
 
             mensagemOption.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openMessageMenu(v, mensagem, message_position);
+                    openMessageMenu(v, mensagem, position);
                 }
             });
 
@@ -264,6 +290,24 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     shareMessage(v, mensagem);
                 }
             });
+
+            favButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFavorite(v, position);
+
+                }
+            });
+
+            sendedButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleSend(v, position);
+
+                }
+            });
+
+
 
             return convertView;
         }
@@ -285,6 +329,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             if(TOTAL_ITEMS > number){
                 SystemClock.sleep(1000);
                 isloading = true;
+                int MAX_ITEMS_PER_PAGE = 10;
                 for (int i = 1; i <= MAX_ITEMS_PER_PAGE; i++) {
                     int idx = new Random().nextInt(mensagens.length);
                     String random_mensagem = (mensagens[idx]);

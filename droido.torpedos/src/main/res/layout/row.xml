@@ -29,25 +29,38 @@
     <TextView
         android:id="@+id/author"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:text="@string/message_author"
         android:textSize="12sp"
         android:textColor="#AAA0A0"
         android:paddingLeft="20dp"
         android:textStyle="italic"
+        android:gravity="center|center_horizontal"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
 
     <ImageView
-        android:id="@+id/sended"
+        android:id="@+id/btn_favstar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_check"
+        android:src="@drawable/btn_fav"
+        android:contentDescription="@string/mensagem_btn_fav"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:layout_marginRight="40dp"
+        />
+
+
+    <ImageView
+        android:id="@+id/btn_sended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_sended"
         android:contentDescription="@string/row_options"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:onClick="OpenMessageMenu"
         />
 
 </RelativeLayout>

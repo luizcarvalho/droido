@@ -43,6 +43,7 @@
     <string name="mensagem_copiar">Copiar</string>
     <string name="send_to">Enviar para...</string>
     <string name="success_clipboarded">Sua mensagem foi copiada para área de transferêcia caso queira cola-la em algum lugar :)</string>
+    <string name="mensagem_btn_fav">Favoritar</string>
 
 
 </resources>
