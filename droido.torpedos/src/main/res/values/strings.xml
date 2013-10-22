@@ -40,7 +40,9 @@
     <string name="menu_avaliar">Avaliar</string>
     <string name="menu_configuracoes">Configurações</string>
     <string name="menu_sobre">Sobre</string>
-
+    <string name="mensagem_copiar">Copiar</string>
+    <string name="send_to">Enviar para...</string>
+    <string name="success_clipboarded">Sua mensagem foi copiada para área de transferêcia caso queira cola-la em algum lugar :)</string>
 
 
 </resources>

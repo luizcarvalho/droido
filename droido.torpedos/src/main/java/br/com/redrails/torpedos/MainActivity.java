@@ -1,6 +1,8 @@
 package br.com.redrails.torpedos;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -13,7 +15,10 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +40,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private MessageLoadTask task;
     private TextView footer;
     private int TOTAL_ITEMS = 100;
-    private TextView header;
+
+
 
 
     @Override
@@ -59,19 +65,86 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         task.execute();
     }
 
+     public void openMainMenu(View v){
+        PopupMenu mainMenu = new PopupMenu(this, v);
+        MenuInflater inflater = mainMenu.getMenuInflater();
+        inflater.inflate(R.menu.filtros, mainMenu.getMenu());
+        mainMenu.show();
+    }
 
-    public void openMainMenu(View v){
-        PopupMenu opcoesMenu = new PopupMenu(this, v);
+    public void openMessageMenu(final View v, final TextView mensagem, int position){
+        PopupMenu opcoesMenu = new PopupMenu(v.getContext(), v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
-        inflater.inflate(R.menu.filtros, opcoesMenu.getMenu());
+        opcoesMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.mensagem_favorito:
+                            addFavorite(menuItem);
+                            return true;
+                        case R.id.mensagem_share:
+                            shareMessage(v, mensagem);
+                            return true;
+                        case R.id.mensagem_avaliar:
+                            avaliar(menuItem);
+                            return true;
+                        case R.id.mensagem_editar:
+                            editar(menuItem);
+                        case R.id.mensagem_copiar:
+                            copiarMensagem((String) mensagem.getText());
+                            return true;
+                        default:
+                            return false;
+                    }
+
+            }
+        });
+        inflater.inflate(R.menu.mensagem_menu, opcoesMenu.getMenu());
         opcoesMenu.show();
     }
 
-    public static void openMessageMenu(View v){
-        PopupMenu opcoesMenu = new PopupMenu(v.getContext(), v);
-        MenuInflater inflater = opcoesMenu.getMenuInflater();
-        inflater.inflate(R.menu.mensagem_menu, opcoesMenu.getMenu());
-        opcoesMenu.show();
+    public void addFavorite(MenuItem menuItem){
+        Toast.makeText(this, "favorite: "+menuItem.getItemId(), Toast.LENGTH_LONG).show();
+    }
+
+    public void avaliar(MenuItem menuItem){
+        Toast.makeText(this, "avaliar: "+menuItem.getItemId(), Toast.LENGTH_LONG).show();
+    }
+
+    public void editar(MenuItem menuItem){
+        Toast.makeText(this, "editar: "+menuItem.getItemId(), Toast.LENGTH_LONG).show();
+    }
+
+    public void shareMessage(View v, TextView mensagem){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getText());
+        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "via Droido ( http://goo.gl/5fN2N )");
+
+
+        copiarMensagem(mensagem.getText() + "\n\n via Droido ( http://goo.gl/5fN2N )");
+
+
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+    }
+
+
+
+    @SuppressWarnings("deprecation")
+    public void copiarMensagem(String text){
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES. HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = ClipData.newPlainText("simple text",text);
+            clipboard.setPrimaryClip(clip);
+        }
+        Toast.makeText(this, getResources().getText(R.string.success_clipboarded), Toast.LENGTH_LONG).show();
+
     }
 
     //------------- ACTIONBAR MENU CONTROLL -------------------------------------------------
@@ -98,6 +171,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 View actionSettingsView = findViewById(R.id.action_menu);
                 openMainMenu(actionSettingsView);
                 return true;
+            default:
+                Toast.makeText(this,item.getTitle() , Toast.LENGTH_LONG).show();
         }
 
         return false;
@@ -131,6 +206,62 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
+
+
+
+    //------------------------------------------------------------------------------------------
+    // -----------####    MESSGES ADAPTER ------------------------------------------------------
+    //------------------------------------------------------------------------------------------
+
+    class MessageAdapter extends ArrayAdapter<String> {
+        LayoutInflater inflater;
+        public ArrayList<String> messageArrayList = new ArrayList<String>();
+
+        public MessageAdapter(Context context, int rowResourceId) {
+            super(context, rowResourceId);
+
+            inflater = LayoutInflater.from(context);
+
+        }
+
+        @Override
+        public int getCount() {
+            return messageArrayList.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return messageArrayList.get(position);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = inflater.inflate(R.layout.row, null);
+            final TextView mensagem = (TextView) convertView.findViewById(R.id.mensagem);
+            ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
+            mensagem.setText(messageArrayList.get(position).toString());
+            final int message_position = position;
+
+
+            mensagemOption.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMessageMenu(v, mensagem, message_position);
+                }
+            });
+
+            mensagem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    shareMessage(v, mensagem);
+                }
+            });
+
+            return convertView;
+        }
+    }
+
+
 
     //------------------------------------------------------------------------------------------
     // -----------     CLASSE TASK -------------------------------------------------------------

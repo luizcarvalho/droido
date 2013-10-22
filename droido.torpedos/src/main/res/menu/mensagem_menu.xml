@@ -9,6 +9,7 @@
     <item
         android:id="@+id/mensagem_share"
         android:title="@string/mensagem_compartilhar"
+        android:actionProviderClass="android.widget.ShareActionProvider"
         />
 
     <item
@@ -16,7 +17,12 @@
         android:title="@string/mensagem_avaliar"
         />
     <item
-        android:id="@+id/mensgem_editar"
+        android:id="@+id/mensagem_copiar"
+        android:title="@string/mensagem_copiar"
+        />
+    <item
+        android:id="@+id/mensagem_editar"
         android:title="@string/mensagem_editar"
         />
+
 </menu>
