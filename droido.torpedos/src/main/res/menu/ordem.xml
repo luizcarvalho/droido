@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/ordem_favoritos"
+        android:title="@string/ordem_melhores"
+        />
+
+    <item
+        android:id="@+id/ordem_favoritos"
+        android:title="@string/ordem_favoritos"
+        />
+
+    <item
+        android:id="@+id/ordem_novas"
+        android:title="@string/ordem_novas"
+        />
+
+    <item
+        android:id="@+id/ordem_nao_enviadas"
+        android:title="@string/ordem_nao_enviadas"
+        />
+
+    <item
+        android:id="@+id/ordem_enviadas"
+        android:title="@string/ordem_enviadas"
+        />
+</menu>

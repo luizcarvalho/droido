@@ -28,12 +28,11 @@
     <string name="mensagem_favorito">Addicionar aos Favoritos</string>
 
     <!-- Filtros -->
-    <string name="categoria_piada">Piadas</string>
-    <string name="categoria_romantica">Românticas</string>
-    <string name="categoria_engracada">Engraçadas</string>
-    <string name="categoria_religiosa">Religiosas</string>
-    <string name="categoria_aniversario">Aniversário</string>
-    <string name="categoria_artes">Artes</string>
+    <string name="ordem_melhores">Melhores primeiro</string>
+    <string name="ordem_favoritos">Favoritos Primeiro</string>
+    <string name="ordem_novas">Novas Primeiro</string>
+    <string name="ordem_nao_enviadas">Não Enviadas Primeiro</string>
+    <string name="ordem_enviadas">Enviadas Primeiro</string>
 
     <!-- Menu Inferior (Actionbar) -->
     <string name="menu_mais_apps">Mais Aplicativos</string>

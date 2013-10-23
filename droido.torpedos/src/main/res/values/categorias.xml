@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categorias">
+        <item>Todas</item>
+        <item>Engraçadas</item>
+        <item>Piadas</item>
+        <item>Romanticas</item>
+        <item>Religiosas</item>
+        <item>Aniversário</item>
+
+
+    </string-array>
+</resources>

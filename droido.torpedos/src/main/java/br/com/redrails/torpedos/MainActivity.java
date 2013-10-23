@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,8 +28,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener {
+public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener, ActionBar.OnNavigationListener {
     private SearchView mSearchView;
+    private ActionBar mActionBar;
 
     //Dynamic Load
     private ArrayList<String> mArrayList = new ArrayList<String>();
@@ -47,6 +49,16 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        mActionBar = getSupportActionBar();
+        mActionBar.setDisplayShowTitleEnabled(false);
+        mActionBar.setDisplayShowHomeEnabled(true);
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        final String[] dropdownValues = getResources().getStringArray(R.array.categorias);
+        ArrayAdapter<String> dropdownAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
+                dropdownValues);
+
+        mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
 
 
         //header = (TextView) findViewById(R.id.header);
@@ -78,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 return false;
             }
         });
-        inflater.inflate(R.menu.filtros, mainMenu.getMenu());
+        inflater.inflate(R.menu.ordem, mainMenu.getMenu());
         mainMenu.show();
     }
 
@@ -239,6 +251,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int i, long l) {
+        return false;
     }
 
     //------------------------------------------------------------------------------------------
