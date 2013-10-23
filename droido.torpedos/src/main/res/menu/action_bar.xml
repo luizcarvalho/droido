@@ -22,13 +22,14 @@
         android:icon="@drawable/ic_more_app"
         app:showAsAction="never"
         />
+    <!--
     <item
         android:id="@+id/menu_configuracoes"
         android:title="@string/menu_configuracoes"
         android:icon="@drawable/ic_config"
         app:showAsAction="never"
         />
-
+    -->
     <item
         android:id="@+id/menu_avaliar"
         android:title="@string/menu_avaliar"

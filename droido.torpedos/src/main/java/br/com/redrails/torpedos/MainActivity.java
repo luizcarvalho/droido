@@ -108,11 +108,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         case R.id.mensagem_share:
                             shareMessage(v, mensagem);
                             return true;
-                        case R.id.mensagem_avaliar:
-                            avaliar(v, position);
-                            return true;
-                        case R.id.mensagem_editar:
-                            editar(v, position);
                         case R.id.mensagem_copiar:
                             copiarMensagem((String) mensagem.getText());
                             return true;
@@ -127,40 +122,29 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     }
 
     public void toggleFavorite(View v, int position){
-        ImageView favIcon = (ImageView) v.findViewById(R.id.btn_favstar);
-        int alfa = favIcon.getImageAlpha();
-        if(alfa==255){
+        String view = adapter.getItem(position);
+        ImageView favIcon = (ImageView) findViewById(R.id.btn_favstar);
+        boolean x = true;
+        if(x){
             favIcon.setImageResource(R.drawable.btn_unfav);
-            favIcon.setImageAlpha(254);
         }else{
             favIcon.setImageResource(R.drawable.btn_fav);
-            favIcon.setImageAlpha(255);
         }
 
 
-        //Toast.makeText(this, "Mensagem marcada/desmarcada como favorita: "+alfa, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Mensagem marcada/desmarcada como favorita: "+x, Toast.LENGTH_LONG).show();
     }
 
     public void toggleSend(View v, int position){
         ImageView sendIcon = (ImageView) v.findViewById(R.id.btn_sended);
-        int alfa = sendIcon.getImageAlpha();
-        if(alfa==255){
+        boolean x = true;
+        if(x){
             sendIcon.setImageResource(R.drawable.btn_unsended);
-            sendIcon.setImageAlpha(254);
         }else{
             sendIcon.setImageResource(R.drawable.btn_sended);
-            sendIcon.setImageAlpha(255);
         }
 
         Toast.makeText(this, "Mensagem marcada/desmarcada como enviada : "+position, Toast.LENGTH_LONG).show();
-    }
-
-    public void avaliar(View v, int position){
-        Toast.makeText(this, "avaliar: "+adapter.getItem(position), Toast.LENGTH_LONG).show();
-    }
-
-    public void editar(View v, int position){
-        Toast.makeText(this, "editar: "+adapter.getItem(position), Toast.LENGTH_LONG).show();
     }
 
     public void shareMessage(View v, TextView mensagem){
@@ -339,14 +323,15 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     class MessageLoadTask extends AsyncTask<Void, Void, Void>
     {
         String[] mensagens = getResources().getStringArray(R.array.mensagens);
+        int MAX_ITEMS_PER_PAGE = 20;
 
 
         @Override
         protected Void doInBackground(Void... params) {
             if(TOTAL_ITEMS > number){
-                SystemClock.sleep(1000);
+                //SystemClock.sleep(1000);
                 isloading = true;
-                int MAX_ITEMS_PER_PAGE = 10;
+
                 for (int i = 1; i <= MAX_ITEMS_PER_PAGE; i++) {
                     int idx = new Random().nextInt(mensagens.length);
                     String random_mensagem = (mensagens[idx]);
