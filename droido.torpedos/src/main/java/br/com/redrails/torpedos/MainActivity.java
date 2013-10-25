@@ -41,6 +41,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private MessageLoadTask task;
     private TextView footer;
     private int TOTAL_ITEMS = 100;
+    Message textos;
 
 
 
@@ -60,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
 
+        textos = new Message(1, this, "");
 
         //header = (TextView) findViewById(R.id.header);
         lista = (ListView) findViewById(R.id.lista);
