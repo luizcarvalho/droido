@@ -12,7 +12,7 @@ public class Menssagem {
 
     }
 
-    public Menssagem(int id, String texto) {
+    public Menssagem(int id, String texto, boolean favoritada, boolean enviada) {
         super();
         this.id = id;
         this.texto = texto;

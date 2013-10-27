@@ -43,6 +43,11 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public static DataBaseHelper getInstance(Context context) {
         if(instance == null)
             instance = new DataBaseHelper(context);
+        try {
+            instance.createDataBase();
+        } catch (IOException e) {
+            Log.e("Droido", String.valueOf(e.getStackTrace()));
+        }
 
         return instance;
     }
