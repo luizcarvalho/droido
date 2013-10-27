@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
@@ -25,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private MessageLoadTask task;
     private TextView footer;
     private int TOTAL_ITEMS = 100;
-    Message textos;
+    List<Menssagem> menssagens;
 
 
 
@@ -61,7 +61,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
 
-        textos = new Message(1, this, "");
+        MenssagemDAO menssagemDao = MenssagemDAO.getInstance(this);
+        menssagens = menssagemDao.recuperarTodos();
+
 
         //header = (TextView) findViewById(R.id.header);
         lista = (ListView) findViewById(R.id.lista);
@@ -338,7 +340,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     int idx = new Random().nextInt(mensagens.length);
                     String random_mensagem = (mensagens[idx]);
 
-                    mArrayList.add(random_mensagem);
+                    mArrayList.add(menssagens.get(i).getTexto());
                     number += 1;
                 }
             }

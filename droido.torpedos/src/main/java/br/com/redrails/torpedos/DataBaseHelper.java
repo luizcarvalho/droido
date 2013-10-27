@@ -21,9 +21,11 @@ public class DataBaseHelper extends SQLiteOpenHelper{
  
     private static String DB_NAME = "database.sqlite";
     
-    private static int DB_VERSION=13;//change to version of code
+    private static int DB_VERSION=14;//change to version of code
  
-    private SQLiteDatabase myDataBase; 
+    private SQLiteDatabase myDataBase;
+
+    private static DataBaseHelper instance;
  
     private final Context myContext;
  
@@ -36,7 +38,14 @@ public class DataBaseHelper extends SQLiteOpenHelper{
  
     	super(context, DB_NAME, null, DB_VERSION);
         this.myContext = context;
-    }	
+    }
+
+    public static DataBaseHelper getInstance(Context context) {
+        if(instance == null)
+            instance = new DataBaseHelper(context);
+
+        return instance;
+    }
  
   /**
      * Creates a empty database on the system and rewrites it with your own database.
