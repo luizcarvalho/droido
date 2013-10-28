@@ -23,6 +23,12 @@ public class MenssagemDAO {
     public static final String COLUNA_FAVORITADA = "favoritada";
     public static final String COLUNA_ENVIADA = "enviada";
 
+    public static final int ORDEM_AVALIACAO = 1;
+    public static final int ORDEM_FAVORITOS = 2;
+    public static final int ORDEM_DATA = 3;
+    public static final int ORDEM_ENVIADAS = 4;
+    public static final int ORDEM_NAO_ENVIADAS = 5;
+
     private static long QUANTIDADE_TOTAL=0;
     public static int QUANTIDADE_POR_PAGINA=20;
 
@@ -54,21 +60,20 @@ public class MenssagemDAO {
 
         return converterCursorEmMenssagens(cursor);
     }
-    public List<Menssagem> paginate(int pagina) {
+
+    public List<Menssagem> getMenssagens(int pagina, int ordem) {
         String parametros = parametrize(pagina);
-        String queryReturnPaginate = "SELECT * FROM " + NOME_TABELA +parametros;
+        String ordem_clausula = ordering(ordem);
+        String queryReturnPaginate = "SELECT * FROM " + NOME_TABELA +ordem_clausula+parametros;
         Log.w("Droido","Executando SQL: "+queryReturnPaginate);
         Cursor cursor = dataBase.rawQuery(queryReturnPaginate, null);
-
         return converterCursorEmMenssagens(cursor);
     }
 
     public void deletar(Menssagem menssagem) {
-
         String[] valoresParaSubstituir = {
                 String.valueOf(menssagem.getId())
         };
-
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
     }
 
@@ -151,5 +156,23 @@ public class MenssagemDAO {
         limit_sql +=limit;
 
         return limit_sql+offset_sql;
+    }
+
+    private String ordering(int ordem){
+        String ordemClausula = " ORDER BY ";
+        switch (ordem){
+            case ORDEM_FAVORITOS:
+                return ordemClausula+" favoritada DESC ";
+            case ORDEM_DATA:
+                return ordemClausula+" data DESC ";
+            case ORDEM_ENVIADAS:
+                return ordemClausula+" enviada DESC ";
+            case ORDEM_NAO_ENVIADAS:
+                return ordemClausula+" enviada ASC ";
+            default:
+                return ordemClausula+" avaliacao DESC ";
+
+        }
+
     }
 }

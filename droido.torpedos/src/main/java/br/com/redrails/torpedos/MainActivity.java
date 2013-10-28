@@ -26,22 +26,22 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener, ActionBar.OnNavigationListener {
     private SearchView mSearchView;
     private ActionBar mActionBar;
 
+
     //Dynamic Load
     private ArrayList<Menssagem> mArrayList = new ArrayList<Menssagem>();
     private ListView lista;
-    private int number = 1;
     private boolean isloading = false;
     private MessageAdapter adapter;
     private MessageLoadTask task;
     private TextView footer;
     MenssagemDAO menssagemDao;
+    int ordem = menssagemDao.ORDEM_AVALIACAO;
 
     int TOTAL_ITEMS ;
     int quantidade_carregada= 0;
@@ -86,6 +86,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         task.execute();
     }
 
+    private void reload(){
+        pagina_atual = 1;
+        mArrayList.clear();
+        adapter.notifyDataSetChanged();
+        task = new MessageLoadTask();
+        task.execute();
+    }
     //--------------------------------------------------------------------------------------------
     // **************** *** Call and Listeners Methods
     //--------------------------------------------------------------------------------------------
@@ -96,7 +103,36 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mainMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast.makeText(v.getContext(), "Filtrando por mensagens do tipo: "+menuItem.getTitle() , Toast.LENGTH_LONG).show();
+                switch (menuItem.getItemId()) {
+                    case R.id.ordem_avaliacao:
+                        ordem = menssagemDao.ORDEM_AVALIACAO;
+                        reload();
+                        Log.w("DROIDO", "MENU : AVALIACAO" );
+                        return true;
+                    case R.id.ordem_enviadas:
+                        ordem = menssagemDao.ORDEM_ENVIADAS;
+                        reload();
+                        Log.w("DROIDO", "MENU : ENVIADAS" );
+                        return true;
+                    case R.id.ordem_favoritos:
+                        ordem = menssagemDao.ORDEM_FAVORITOS;
+                        reload();
+                        Log.w("DROIDO", "MENU : FAV" );
+                        return true;
+                    case R.id.ordem_novas:
+                        ordem = menssagemDao.ORDEM_DATA;
+                        reload();
+                        Log.w("DROIDO", "MENU : DATA" );
+
+                        return true;
+                    case R.id.ordem_nao_enviadas:
+                        ordem = menssagemDao.ORDEM_NAO_ENVIADAS;
+                        reload();
+                        Log.w("DROIDO", "MENU : N ENV" );
+                        return true;
+                }
+
+
                 return false;
             }
         });
@@ -337,28 +373,28 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             if(TOTAL_ITEMS > quantidade_carregada){
                 //SystemClock.sleep(1000);
                 isloading = true;
-                List<Menssagem> menssagens = menssagemDao.paginate(pagina_atual);
+                List<Menssagem> menssagens = menssagemDao.getMenssagens(pagina_atual, ordem);
+                Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
                 quantidade_carregada += MAX_ITEMS_PER_PAGE;
                 pagina_atual+=1;
                 for (int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
                     //int idx = new Random().nextInt(mensagens.length);
                     //String random_mensagem = (mensagens[idx]);
                     mArrayList.add(menssagens.get(i));
-
-
-
                 }
+
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
+            Log.w("DROIDO", "Notificando DATASET CHANGED");
             adapter.notifyDataSetChanged();
+            Log.i("DROIDO", "Notificado!!!");
             isloading = false;
             //Se carregou todos os itens
             if(adapter.getCount() == TOTAL_ITEMS){
-                //header.setText("All "+adapter.getCount()+" Items are loaded.");
                 lista.setOnScrollListener(null);//Para a escuta do scroll
                 lista.removeFooterView(footer);// remove o footer
             }
@@ -367,5 +403,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
             }
         }
+        @Override
+        protected void onCancelled(){
+            adapter.notifyDataSetChanged();
+        }
     }
-}
+
+ }
