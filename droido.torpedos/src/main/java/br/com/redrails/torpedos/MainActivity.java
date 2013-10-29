@@ -30,7 +30,6 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener, ActionBar.OnNavigationListener {
     private SearchView mSearchView;
-    private ActionBar mActionBar;
 
 
     //Dynamic Load
@@ -54,7 +53,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        mActionBar = getSupportActionBar();
+        ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayShowTitleEnabled(false);
         mActionBar.setDisplayShowHomeEnabled(true);
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -321,8 +320,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             menssagemView.setText(mensagem.getTexto());
 
             ImageView favButton = (ImageView) convertView.findViewById(R.id.btn_favstar);
-            Log.w("Droido","Verificando Icone: "+mensagem.getFavoritada());
+            Log.w("Droido","Mensagem: "+mensagem);
             if(mensagem.getFavoritada()){
+                Log.d("Droido","Mensagem Favoritada na Lista Detectada: "+mensagem.getId());
                 favButton.setImageResource(R.drawable.btn_fav);
             }
 

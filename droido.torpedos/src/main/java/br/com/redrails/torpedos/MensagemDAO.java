@@ -134,7 +134,10 @@ public class MensagemDAO {
 
                     int id = cursor.getInt(indexID);
                     String texto = cursor.getString(indexTexto);
-                    boolean favoritada = cursor.getString(indexFavoritada)=="true";
+                    boolean favoritada = cursor.getString(indexFavoritada).contentEquals("true");
+                    //Log.d("Droido: ","Cursor FAV ("+cursor.getString(indexFavoritada).getClass().getName()+") == ("+"true".getClass().getName()+") true String : "+cursor.getString(indexFavoritada).contentEquals("true")+" <> "+favoritada);
+                    Log.d("Droido: ",cursor.getString(indexFavoritada).contentEquals("true")+" <> "+favoritada);
+
                     boolean enviada = cursor.getString(indexEnviada)=="true";
 
                     Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada);

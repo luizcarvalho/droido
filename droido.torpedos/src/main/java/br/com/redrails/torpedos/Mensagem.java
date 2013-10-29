@@ -66,7 +66,7 @@ public class Mensagem {
 
     @Override
     public String toString() {
-        return texto;
+        return "#< id: "+id+"texto: "+texto+" favoritada: "+favoritada+" enviada: "+enviada+" >";
     }
 
 
