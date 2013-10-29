@@ -34,14 +34,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
 
     //Dynamic Load
-    private ArrayList<Menssagem> mArrayList = new ArrayList<Menssagem>();
+    private ArrayList<Mensagem> mArrayList = new ArrayList<Mensagem>();
     private ListView lista;
     private boolean isloading = false;
     private MessageAdapter adapter;
     private MessageLoadTask task;
     private TextView footer;
-    MenssagemDAO menssagemDao;
-    int ordem = menssagemDao.ORDEM_AVALIACAO;
+    MensagemDAO mensagemDao;
+    int ordem = mensagemDao.ORDEM_AVALIACAO;
 
     int TOTAL_ITEMS ;
     int quantidade_carregada= 0;
@@ -65,10 +65,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
 
-        menssagemDao = MenssagemDAO.getInstance(this);
-        TOTAL_ITEMS = (int) menssagemDao.getQuantidadeTotal();
-        //Log.w("DROIDO", "TOTAL: " + menssagemDao.getQuantidadeTotal());
-        //menssagens = menssagemDao.recuperarTodos();
+        mensagemDao = MensagemDAO.getInstance(this);
+        TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
+
 
 
         //header = (TextView) findViewById(R.id.header);
@@ -105,28 +104,28 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.ordem_avaliacao:
-                        ordem = menssagemDao.ORDEM_AVALIACAO;
+                        ordem = mensagemDao.ORDEM_AVALIACAO;
                         reload();
                         Log.w("DROIDO", "MENU : AVALIACAO" );
                         return true;
                     case R.id.ordem_enviadas:
-                        ordem = menssagemDao.ORDEM_ENVIADAS;
+                        ordem = mensagemDao.ORDEM_ENVIADAS;
                         reload();
                         Log.w("DROIDO", "MENU : ENVIADAS" );
                         return true;
                     case R.id.ordem_favoritos:
-                        ordem = menssagemDao.ORDEM_FAVORITOS;
+                        ordem = mensagemDao.ORDEM_FAVORITOS;
                         reload();
                         Log.w("DROIDO", "MENU : FAV" );
                         return true;
                     case R.id.ordem_novas:
-                        ordem = menssagemDao.ORDEM_DATA;
+                        ordem = mensagemDao.ORDEM_DATA;
                         reload();
                         Log.w("DROIDO", "MENU : DATA" );
 
                         return true;
                     case R.id.ordem_nao_enviadas:
-                        ordem = menssagemDao.ORDEM_NAO_ENVIADAS;
+                        ordem = mensagemDao.ORDEM_NAO_ENVIADAS;
                         reload();
                         Log.w("DROIDO", "MENU : N ENV" );
                         return true;
@@ -140,7 +139,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mainMenu.show();
     }
 
-    public void openMessageMenu(final View v, final Menssagem menssagem){
+    public void openMessageMenu(final View v, final Mensagem mensagem){
         PopupMenu opcoesMenu = new PopupMenu(v.getContext(), v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
         opcoesMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -149,13 +148,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
                     switch (menuItem.getItemId()) {
                         case R.id.mensagem_favorito:
-                            toggleFavorite(v, menssagem.getId());
+                            toggleFavorite(v, mensagem.getId());
                             return true;
                         case R.id.mensagem_share:
-                            shareMessage(v, menssagem);
+                            shareMessage(v, mensagem);
                             return true;
                         case R.id.mensagem_copiar:
-                            copiarMenssagem(menssagem.getTexto());
+                            copiarMenssagem(mensagem.getTexto());
                             return true;
                         default:
                             return false;
@@ -168,7 +167,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     }
 
     public void toggleFavorite(View v, int position){
-        Menssagem menssagem = adapter.getItem(position);
+        Mensagem mensagem = adapter.getItem(position);
 
         ImageView favIcon = (ImageView) findViewById(R.id.btn_favstar);
         boolean x = true;
@@ -194,13 +193,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         Toast.makeText(this, "Mensagem marcada/desmarcada como enviada : "+position, Toast.LENGTH_LONG).show();
     }
 
-    public void shareMessage(View v, Menssagem menssagem){
+    public void shareMessage(View v, Mensagem mensagem){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, menssagem.getTexto());
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getTexto());
         sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "via Droido ( http://goo.gl/5fN2N )");
 
-        copiarMenssagem(menssagem.getTexto() + "\n\n via Droido ( http://goo.gl/5fN2N )");
+        copiarMenssagem(mensagem.getTexto() + "\n\n via Droido ( http://goo.gl/5fN2N )");
 
 
         sendIntent.setType("text/plain");
@@ -293,9 +292,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     // -----------####    MESSGES ADAPTER ------------------------------------------------------
     //------------------------------------------------------------------------------------------
 
-    class MessageAdapter extends ArrayAdapter<Menssagem> {
+    class MessageAdapter extends ArrayAdapter<Mensagem> {
         LayoutInflater inflater;
-        public ArrayList<Menssagem> messageArrayList = new ArrayList<Menssagem>();
+        public ArrayList<Mensagem> messageArrayList = new ArrayList<Mensagem>();
 
         public MessageAdapter(Context context, int rowResourceId) {
             super(context, rowResourceId);
@@ -310,33 +309,33 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         }
 
         @Override
-        public Menssagem getItem(int position) {
+        public Mensagem getItem(int position) {
             return messageArrayList.get(position);
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = inflater.inflate(R.layout.row, null);
-            final Menssagem menssagem = messageArrayList.get(position);
+            final Mensagem mensagem = messageArrayList.get(position);
             TextView menssagemView = (TextView) convertView.findViewById(R.id.mensagem);
             ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
             ImageView favButton = (ImageView) convertView.findViewById(R.id.btn_favstar);
             ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sended);
-            menssagemView.setText(menssagem.getTexto());
+            menssagemView.setText(mensagem.getTexto());
 
 
 
             mensagemOption.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openMessageMenu(v, menssagem);
+                    openMessageMenu(v, mensagem);
                 }
             });
 
             menssagemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shareMessage(v, menssagem);
+                    shareMessage(v, mensagem);
                 }
             });
 
@@ -373,14 +372,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             if(TOTAL_ITEMS > quantidade_carregada){
                 //SystemClock.sleep(1000);
                 isloading = true;
-                List<Menssagem> menssagens = menssagemDao.getMenssagens(pagina_atual, ordem);
+                List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual, ordem);
                 Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
                 quantidade_carregada += MAX_ITEMS_PER_PAGE;
                 pagina_atual+=1;
                 for (int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
                     //int idx = new Random().nextInt(mensagens.length);
                     //String random_mensagem = (mensagens[idx]);
-                    mArrayList.add(menssagens.get(i));
+                    mArrayList.add(mensagens.get(i));
                 }
 
             }

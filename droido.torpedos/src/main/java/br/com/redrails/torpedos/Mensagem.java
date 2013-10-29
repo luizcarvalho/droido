@@ -1,6 +1,6 @@
 package br.com.redrails.torpedos;
 
-public class Menssagem {
+public class Mensagem {
 
     private int id;
     private String texto;
@@ -8,11 +8,11 @@ public class Menssagem {
     private Boolean favoritada;
     private Boolean enviada;
 
-    public Menssagem() {
+    public Mensagem() {
 
     }
 
-    public Menssagem(int id, String texto, boolean favoritada, boolean enviada) {
+    public Mensagem(int id, String texto, boolean favoritada, boolean enviada) {
         super();
         this.id = id;
         this.texto = texto;

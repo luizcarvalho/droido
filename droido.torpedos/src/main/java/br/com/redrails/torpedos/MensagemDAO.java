@@ -14,10 +14,10 @@ import java.util.List;
  * Criado por luiz em 10/26/13.
  * Todos os direitos reservados para RedRails
  */
-public class MenssagemDAO {
+public class MensagemDAO {
 
 
-    public static final String NOME_TABELA = "menssagens";
+    public static final String NOME_TABELA = "mensagens";
     public static final String COLUNA_ID = "_id";
     public static final String COLUNA_TEXTO = "texto";
     public static final String COLUNA_FAVORITADA = "favoritada";
@@ -35,59 +35,58 @@ public class MenssagemDAO {
     private SQLiteDatabase dataBase = null;
 
 
-    private static MenssagemDAO instance;
+    private static MensagemDAO instance;
 
 
-    public static MenssagemDAO getInstance(Context context) {
+    public static MensagemDAO getInstance(Context context) {
         if(instance == null)
-            instance = new MenssagemDAO(context);
+            instance = new MensagemDAO(context);
         return instance;
     }
 
-    private MenssagemDAO(Context context) {
+    private MensagemDAO(Context context) {
         DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
         dataBase = persistenceHelper.getWritableDatabase();
     }
 
-    public void salvar(Menssagem menssagem) {
-        ContentValues values = gerarContentValeuesMenssagem(menssagem);
+    public void salvar(Mensagem mensagem) {
+        ContentValues values = gerarContentValeuesMenssagem(mensagem);
         dataBase.insert(NOME_TABELA, null, values);
     }
 
-    public List<Menssagem> recuperarTodos() {
+    public List<Mensagem> recuperarTodos() {
         String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
         Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
 
-        return converterCursorEmMenssagens(cursor);
+        return converterCursorEmMensagens(cursor);
     }
 
-    public List<Menssagem> getMenssagens(int pagina, int ordem) {
+    public List<Mensagem> getMensagens(int pagina, int ordem) {
         String parametros = parametrize(pagina);
         String ordem_clausula = ordering(ordem);
         String queryReturnPaginate = "SELECT * FROM " + NOME_TABELA +ordem_clausula+parametros;
         Log.w("Droido","Executando SQL: "+queryReturnPaginate);
         Cursor cursor = dataBase.rawQuery(queryReturnPaginate, null);
-        return converterCursorEmMenssagens(cursor);
+        return converterCursorEmMensagens(cursor);
     }
 
-    public void deletar(Menssagem menssagem) {
+    public void deletar(Mensagem mensagem) {
         String[] valoresParaSubstituir = {
-                String.valueOf(menssagem.getId())
+                String.valueOf(mensagem.getId())
         };
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
     }
 
-    public void editar(Menssagem menssagem) {
-        ContentValues valores = gerarContentValeuesMenssagem(menssagem);
+    public void editar(Mensagem mensagem) {
+        ContentValues valores = gerarContentValeuesMenssagem(mensagem);
 
         String[] valoresParaSubstituir = {
-                String.valueOf(menssagem.getId())
+                String.valueOf(mensagem.getId())
         };
 
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
     }
 
-    
     public long getQuantidadeTotal() {
         if(QUANTIDADE_TOTAL == 0){
             String queryCountTotal = "SELECT COUNT(*) FROM "+ NOME_TABELA;
@@ -102,10 +101,10 @@ public class MenssagemDAO {
     }
 
 
-    private List<Menssagem> converterCursorEmMenssagens(Cursor cursor) {
-        List<Menssagem> menssagens = new ArrayList<Menssagem>();
+    private List<Mensagem> converterCursorEmMensagens(Cursor cursor) {
+        List<Mensagem> mensagens = new ArrayList<Mensagem>();
         if(cursor == null)
-            return menssagens;
+            return mensagens;
 
         try {
 
@@ -122,9 +121,9 @@ public class MenssagemDAO {
                     boolean favoritada = cursor.getInt(indexFavoritada)>0;
                     boolean enviada = cursor.getInt(indexEnviada)>0;
 
-                    Menssagem menssagem = new Menssagem(id,texto, favoritada, enviada);
+                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada);
 
-                    menssagens.add(menssagem);
+                    mensagens.add(mensagem);
 
                 } while (cursor.moveToNext());
             }
@@ -132,14 +131,14 @@ public class MenssagemDAO {
         } finally {
             cursor.close();
         }
-        return menssagens;
+        return mensagens;
     }
 
-    private ContentValues gerarContentValeuesMenssagem(Menssagem menssagem) {
+    private ContentValues gerarContentValeuesMenssagem(Mensagem mensagem) {
         ContentValues values = new ContentValues();
-        values.put(COLUNA_TEXTO, menssagem.getTexto());
-        values.put(COLUNA_FAVORITADA, menssagem.getFavoritada());
-        values.put(COLUNA_ENVIADA, menssagem.getEnviada());
+        values.put(COLUNA_TEXTO, mensagem.getTexto());
+        values.put(COLUNA_FAVORITADA, mensagem.getFavoritada());
+        values.put(COLUNA_ENVIADA, mensagem.getEnviada());
 
         return values;
     }
