@@ -39,6 +39,15 @@ public class Mensagem {
         this.favoritada = favoritada;
     }
 
+    public Boolean toggleFavorite(){
+        if(this.favoritada){
+            this.favoritada=false;
+        }else{
+            this.favoritada=true;
+        }
+        return this.favoritada;
+    }
+
     public Boolean getEnviada() {
         return enviada;
     }
@@ -59,4 +68,6 @@ public class Mensagem {
     public String toString() {
         return texto;
     }
+
+
 } 

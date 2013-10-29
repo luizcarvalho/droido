@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,16 @@ public class MensagemDAO {
         dataBase.insert(NOME_TABELA, null, values);
     }
 
+    public Mensagem getMensagem(int id){
+
+        Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
+                COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA }, COLUNA_ID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+        List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
+        // return contact
+        return mensagem.get(0);
+    }
+
     public List<Mensagem> recuperarTodos() {
         String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
         Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
@@ -77,14 +88,19 @@ public class MensagemDAO {
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
     }
 
-    public void editar(Mensagem mensagem) {
+    public void atualizar(Mensagem mensagem) {
         ContentValues valores = gerarContentValeuesMenssagem(mensagem);
 
         String[] valoresParaSubstituir = {
                 String.valueOf(mensagem.getId())
         };
-
+        Log.d("Droido","Executando SQL: "+NOME_TABELA+ valores+ COLUNA_ID + " = ?"+ valoresParaSubstituir[0]);
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
+        //String sql = "UPDATE \"mensagens\" SET \"enviada\" = \"true\" WHERE  \"_id\" = "+mensagem.getId()+" ;";
+        //Log.d("Droido","Executando SQL: "+sql);
+        //dataBase.execSQL(sql);
+        Mensagem result_msg = getMensagem(mensagem.getId()-1);
+        Log.d("Droido","("+mensagem.getId()+") Mensagem Favoritada? : "+result_msg.getFavoritada());
     }
 
     public long getQuantidadeTotal() {
@@ -118,8 +134,8 @@ public class MensagemDAO {
 
                     int id = cursor.getInt(indexID);
                     String texto = cursor.getString(indexTexto);
-                    boolean favoritada = cursor.getInt(indexFavoritada)>0;
-                    boolean enviada = cursor.getInt(indexEnviada)>0;
+                    boolean favoritada = cursor.getString(indexFavoritada)=="true";
+                    boolean enviada = cursor.getString(indexEnviada)=="true";
 
                     Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada);
 

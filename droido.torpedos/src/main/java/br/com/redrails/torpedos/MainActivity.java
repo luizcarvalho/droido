@@ -106,28 +106,22 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     case R.id.ordem_avaliacao:
                         ordem = mensagemDao.ORDEM_AVALIACAO;
                         reload();
-                        Log.w("DROIDO", "MENU : AVALIACAO" );
                         return true;
                     case R.id.ordem_enviadas:
                         ordem = mensagemDao.ORDEM_ENVIADAS;
                         reload();
-                        Log.w("DROIDO", "MENU : ENVIADAS" );
                         return true;
                     case R.id.ordem_favoritos:
                         ordem = mensagemDao.ORDEM_FAVORITOS;
                         reload();
-                        Log.w("DROIDO", "MENU : FAV" );
                         return true;
                     case R.id.ordem_novas:
                         ordem = mensagemDao.ORDEM_DATA;
                         reload();
-                        Log.w("DROIDO", "MENU : DATA" );
-
                         return true;
                     case R.id.ordem_nao_enviadas:
                         ordem = mensagemDao.ORDEM_NAO_ENVIADAS;
                         reload();
-                        Log.w("DROIDO", "MENU : N ENV" );
                         return true;
                 }
 
@@ -168,14 +162,18 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     public void toggleFavorite(View v, int position){
         Mensagem mensagem = adapter.getItem(position);
+        mensagem.toggleFavorite();
 
-        ImageView favIcon = (ImageView) findViewById(R.id.btn_favstar);
-        boolean x = true;
-        if(x){
-            favIcon.setImageResource(R.drawable.btn_unfav);
-        }else{
+
+        ImageView favIcon = (ImageView) v.findViewById(R.id.btn_favstar);
+        mensagemDao.atualizar(mensagem);
+
+        if(mensagem.getFavoritada()){
             favIcon.setImageResource(R.drawable.btn_fav);
+        }else{
+            favIcon.setImageResource(R.drawable.btn_unfav);
         }
+
 
 
         //Toast.makeText(this, "Mensagem marcada/desmarcada como favorita: "+x, Toast.LENGTH_LONG).show();
@@ -319,9 +317,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             final Mensagem mensagem = messageArrayList.get(position);
             TextView menssagemView = (TextView) convertView.findViewById(R.id.mensagem);
             ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
-            ImageView favButton = (ImageView) convertView.findViewById(R.id.btn_favstar);
             ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sended);
             menssagemView.setText(mensagem.getTexto());
+
+            ImageView favButton = (ImageView) convertView.findViewById(R.id.btn_favstar);
+            Log.w("Droido","Verificando Icone: "+mensagem.getFavoritada());
+            if(mensagem.getFavoritada()){
+                favButton.setImageResource(R.drawable.btn_fav);
+            }
 
 
 
@@ -342,7 +345,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFavorite(v, 1);
+                    toggleFavorite(v, position);
 
                 }
             });
@@ -350,7 +353,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             sendedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleSend(v, 1);
+                    toggleSend(v, position);
 
                 }
             });
