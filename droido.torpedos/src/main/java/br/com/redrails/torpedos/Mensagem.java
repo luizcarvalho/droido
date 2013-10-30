@@ -16,8 +16,8 @@ public class Mensagem {
         super();
         this.id = id;
         this.texto = texto;
-        this.favoritada = false;
-        this.enviada = false;
+        this.favoritada = favoritada;
+        this.enviada = enviada;
         this.slug = "slug"+id;
     }
 
@@ -46,6 +46,15 @@ public class Mensagem {
             this.favoritada=true;
         }
         return this.favoritada;
+    }
+
+    public Boolean toggleSended(){
+        if(this.enviada){
+            this.enviada=false;
+        }else{
+            this.enviada=true;
+        }
+        return this.enviada;
     }
 
     public Boolean getEnviada() {

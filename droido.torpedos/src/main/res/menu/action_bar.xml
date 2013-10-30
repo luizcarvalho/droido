@@ -33,7 +33,7 @@
     <item
         android:id="@+id/menu_avaliar"
         android:title="@string/menu_avaliar"
-        android:icon="@drawable/ic_fav"
+        android:icon="@drawable/ic_menu_fav"
         app:showAsAction="never"
         />
 

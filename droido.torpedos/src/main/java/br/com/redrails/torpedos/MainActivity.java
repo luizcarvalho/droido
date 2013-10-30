@@ -46,9 +46,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     int quantidade_carregada= 0;
     int pagina_atual = 1;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +88,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         task = new MessageLoadTask();
         task.execute();
     }
+
     //--------------------------------------------------------------------------------------------
     // **************** *** Call and Listeners Methods
     //--------------------------------------------------------------------------------------------
@@ -132,16 +130,18 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mainMenu.show();
     }
 
-    public void openMessageMenu(final View v, final Mensagem mensagem){
+    public void openMessageMenu(final View v, final Mensagem mensagem, final int position){
         PopupMenu opcoesMenu = new PopupMenu(v.getContext(), v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
+        final View rowView = (View) v.getParent();
+
         opcoesMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
                     switch (menuItem.getItemId()) {
                         case R.id.mensagem_favorito:
-                            toggleFavorite(v, mensagem.getId());
+                            toggleFavorite(rowView, position);
                             return true;
                         case R.id.mensagem_share:
                             shareMessage(v, mensagem);
@@ -156,6 +156,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             }
         });
         inflater.inflate(R.menu.mensagem_menu, opcoesMenu.getMenu());
+
         opcoesMenu.show();
     }
 
@@ -164,30 +165,32 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mensagem.toggleFavorite();
 
 
+
         ImageView favIcon = (ImageView) v.findViewById(R.id.btn_favstar);
         mensagemDao.atualizar(mensagem);
 
         if(mensagem.getFavoritada()){
-            favIcon.setImageResource(R.drawable.btn_fav);
+            favIcon.setImageResource(R.drawable.ic_fav);
         }else{
-            favIcon.setImageResource(R.drawable.btn_unfav);
+            favIcon.setImageResource(R.drawable.ic_unfav);
         }
 
-
-
-        //Toast.makeText(this, "Mensagem marcada/desmarcada como favorita: "+x, Toast.LENGTH_LONG).show();
     }
 
     public void toggleSend(View v, int position){
-        ImageView sendIcon = (ImageView) v.findViewById(R.id.btn_sended);
-        boolean x = true;
-        if(x){
-            sendIcon.setImageResource(R.drawable.btn_unsended);
-        }else{
-            sendIcon.setImageResource(R.drawable.btn_sended);
-        }
+        Mensagem mensagem = adapter.getItem(position);
+        ImageView sendIcon = (ImageView) v.findViewById(R.id.btn_sendcheck);
 
-        Toast.makeText(this, "Mensagem marcada/desmarcada como enviada : "+position, Toast.LENGTH_LONG).show();
+        mensagem.toggleSended();
+        mensagemDao.atualizar(mensagem);
+
+        if(mensagem.getEnviada()){
+            sendIcon.setImageResource(R.drawable.ic_sended);
+
+        }else{
+            sendIcon.setImageResource(R.drawable.ic_unsended);
+        }
+        //Toast.makeText(this, "Mensagem marcada/desmarcada como enviada : "+position, Toast.LENGTH_LONG).show();
     }
 
     public void shareMessage(View v, Mensagem mensagem){
@@ -198,12 +201,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         copiarMenssagem(mensagem.getTexto() + "\n\n via Droido ( http://goo.gl/5fN2N )");
 
-
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
     }
-
-
 
     @SuppressWarnings("deprecation")
     public void copiarMenssagem(String text){
@@ -316,14 +316,16 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             final Mensagem mensagem = messageArrayList.get(position);
             TextView menssagemView = (TextView) convertView.findViewById(R.id.mensagem);
             ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
-            ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sended);
+            ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sendcheck);
             menssagemView.setText(mensagem.getTexto());
 
             ImageView favButton = (ImageView) convertView.findViewById(R.id.btn_favstar);
-            Log.w("Droido","Mensagem: "+mensagem);
             if(mensagem.getFavoritada()){
-                Log.d("Droido","Mensagem Favoritada na Lista Detectada: "+mensagem.getId());
-                favButton.setImageResource(R.drawable.btn_fav);
+                favButton.setImageResource(R.drawable.ic_fav);
+            }
+
+            if(mensagem.getEnviada()){
+                sendedButton.setImageResource(R.drawable.ic_sended);
             }
 
 
@@ -331,7 +333,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             mensagemOption.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openMessageMenu(v, mensagem);
+                    openMessageMenu(v, mensagem, position);
                 }
             });
 
@@ -353,8 +355,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             sendedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.w("Droido","Clicou no botao toggle");
                     toggleSend(v, position);
-
                 }
             });
 
@@ -376,7 +378,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 //SystemClock.sleep(1000);
                 isloading = true;
                 List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual, ordem);
-                Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
+                //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
                 quantidade_carregada += MAX_ITEMS_PER_PAGE;
                 pagina_atual+=1;
                 for (int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
@@ -391,9 +393,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         @Override
         protected void onPostExecute(Void result) {
-            Log.w("DROIDO", "Notificando DATASET CHANGED");
+            //Log.w("DROIDO", "Notificando DATASET CHANGED");
             adapter.notifyDataSetChanged();
-            Log.i("DROIDO", "Notificado!!!");
+            //Log.i("DROIDO", "Notificado!!!");
             isloading = false;
             //Se carregou todos os itens
             if(adapter.getCount() == TOTAL_ITEMS){

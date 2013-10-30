@@ -62,7 +62,10 @@ public class MensagemDAO {
                 new String[] { String.valueOf(id) }, null, null, null, null);
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
-        return mensagem.get(0);
+        if(!mensagem.isEmpty()){
+            return mensagem.get(0);
+        }
+        return null;
     }
 
     public List<Mensagem> recuperarTodos() {
@@ -96,11 +99,9 @@ public class MensagemDAO {
         };
         Log.d("Droido","Executando SQL: "+NOME_TABELA+ valores+ COLUNA_ID + " = ?"+ valoresParaSubstituir[0]);
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
-        //String sql = "UPDATE \"mensagens\" SET \"enviada\" = \"true\" WHERE  \"_id\" = "+mensagem.getId()+" ;";
+        //String sql = "UPDATE \"mensagens\" SET \"favoritada\" = \""+mensagem.getFavoritada()+"\" WHERE  \"_id\" = "+mensagem.getId()+" ;";
         //Log.d("Droido","Executando SQL: "+sql);
         //dataBase.execSQL(sql);
-        Mensagem result_msg = getMensagem(mensagem.getId()-1);
-        Log.d("Droido","("+mensagem.getId()+") Mensagem Favoritada? : "+result_msg.getFavoritada());
     }
 
     public long getQuantidadeTotal() {
@@ -136,9 +137,9 @@ public class MensagemDAO {
                     String texto = cursor.getString(indexTexto);
                     boolean favoritada = cursor.getString(indexFavoritada).contentEquals("true");
                     //Log.d("Droido: ","Cursor FAV ("+cursor.getString(indexFavoritada).getClass().getName()+") == ("+"true".getClass().getName()+") true String : "+cursor.getString(indexFavoritada).contentEquals("true")+" <> "+favoritada);
-                    Log.d("Droido: ",cursor.getString(indexFavoritada).contentEquals("true")+" <> "+favoritada);
+                    //Log.d("Droido: ",cursor.getString(indexFavoritada).contentEquals("true")+" <> "+favoritada);
 
-                    boolean enviada = cursor.getString(indexEnviada)=="true";
+                    boolean enviada = cursor.getString(indexEnviada).contentEquals("true");
 
                     Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada);
 
@@ -156,8 +157,8 @@ public class MensagemDAO {
     private ContentValues gerarContentValeuesMenssagem(Mensagem mensagem) {
         ContentValues values = new ContentValues();
         values.put(COLUNA_TEXTO, mensagem.getTexto());
-        values.put(COLUNA_FAVORITADA, mensagem.getFavoritada());
-        values.put(COLUNA_ENVIADA, mensagem.getEnviada());
+        values.put(COLUNA_FAVORITADA, String.valueOf(mensagem.getFavoritada()));
+        values.put(COLUNA_ENVIADA, String.valueOf(mensagem.getEnviada()));
 
         return values;
     }
