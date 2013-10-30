@@ -9,11 +9,13 @@
         android:id="@+id/mensagem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dip"
+        android:paddingLeft="20dip"
+        android:paddingTop="20dip"
+        android:paddingBottom="50dp"
+        android:paddingRight="20dp"
         android:layout_marginRight="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="50dp"
         />
 
     <ImageView
@@ -51,7 +53,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:layout_marginBottom="6dp"
+        android:padding="6dp"
         android:layout_marginRight="50dp"
         />
 
@@ -65,7 +67,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:layout_margin="6dp"
+        android:padding="6dp"
         />
 
 </RelativeLayout>

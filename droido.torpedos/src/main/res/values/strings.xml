@@ -25,7 +25,8 @@
     <string name="mensagem_avaliar">Avaliar</string>
     <string name="mensagem_compartilhar">Compartilhar</string>
     <string name="mensagem_editar">Editar</string>
-    <string name="mensagem_favorito">Addicionar aos Favoritos</string>
+    <string name="mensagem_favorito">Adicionar/Remover dos Favoritos</string>
+    <string name="mensagem_enviado">Marcar/Desmarcar como enviada</string>
 
     <!-- Filtros -->
     <string name="ordem_melhores">Melhores primeiro</string>

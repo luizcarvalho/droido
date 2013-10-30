@@ -134,6 +134,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         PopupMenu opcoesMenu = new PopupMenu(v.getContext(), v);
         MenuInflater inflater = opcoesMenu.getMenuInflater();
         final View rowView = (View) v.getParent();
+        Menu menuObj = opcoesMenu.getMenu();
 
         opcoesMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -163,8 +164,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public void toggleFavorite(View v, int position){
         Mensagem mensagem = adapter.getItem(position);
         mensagem.toggleFavorite();
-
-
 
         ImageView favIcon = (ImageView) v.findViewById(R.id.btn_favstar);
         mensagemDao.atualizar(mensagem);
@@ -328,8 +327,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 sendedButton.setImageResource(R.drawable.ic_sended);
             }
 
-
-
             mensagemOption.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -355,7 +352,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             sendedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.w("Droido","Clicou no botao toggle");
                     toggleSend(v, position);
                 }
             });
