@@ -64,8 +64,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mensagemDao = MensagemDAO.getInstance(this);
         TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
 
-
-
         //header = (TextView) findViewById(R.id.header);
         lista = (ListView) findViewById(R.id.lista);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -199,9 +197,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "via Droido ( http://goo.gl/5fN2N )");
 
         copiarMenssagem(mensagem.getTexto() + "\n\n via Droido ( http://goo.gl/5fN2N )");
-
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+        try {
+            mensagem.setEnviada(true);
+            mensagemDao.atualizar(mensagem);
+        } catch (Exception e) {
+            Toast.makeText(this,"Não conseguimos marcar sua mensagem como lida =(",Toast.LENGTH_LONG);
+        }
     }
 
     @SuppressWarnings("deprecation")
