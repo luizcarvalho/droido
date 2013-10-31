@@ -250,6 +250,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 View actionSettingsView = findViewById(R.id.action_menu);
                 openMainMenu(actionSettingsView);
                 return true;
+            case R.id.menu_sobre:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 Toast.makeText(this,item.getTitle() , Toast.LENGTH_LONG).show();
         }
