@@ -1,14 +1,17 @@
 package br.com.redrails.torpedos;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
@@ -66,6 +69,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
 
 
+
         //header = (TextView) findViewById(R.id.header);
         lista = (ListView) findViewById(R.id.lista);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -79,6 +83,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         task = new MessageLoadTask();
         task.execute();
+        firstRunActions(this);
     }
 
     private void reload(){
@@ -407,6 +412,65 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         protected void onCancelled(){
             adapter.notifyDataSetChanged();
         }
+    }
+
+    public void firstRunActions(Context context){
+        SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
+        boolean firstRun = prefs.getBoolean("firstRun", true);
+        if(firstRun){
+            openNews(context);
+            createShortCut();
+            SharedPreferences.Editor ed = prefs.edit();
+            ed.putBoolean("firstRun", false);
+            ed.commit();
+        }
+    }
+
+    public void createShortCut(){
+        Intent shortcutIntent = new Intent(getApplicationContext(),
+                MainActivity.class);
+
+        shortcutIntent.setAction(Intent.ACTION_MAIN);
+
+        Intent addIntent = new Intent();
+        addIntent
+                .putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Droido SMS");
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                Intent.ShortcutIconResource.fromContext(getApplicationContext(),
+                        R.drawable.ic_launcher));
+
+        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        getApplicationContext().sendBroadcast(addIntent);
+
+
+    }
+
+    public void openNews(Context context){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+        View novidadesView = inflater.inflate(R.layout.news, null);
+        TextView novidadeText = (TextView) novidadesView.findViewById(R.id.novidade_texto);
+        novidadeText.setMovementMethod(new ScrollingMovementMethod());
+
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(novidadesView);
+        builder.setPositiveButton(R.string.novidade_dismiss, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create();
+        builder.show();
+
+
+
     }
 
  }

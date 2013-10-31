@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/novidade_titulo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/novidades_titulo"
+        android:textSize="23sp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+       />
+
+    <TextView
+        android:id="@+id/novidade_texto"
+        android:text="@string/novidades"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:paddingBottom="5dp"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:scrollbars="vertical"
+
+        />
+
+</RelativeLayout>
