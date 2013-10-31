@@ -64,10 +64,27 @@ def setar_defaults()
 end
 
 
+def set_autor()
+    ms = Mensagem.all()
+    autores = ["Luiz Carvalho", "RedRails Dev", "Droido App", "Luiz Carvalho", "Luiz Carvalho", "Luiz Carvalho"]
+i=0
+max = 5
+    ms.each do |m|
+	m.autor = autores[i]
+        m.save
+	i+=1
+	i=0 if i> 5
+    end 
+end
+
+
+
 def categorizar_mensagens()
     ms = Mensagem.all()
     ms.each do |m|
         MensagemCategoria.create(:categoria_id=>m.categoria_id, :mensagem_id=>m.id)
     end 
 end
+
+set_autor()
 

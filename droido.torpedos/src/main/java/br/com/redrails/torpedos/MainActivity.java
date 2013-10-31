@@ -325,9 +325,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             convertView = inflater.inflate(R.layout.row, null);
             final Mensagem mensagem = messageArrayList.get(position);
             TextView menssagemView = (TextView) convertView.findViewById(R.id.mensagem);
+            TextView autorText = (TextView) convertView.findViewById(R.id.author);
             ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
             ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sendcheck);
             menssagemView.setText(mensagem.getTexto());
+            autorText.setText(mensagem.getAutor());
 
             ImageView favButton = (ImageView) convertView.findViewById(R.id.btn_favstar);
             if(mensagem.getFavoritada()){
