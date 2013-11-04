@@ -381,12 +381,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     {
         int MAX_ITEMS_PER_PAGE = 20;
 
+        List<String> filtro = null;
         @Override
         protected Void doInBackground(Void... params) {
             if(TOTAL_ITEMS > quantidade_carregada){
                 //SystemClock.sleep(1000);
                 isloading = true;
-                List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual, ordem);
+                List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual, ordem, filtro);
                 //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
                 quantidade_carregada += MAX_ITEMS_PER_PAGE;
                 pagina_atual+=1;

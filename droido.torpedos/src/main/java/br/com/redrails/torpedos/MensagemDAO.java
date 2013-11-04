@@ -76,7 +76,7 @@ public class MensagemDAO {
         return converterCursorEmMensagens(cursor);
     }
 
-    public List<Mensagem> getMensagens(int pagina, int ordem) {
+    public List<Mensagem> getMensagens(int pagina, int ordem, List<String> filtro) {
         String parametros = parametrize(pagina);
         String ordem_clausula = ordering(ordem);
         String queryReturnPaginate = "SELECT * FROM " + NOME_TABELA +ordem_clausula+parametros;
@@ -195,4 +195,53 @@ public class MensagemDAO {
         }
 
     }
+
+    private String filter(List<String> filtros){
+        String filtroClausula = " ORDER BY ";
+        String f = "SELECT * FROM mensagens m" +
+                "LEFT JOIN mensagem_categorias mc ON mc.menssagem_id = m._id  " +
+                "  WHERE mc.categoria_id = '1';";
+        for(int i=0;i<filtros.size();i++){
+
+        }
+        return filtroClausula;
+
+    }
+
+    class Filtro{
+        private String busca;
+        private ArrayList<Integer> categorias;
+        private String clausula="";
+
+        public Filtro(){
+        }
+
+        public void addCategoria(int categoriaID){
+            this.categorias.add(categoriaID);
+        }
+
+        public void setBusca(String termo){
+            this.busca = termo;
+        }
+
+        public String getClausula(){
+            String sql="";
+            if(!categorias.isEmpty()){
+                sql+="LEFT JOIN mensagem_categorias mc ON mc.mensagem_id = mensagem._id  ";
+            }
+            sql+=" WHERE ";
+            for(int i=0;i<categorias.size();i++){
+                sql+=""+categorias.get(i);
+            }
+
+
+
+
+
+            return sql;
+        }
+
+    }
+
 }
+
