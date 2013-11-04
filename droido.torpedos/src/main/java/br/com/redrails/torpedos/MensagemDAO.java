@@ -23,6 +23,7 @@ public class MensagemDAO {
     public static final String COLUNA_TEXTO = "texto";
     public static final String COLUNA_FAVORITADA = "favoritada";
     public static final String COLUNA_ENVIADA = "enviada";
+    public static final String COLUNA_AUTOR = "autor";
 
     public static final int ORDEM_AVALIACAO = 1;
     public static final int ORDEM_FAVORITOS = 2;
@@ -58,7 +59,7 @@ public class MensagemDAO {
     public Mensagem getMensagem(int id){
 
         Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
-                COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA }, COLUNA_ID + "=?",
+                COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA, COLUNA_AUTOR }, COLUNA_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
@@ -132,16 +133,15 @@ public class MensagemDAO {
                     int indexTexto = cursor.getColumnIndex(COLUNA_TEXTO);
                     int indexFavoritada = cursor.getColumnIndex(COLUNA_FAVORITADA);
                     int indexEnviada = cursor.getColumnIndex(COLUNA_ENVIADA);
+                    int indexAutor = cursor.getColumnIndex(COLUNA_AUTOR);
 
                     int id = cursor.getInt(indexID);
                     String texto = cursor.getString(indexTexto);
                     boolean favoritada = cursor.getString(indexFavoritada).contentEquals("true");
-                    //Log.d("Droido: ","Cursor FAV ("+cursor.getString(indexFavoritada).getClass().getName()+") == ("+"true".getClass().getName()+") true String : "+cursor.getString(indexFavoritada).contentEquals("true")+" <> "+favoritada);
-                    //Log.d("Droido: ",cursor.getString(indexFavoritada).contentEquals("true")+" <> "+favoritada);
 
                     boolean enviada = cursor.getString(indexEnviada).contentEquals("true");
-
-                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada);
+                    String autor = cursor.getString(indexAutor);
+                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor);
 
                     mensagens.add(mensagem);
 
@@ -159,6 +159,7 @@ public class MensagemDAO {
         values.put(COLUNA_TEXTO, mensagem.getTexto());
         values.put(COLUNA_FAVORITADA, String.valueOf(mensagem.getFavoritada()));
         values.put(COLUNA_ENVIADA, String.valueOf(mensagem.getEnviada()));
+        values.put(COLUNA_AUTOR, String.valueOf(mensagem.getAutor()));
 
         return values;
     }

@@ -5,6 +5,7 @@ public class Mensagem {
     private int id;
     private String texto;
     private String slug;
+    private String autor;
     private Boolean favoritada;
     private Boolean enviada;
 
@@ -12,13 +13,14 @@ public class Mensagem {
 
     }
 
-    public Mensagem(int id, String texto, boolean favoritada, boolean enviada) {
+    public Mensagem(int id, String texto, boolean favoritada, boolean enviada, String autor) {
         super();
         this.id = id;
         this.texto = texto;
         this.favoritada = favoritada;
         this.enviada = enviada;
         this.slug = "slug"+id;
+        this.autor = autor;
     }
 
 
@@ -73,9 +75,17 @@ public class Mensagem {
         this.id = id;
     }
 
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
     @Override
     public String toString() {
-        return "#< id: "+id+"texto: "+texto+" favoritada: "+favoritada+" enviada: "+enviada+" >";
+        return "#< id: "+id+"texto: "+texto+" favoritada: "+favoritada+" enviada: "+enviada+" autor: "+autor+" >";
     }
 
 
