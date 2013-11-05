@@ -43,9 +43,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private MessageLoadTask task;
     private TextView footer;
     MensagemDAO mensagemDao;
-    int ordem = mensagemDao.ORDEM_AVALIACAO;
 
-    int TOTAL_ITEMS ;
+
+    int TOTAL_ITEMS=0;
     int quantidade_carregada= 0;
     int pagina_atual = 1;
 
@@ -85,6 +85,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     private void reload(){
         pagina_atual = 1;
+        mensagemDao.reloadQuantidadeTotal();
+        quantidade_carregada=0;
         mArrayList.clear();
         adapter.notifyDataSetChanged();
         task = new MessageLoadTask();
@@ -103,23 +105,23 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.ordem_avaliacao:
-                        ordem = mensagemDao.ORDEM_AVALIACAO;
+                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_AVALIACAO);
                         reload();
                         return true;
                     case R.id.ordem_enviadas:
-                        ordem = mensagemDao.ORDEM_ENVIADAS;
+                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_ENVIADAS);
                         reload();
                         return true;
                     case R.id.ordem_favoritos:
-                        ordem = mensagemDao.ORDEM_FAVORITOS;
+                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_FAVORITOS);
                         reload();
                         return true;
                     case R.id.ordem_novas:
-                        ordem = mensagemDao.ORDEM_DATA;
+                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_DATA);
                         reload();
                         return true;
                     case R.id.ordem_nao_enviadas:
-                        ordem = mensagemDao.ORDEM_NAO_ENVIADAS;
+                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_NAO_ENVIADAS);
                         reload();
                         return true;
                 }
@@ -264,7 +266,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     //---------- QUERY CALLBACKS ---------
     @Override
     public boolean onQueryTextSubmit(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+        mensagemDao.filtro.setBusca(s);
+        reload();
         return true;
     }
 
@@ -381,14 +384,18 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     {
         int MAX_ITEMS_PER_PAGE = 20;
 
-        List<String> filtro = null;
+
         @Override
         protected Void doInBackground(Void... params) {
-            if(TOTAL_ITEMS > quantidade_carregada){
+            if(mensagemDao.getQuantidadeTotal() > quantidade_carregada){
                 //SystemClock.sleep(1000);
                 isloading = true;
-                List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual, ordem, filtro);
+                List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
                 //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
+
+                if(MAX_ITEMS_PER_PAGE>mensagemDao.getQuantidadeTotal()){
+                    MAX_ITEMS_PER_PAGE= (int) mensagemDao.getQuantidadeTotal();
+                }
                 quantidade_carregada += MAX_ITEMS_PER_PAGE;
                 pagina_atual+=1;
                 for (int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
@@ -408,7 +415,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             //Log.i("DROIDO", "Notificado!!!");
             isloading = false;
             //Se carregou todos os itens
-            if(adapter.getCount() == TOTAL_ITEMS){
+            if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){
                 lista.setOnScrollListener(null);//Para a escuta do scroll
                 lista.removeFooterView(footer);// remove o footer
             }

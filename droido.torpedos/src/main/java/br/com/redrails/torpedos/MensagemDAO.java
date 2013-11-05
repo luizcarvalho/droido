@@ -31,13 +31,17 @@ public class MensagemDAO {
     public static final int ORDEM_ENVIADAS = 4;
     public static final int ORDEM_NAO_ENVIADAS = 5;
 
-    private static long QUANTIDADE_TOTAL=0;
+    public static long QUANTIDADE_TOTAL=0;
     public static int QUANTIDADE_POR_PAGINA=20;
+
+    private int TIPO_BUSCA_SELECT = 1;
+    private int TIPO_BUSCA_COUNT = 2;
 
     private SQLiteDatabase dataBase = null;
 
 
     private static MensagemDAO instance;
+    public Filtro filtro;
 
 
     public static MensagemDAO getInstance(Context context) {
@@ -48,6 +52,7 @@ public class MensagemDAO {
 
     private MensagemDAO(Context context) {
         DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
+        filtro = new Filtro();
         dataBase = persistenceHelper.getWritableDatabase();
     }
 
@@ -76,12 +81,21 @@ public class MensagemDAO {
         return converterCursorEmMensagens(cursor);
     }
 
-    public List<Mensagem> getMensagens(int pagina, int ordem, List<String> filtro) {
-        String parametros = parametrize(pagina);
-        String ordem_clausula = ordering(ordem);
-        String queryReturnPaginate = "SELECT * FROM " + NOME_TABELA +ordem_clausula+parametros;
-        Log.w("Droido","Executando SQL: "+queryReturnPaginate);
-        Cursor cursor = dataBase.rawQuery(queryReturnPaginate, null);
+    private String parametrize(int tipo, Integer pagina){
+        String retorno = " * ";
+        if(tipo==TIPO_BUSCA_COUNT){
+            retorno = " COUNT(*) ";
+        }
+        String paginacao = paginate(pagina);
+
+        String query = "SELECT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula()+paginacao;
+        Log.w("Droido","Executando SQL: "+query);
+        return query;
+    }
+
+
+    public List<Mensagem> getMensagens(int pagina) {
+        Cursor cursor = dataBase.rawQuery(parametrize(TIPO_BUSCA_SELECT,pagina), null);
         return converterCursorEmMensagens(cursor);
     }
 
@@ -98,17 +112,16 @@ public class MensagemDAO {
         String[] valoresParaSubstituir = {
                 String.valueOf(mensagem.getId())
         };
-        Log.d("Droido","Executando SQL: "+NOME_TABELA+ valores+ COLUNA_ID + " = ?"+ valoresParaSubstituir[0]);
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
-        //String sql = "UPDATE \"mensagens\" SET \"favoritada\" = \""+mensagem.getFavoritada()+"\" WHERE  \"_id\" = "+mensagem.getId()+" ;";
-        //Log.d("Droido","Executando SQL: "+sql);
-        //dataBase.execSQL(sql);
+
+    }
+    public void reloadQuantidadeTotal(){
+        QUANTIDADE_TOTAL =DatabaseUtils.longForQuery(dataBase,parametrize(TIPO_BUSCA_COUNT,null) , null);
     }
 
     public long getQuantidadeTotal() {
         if(QUANTIDADE_TOTAL == 0){
-            String queryCountTotal = "SELECT COUNT(*) FROM "+ NOME_TABELA;
-            QUANTIDADE_TOTAL =DatabaseUtils.longForQuery(dataBase,queryCountTotal , null);
+            reloadQuantidadeTotal();
         }
             return QUANTIDADE_TOTAL;
     }
@@ -163,55 +176,34 @@ public class MensagemDAO {
 
         return values;
     }
-    private String parametrize(int pagina){
-        String offset_sql = " OFFSET ";
-        String limit_sql = " LIMIT ";
-        int limit = pagina*QUANTIDADE_POR_PAGINA;
-        int offset = limit-QUANTIDADE_POR_PAGINA;
-        if(offset!=0){
-            offset_sql = offset_sql+offset;
-        }else{
-            offset_sql="";
+    private String paginate(Integer pagina){
+        if(pagina!=null ){
+            String offset_sql = " OFFSET ";
+            String limit_sql = " LIMIT ";
+            int limit = pagina*QUANTIDADE_POR_PAGINA;
+            int offset = limit-QUANTIDADE_POR_PAGINA;
+            if(offset!=0){
+                offset_sql = offset_sql+offset;
+            }else{
+                offset_sql="";
+            }
+            limit_sql +=limit;
+            return limit_sql+offset_sql;
         }
-        limit_sql +=limit;
-
-        return limit_sql+offset_sql;
-    }
-
-    private String ordering(int ordem){
-        String ordemClausula = " ORDER BY ";
-        switch (ordem){
-            case ORDEM_FAVORITOS:
-                return ordemClausula+" favoritada DESC ";
-            case ORDEM_DATA:
-                return ordemClausula+" data DESC ";
-            case ORDEM_ENVIADAS:
-                return ordemClausula+" enviada DESC ";
-            case ORDEM_NAO_ENVIADAS:
-                return ordemClausula+" enviada ASC ";
-            default:
-                return ordemClausula+" avaliacao DESC ";
-
-        }
+        return "";
 
     }
 
-    private String filter(List<String> filtros){
-        String filtroClausula = " ORDER BY ";
-        String f = "SELECT * FROM mensagens m" +
-                "LEFT JOIN mensagem_categorias mc ON mc.menssagem_id = m._id  " +
-                "  WHERE mc.categoria_id = '1';";
-        for(int i=0;i<filtros.size();i++){
 
-        }
-        return filtroClausula;
 
+    public Filtro getFiltro(){
+        return instance.filtro;
     }
 
-    class Filtro{
+    public class Filtro{
         private String busca;
+        private int ordem = ORDEM_AVALIACAO;
         private ArrayList<Integer> categorias;
-        private String clausula="";
 
         public Filtro(){
         }
@@ -223,22 +215,69 @@ public class MensagemDAO {
         public void setBusca(String termo){
             this.busca = termo;
         }
+        public void setOrdem(int ordem){
+            this.ordem = ordem;
+        }
 
-        public String getClausula(){
-            String sql="";
-            if(!categorias.isEmpty()){
-                sql+="LEFT JOIN mensagem_categorias mc ON mc.mensagem_id = mensagem._id  ";
+        private String sqlForOrdem(){
+            String ordemClausula = " ORDER BY ";
+            switch (ordem){
+                case ORDEM_FAVORITOS:
+                    return ordemClausula+" favoritada DESC ";
+                case ORDEM_DATA:
+                    return ordemClausula+" data DESC ";
+                case ORDEM_ENVIADAS:
+                    return ordemClausula+" enviada DESC ";
+                case ORDEM_NAO_ENVIADAS:
+                    return ordemClausula+" enviada ASC ";
+                default:
+                    return ordemClausula+" avaliacao DESC ";
+
             }
-            sql+=" WHERE ";
-            for(int i=0;i<categorias.size();i++){
-                sql+=""+categorias.get(i);
+
+        }
+
+
+        private String sqlForCategorias(){
+            String sql = "";
+            if(categorias!=null){
+                int categorias_size = categorias.size();
+                if(!categorias.isEmpty()){
+                    sql+="LEFT JOIN mensagem_categorias mc ON mc.mensagem_id = mensagem._id  ";
+                }
+                sql+=" WHERE ";
+                for(int i=0;i<categorias_size;i++){
+                    sql+=" mensagem_categorias.categoria_id= '"+categorias.get(i)+"' ";
+                    if(i<categorias_size){
+                        sql+=" and ";
+                    }
+                }
+                return sql;
+            }else{
+                return "";
             }
+        }
 
+        private String sqlForBusca(){
+            String sql = "";
+            if(busca!=null){
+                if(categorias==null){
+                    sql+=" WHERE "+sql;
+                }
+                sql+=" "+NOME_TABELA+"."+COLUNA_TEXTO+" like '%"+busca+"%' ";
 
-
-
+            }
 
             return sql;
+        }
+
+        public String getClausula(){
+
+            String categoriaSql = sqlForCategorias();
+            String buscaSql = sqlForBusca();
+            String ordemSql = sqlForOrdem();
+
+            return categoriaSql+buscaSql+ordemSql;
         }
 
     }
