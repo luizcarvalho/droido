@@ -12,6 +12,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
@@ -271,8 +272,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         return true;
     }
 
+
+
     @Override
     public boolean onQueryTextChange(String s) {
+        if(s.equals("")){
+            mensagemDao.filtro.setBusca(null);
+            reload();
+        }
         return false;
     }
 
