@@ -12,6 +12,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
@@ -30,6 +31,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.redrails.torpedos.categoria.Categoria;
+import br.com.redrails.torpedos.categoria.CategoriaDAO;
+
 
 public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener, ActionBar.OnNavigationListener {
     private SearchView mSearchView;
@@ -45,6 +49,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     MensagemDAO mensagemDao;
     Context mainContext;
 
+    ArrayAdapter<Categoria> dropdownAdapter;
+
 
     int TOTAL_ITEMS=0;
     int quantidade_carregada= 0;
@@ -58,12 +64,16 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mActionBar.setDisplayShowTitleEnabled(false);
         mActionBar.setDisplayShowHomeEnabled(true);
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        final String[] dropdownValues = getResources().getStringArray(R.array.categorias);
-        ArrayAdapter<String> dropdownAdapter = new ArrayAdapter<String>(this,
+        //final String[] dropdownValues = getResources().getStringArray(R.array.categorias);
+        CategoriaDAO categoriaDao = CategoriaDAO.getInstance(this);
+        List<Categoria> categorias = categoriaDao.recuperarTodas();
+        dropdownAdapter = new ArrayAdapter<Categoria>(this,
                 android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
-                dropdownValues);
+                categorias);
+
 
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
+
         mainContext = this;
 
         mensagemDao = MensagemDAO.getInstance(this);
@@ -235,6 +245,17 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     }
 
     //------------- ACTIONBAR MENU CONTROLL -------------------------------------------------
+
+    @Override
+    public boolean onNavigationItemSelected(int i, long l) {
+
+        Categoria categoria = dropdownAdapter.getItem(i);
+        Log.d("Droido", "Categoria: " + categoria + "  ID: " + categoria.getId());
+
+
+        return false;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -305,10 +326,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
 
-    @Override
-    public boolean onNavigationItemSelected(int i, long l) {
-        return false;
-    }
+
 
     //------------------------------------------------------------------------------------------
     // -----------####    MESSGES ADAPTER ------------------------------------------------------
