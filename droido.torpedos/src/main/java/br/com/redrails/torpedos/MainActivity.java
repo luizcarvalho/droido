@@ -12,7 +12,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.support.v7.app.ActionBarActivity;
@@ -44,6 +43,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private MessageLoadTask task;
     private TextView footer;
     MensagemDAO mensagemDao;
+    Context mainContext;
 
 
     int TOTAL_ITEMS=0;
@@ -64,6 +64,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 dropdownValues);
 
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
+        mainContext = this;
 
         mensagemDao = MensagemDAO.getInstance(this);
         TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
@@ -73,22 +74,26 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footer = (TextView) inflater.inflate(R.layout.footer, null);
         lista.addFooterView(footer);
+        lista.setOnScrollListener(this);
 
         adapter = new MessageAdapter(this, R.layout.row);
         adapter.messageArrayList = mArrayList;
         lista.setAdapter(adapter);
-        lista.setOnScrollListener(this);
+
 
         task = new MessageLoadTask();
-        task.execute();
+        reload();
         firstRunActions(this);
     }
 
     private void reload(){
+
         pagina_atual = 1;
         mensagemDao.reloadQuantidadeTotal();
         quantidade_carregada=0;
         mArrayList.clear();
+
+
         adapter.notifyDataSetChanged();
         task = new MessageLoadTask();
         task.execute();
@@ -427,6 +432,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 lista.removeFooterView(footer);// remove o footer
             }
             else{
+                if(lista.getFooterViewsCount()==0){
+                    lista.setOnScrollListener((AbsListView.OnScrollListener) mainContext);
+                    lista.addFooterView(footer);
+                }
                 //SHOW MORE APPS
                 //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
             }
