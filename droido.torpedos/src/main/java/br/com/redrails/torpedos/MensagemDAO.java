@@ -262,17 +262,20 @@ public class MensagemDAO {
                         sql+=" and ";
                     }
                 }
-                return sql;
+
             }else{
                 return "";
             }
+            return sql;
         }
 
         private String sqlForBusca(){
             String sql = "";
             if(busca!=null){
-                if(!categorias.isEmpty()){
+                if(categorias.isEmpty()){
                     sql+=" WHERE "+sql;
+                }else{
+                    sql+=" and ";
                 }
                 sql+=" "+NOME_TABELA+"."+COLUNA_TEXTO+" like '%"+busca+"%' ";
 
