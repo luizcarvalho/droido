@@ -70,6 +70,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         dropdownAdapter = new ArrayAdapter<Categoria>(this,
                 android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
                 categorias);
+        dropdownAdapter.notifyDataSetChanged();
 
 
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
@@ -250,9 +251,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public boolean onNavigationItemSelected(int i, long l) {
 
         Categoria categoria = dropdownAdapter.getItem(i);
-        Log.d("Droido", "Categoria: " + categoria + "  ID: " + categoria.getId());
-
-
+        mensagemDao.filtro.setCategoria(categoria.getId());
+        reload();
         return false;
     }
 

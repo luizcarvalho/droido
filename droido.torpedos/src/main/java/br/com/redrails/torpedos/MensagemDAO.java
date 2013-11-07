@@ -10,6 +10,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.redrails.torpedos.categoria.Categoria;
+
 /**
  * Criado por luiz em 10/26/13.
  * Todos os direitos reservados para RedRails
@@ -202,13 +204,22 @@ public class MensagemDAO {
     public class Filtro{
         private String busca;
         private int ordem = ORDEM_AVALIACAO;
-        private ArrayList<Integer> categorias;
+        private ArrayList<Integer> categorias = new ArrayList<Integer>();
 
         public Filtro(){
         }
 
         public void addCategoria(int categoriaID){
             this.categorias.add(categoriaID);
+        }
+        public void setCategoria(int categoriaID){
+            ArrayList<Integer> array = new ArrayList<Integer>();
+            array.add(categoriaID);
+            this.categorias = array;
+        }
+
+        public ArrayList<Integer> getCategorias(){
+            return categorias;
         }
 
         public void setBusca(String termo){
@@ -239,15 +250,15 @@ public class MensagemDAO {
 
         private String sqlForCategorias(){
             String sql = "";
-            if(categorias!=null){
+            if(!categorias.isEmpty()){
                 int categorias_size = categorias.size();
                 if(!categorias.isEmpty()){
-                    sql+="LEFT JOIN mensagem_categorias mc ON mc.mensagem_id = mensagem._id  ";
+                    sql+=" LEFT JOIN mensagem_categorias ON mensagem_categorias.mensagem_id = mensagens._id  ";
                 }
                 sql+=" WHERE ";
                 for(int i=0;i<categorias_size;i++){
                     sql+=" mensagem_categorias.categoria_id= '"+categorias.get(i)+"' ";
-                    if(i<categorias_size){
+                    if((i+1)<categorias_size){
                         sql+=" and ";
                     }
                 }
@@ -260,7 +271,7 @@ public class MensagemDAO {
         private String sqlForBusca(){
             String sql = "";
             if(busca!=null){
-                if(categorias==null){
+                if(!categorias.isEmpty()){
                     sql+=" WHERE "+sql;
                 }
                 sql+=" "+NOME_TABELA+"."+COLUNA_TEXTO+" like '%"+busca+"%' ";
