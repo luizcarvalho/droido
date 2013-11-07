@@ -25,9 +25,6 @@ public class CategoriaDAO {
     public static final String COLUNA_NOME = "nome";
     public static final String COLUNA_SLUG = "slug";
 
-    private int TIPO_FIXA = 1;
-    private int TIPO_DINAMICA = 2;
-
     private int BUSCA_COUNT = 1;
     private int BUSCA_SELECT = 2;
 
@@ -70,11 +67,26 @@ public class CategoriaDAO {
         return null;
     }
 
+    private List<Categoria> categoriasFixas(){
+
+        List<Categoria> categoriasFixas = new ArrayList<Categoria>();
+        Categoria categoriaTodas = new Categoria(Categoria.TODAS,"Todas", null);
+        categoriaTodas.setTipoFixa();
+        Categoria categoriaFavoritas = new Categoria(Categoria.FAVORITAS,"Favoritas", null);
+        categoriaTodas.setTipoFixa();
+        categoriasFixas.add(categoriaTodas);
+        categoriasFixas.add(categoriaFavoritas);
+
+        return categoriasFixas;
+    }
+
     public List<Categoria> recuperarTodas() {
         String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
         Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
+        List<Categoria> categorias = categoriasFixas();
+        categorias.addAll(converterCursorEmCategorias(cursor));
 
-        return converterCursorEmCategorias(cursor);
+        return categorias;
     }
 
     private String parametrize(int tipo, Integer pagina){

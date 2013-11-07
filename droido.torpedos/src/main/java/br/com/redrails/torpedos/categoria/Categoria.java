@@ -1,10 +1,19 @@
 package br.com.redrails.torpedos.categoria;
 
+
 public class Categoria {
+    private int TIPO_FIXA = 1;
+    private int TIPO_DINAMICA = 2;
+
+    static public int TODAS = 1;
+    static public int FAVORITAS = 2;
+
+
 
     private int id;
     private String nome;
     private String slug;
+    private int tipo;
 
     public Categoria() {
 
@@ -15,9 +24,20 @@ public class Categoria {
         this.id = id;
         this.nome = nome;
         this.slug = "slug"+id;
+        this.tipo = TIPO_DINAMICA;
     }
 
+    public int getTipo() {
+        return tipo;
+    }
 
+    public void setTipoFixa() {
+        this.tipo = TIPO_FIXA;
+    }
+
+    public void setTipoDinamica() {
+        this.tipo = TIPO_DINAMICA;
+    }
 
     public String getNome() {
         return nome;
