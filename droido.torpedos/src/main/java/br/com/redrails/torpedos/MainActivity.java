@@ -40,52 +40,52 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
 
     //Dynamic Load
-    private ArrayList<Mensagem> mArrayList = new ArrayList<Mensagem>();
-    private ListView lista;
-    private boolean isloading = false;
-    private MessageAdapter adapter;
-    private MessageLoadTask task;
-    private TextView footer;
-    MensagemDAO mensagemDao;
-    Context mainContext;
+    private ArrayList<Mensagem> mArrayList = new ArrayList<Mensagem>();//Array de Objetos Mensagem para o adapter
+    private ListView lista; //Lista de Mensagens
+    private boolean isloading = false;//Verifica se a lista está no modo LOAD
+    private MessageAdapter adapter;//Adapter que carrega as mensagens para a ListView
+    private MessageLoadTask task; //Controle de exibição das mensagens em thread
+    private TextView footer; //Adicionar o "carregando" no final da ListView
+    MensagemDAO mensagemDao;//Gerencia todos os métodos do banco de dados
+    Context mainContext;//Usado para 
 
-    ArrayAdapter<Categoria> dropdownAdapter;
+    ArrayAdapter<Categoria> dropdownAdapter;//Adapter para o Dropdown menu de Categorias
 
 
-    int TOTAL_ITEMS=0;
-    int quantidade_carregada= 0;
-    int pagina_atual = 1;
+    int TOTAL_ITEMS=0;//Total de Itens máximo com e sem filtro.
+    int quantidade_carregada= 0;//Quantidade de itens que foi carregado até o momento
+    int pagina_atual = 1;//Controle de páginas Setado como 20 no MensagemDAO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ActionBar mActionBar = getSupportActionBar();
-        mActionBar.setDisplayShowTitleEnabled(false);
-        mActionBar.setDisplayShowHomeEnabled(true);
-        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        //final String[] dropdownValues = getResources().getStringArray(R.array.categorias);
+        mActionBar.setDisplayShowTitleEnabled(false);//Desativa o Título
+        mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
+        
         CategoriaDAO categoriaDao = CategoriaDAO.getInstance(this);
         List<Categoria> categorias = categoriaDao.recuperarTodas();
         dropdownAdapter = new ArrayAdapter<Categoria>(this,
                 android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
                 categorias);
-        dropdownAdapter.notifyDataSetChanged();
+        dropdownAdapter.notifyDataSetChanged();//Notifica a interface que o adapter recebeu dados novos
 
 
-        mActionBar.setListNavigationCallbacks(dropdownAdapter, this);
+        mActionBar.setListNavigationCallbacks(dropdownAdapter, this);//Seta o Dropdown de Categorias no ActionBar
 
-        mainContext = this;
+        mainContext = this;// Adicionar o Contexto MAIN para ser utilziado na questão do Listener da ListView
 
         mensagemDao = MensagemDAO.getInstance(this);
-        TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
+        TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();//Adicionar a quantidade total de itens máximo que pode ser carregado
 
-        //header = (TextView) findViewById(R.id.header);
-        lista = (ListView) findViewById(R.id.lista);
+        
+        lista = (ListView) findViewById(R.id.lista);//Lista de Mensagens do ListView
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        footer = (TextView) inflater.inflate(R.layout.footer, null);
+        footer = (TextView) inflater.inflate(R.layout.footer, null); //Carregando...
         lista.addFooterView(footer);
-        lista.setOnScrollListener(this);
+        lista.setOnScrollListener(this);//Adicionar o Listener implementado no MainActivity
 
         adapter = new MessageAdapter(this, R.layout.row);
         adapter.messageArrayList = mArrayList;
