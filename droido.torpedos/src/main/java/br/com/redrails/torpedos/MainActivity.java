@@ -54,6 +54,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     int TOTAL_ITEMS=0;//Total de Itens máximo com e sem filtro.
     int quantidade_carregada= 0;//Quantidade de itens que foi carregado até o momento
+    int quantidade_restante = 0;
     int pagina_atual = 1;//Controle de páginas Setado como 20 no MensagemDAO
 
     @Override
@@ -102,12 +103,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         pagina_atual = 1;
         mensagemDao.reloadQuantidadeTotal();
         quantidade_carregada=0;
+        quantidade_restante=0;
         mArrayList.clear();
 
-
-        adapter.notifyDataSetChanged();
         task = new MessageLoadTask();
         task.execute();
+        adapter.notifyDataSetChanged();
     }
 
     //--------------------------------------------------------------------------------------------
@@ -139,6 +140,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         return true;
                     case R.id.ordem_nao_enviadas:
                         mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_NAO_ENVIADAS);
+                        reload();
+                        return true;
+                    case R.id.ordem_aleatoria:
+                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_ALEATORIA);
                         reload();
                         return true;
                 }
@@ -191,10 +196,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         if(mensagem.getFavoritada()){
             favIcon.setImageResource(R.drawable.ic_fav);
+            Toast.makeText(this, "Marcada como favorita", Toast.LENGTH_LONG).show();
         }else{
             favIcon.setImageResource(R.drawable.ic_unfav);
+            Toast.makeText(this, "Desmarcada como favorita", Toast.LENGTH_LONG).show();
         }
-
     }
 
     public void toggleSend(View v, int position){
@@ -206,11 +212,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         if(mensagem.getEnviada()){
             sendIcon.setImageResource(R.drawable.ic_sended);
+            Toast.makeText(this, "Marcada como enviada", Toast.LENGTH_LONG).show();
 
         }else{
             sendIcon.setImageResource(R.drawable.ic_unsended);
+            Toast.makeText(this, "Marcada como não enviada", Toast.LENGTH_LONG).show();
         }
-        //Toast.makeText(this, "Mensagem marcada/desmarcada como enviada : "+position, Toast.LENGTH_LONG).show();
+
     }
 
     public void shareMessage(View v, Mensagem mensagem){
@@ -421,17 +429,29 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 //SystemClock.sleep(1000);
                 isloading = true;
                 List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
+
+                TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
                 //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
 
-                if(MAX_ITEMS_PER_PAGE>mensagemDao.getQuantidadeTotal()){
-                    MAX_ITEMS_PER_PAGE= (int) mensagemDao.getQuantidadeTotal();
+
+                quantidade_restante = TOTAL_ITEMS;
+                if(MAX_ITEMS_PER_PAGE>quantidade_restante){
+                    MAX_ITEMS_PER_PAGE= quantidade_restante;
+                    quantidade_restante=0;
+                }else{
+                    quantidade_restante-=quantidade_carregada;
                 }
+
                 quantidade_carregada += MAX_ITEMS_PER_PAGE;
+
+
                 pagina_atual+=1;
                 for (int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
-                    //int idx = new Random().nextInt(mensagens.length);
-                    //String random_mensagem = (mensagens[idx]);
-                    mArrayList.add(mensagens.get(i));
+                    try{
+                        mArrayList.add(mensagens.get(i));
+                    }catch (Exception e){
+                        Log.e("Droido","Error: "+e.getStackTrace());
+                    }
                 }
 
             }

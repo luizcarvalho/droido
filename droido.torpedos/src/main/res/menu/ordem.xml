@@ -3,6 +3,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/ordem_aleatoria"
+        android:title="@string/ordem_aleatoria"
+        />
+
+    <item
         android:id="@+id/ordem_avaliacao"
         android:title="@string/ordem_melhores"
         />
@@ -26,4 +31,5 @@
         android:id="@+id/ordem_enviadas"
         android:title="@string/ordem_enviadas"
         />
+
 </menu>

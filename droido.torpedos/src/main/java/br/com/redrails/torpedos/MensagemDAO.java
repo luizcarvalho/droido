@@ -31,6 +31,7 @@ public class MensagemDAO {
     public static final int ORDEM_DATA = 3;
     public static final int ORDEM_ENVIADAS = 4;
     public static final int ORDEM_NAO_ENVIADAS = 5;
+    public static final int ORDEM_ALEATORIA = 6;
 
     public static long QUANTIDADE_TOTAL=0;
     public static int QUANTIDADE_POR_PAGINA=20;
@@ -203,7 +204,7 @@ public class MensagemDAO {
 
     public class Filtro{
         private String busca;
-        private int ordem = ORDEM_AVALIACAO;
+        private int ordem = ORDEM_ALEATORIA;
         private ArrayList<Integer> categorias = new ArrayList<Integer>();
 
         public Filtro(){
@@ -240,8 +241,12 @@ public class MensagemDAO {
                     return ordemClausula+" enviada DESC ";
                 case ORDEM_NAO_ENVIADAS:
                     return ordemClausula+" enviada ASC ";
-                default:
+                case ORDEM_AVALIACAO:
                     return ordemClausula+" avaliacao DESC ";
+                case ORDEM_ALEATORIA:
+                    return ordemClausula+" RANDOM()  ";
+                default:
+                    return ordemClausula+" RANDOM()  ";
 
             }
 

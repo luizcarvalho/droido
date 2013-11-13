@@ -25,11 +25,13 @@
     <string name="mensagem_enviado">Marcar/Desmarcar como enviada</string>
 
     <!-- Filtros -->
+    <string name="ordem_aleatoria">Aleatória</string>
     <string name="ordem_melhores">Melhores primeiro</string>
     <string name="ordem_favoritos">Favoritos Primeiro</string>
     <string name="ordem_novas">Novas Primeiro</string>
     <string name="ordem_nao_enviadas">Não Enviadas Primeiro</string>
     <string name="ordem_enviadas">Enviadas Primeiro</string>
+
 
     <!-- Menu Inferior (Actionbar) -->
     <string name="menu_mais_apps">Mais Aplicativos</string>
@@ -46,5 +48,6 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="action_settings">Settings</string>
     <string name="app_version">Versão: 2.0.14</string>
+
 
 </resources>
