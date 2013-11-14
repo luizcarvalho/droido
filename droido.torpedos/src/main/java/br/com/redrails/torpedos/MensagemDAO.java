@@ -221,11 +221,14 @@ public class MensagemDAO {
         }
         public void setCategoria(Categoria categoria){
             ArrayList<Categoria> array = new ArrayList<Categoria>();
+            ArrayList<Categoria> blankArray = new ArrayList<Categoria>();
             array.add(categoria);
             if(categoria.getTipo()==Categoria.TIPO_DINAMICA){
                 this.categorias = array;
+                this.staticCategorias = blankArray;//Seta apenas um das categorias por vez
             }else{
                 this.staticCategorias = array;
+                this.categorias = blankArray;//Seta apenas um das categorias por vez
             }
         }
 
@@ -342,9 +345,7 @@ public class MensagemDAO {
                     sql+=" and ";
                 }
                 sql+=" "+NOME_TABELA+"."+COLUNA_TEXTO+" like '%"+busca+"%' ";
-
             }
-
             return sql;
         }
 

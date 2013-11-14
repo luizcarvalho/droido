@@ -1,21 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#e3e3e3"
     android:orientation="vertical"
     tools:context=".MainActivity"
+    android:id="@+id/mainLayout"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+
     >
 
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:gravity="center_horizontal"
-        android:padding="10dip"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        tools:context=".MainActivity" />
+
+
 
     <ListView
         android:id="@+id/lista"
@@ -24,6 +20,24 @@
         tools:context=".MainActivity"
         android:divider="@null"
         android:listSelector="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"/>
+        android:cacheColorHint="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="50dp"
 
-</LinearLayout>
+        />
+
+
+        <com.google.ads.AdView android:id="@+id/adView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            ads:adUnitId="ca-app-pub-6662263716470706/5987486187"
+            ads:adSize="BANNER"
+            ads:testDevices="TEST_EMULATOR"
+            ads:loadAdOnCreate="true"
+            android:layout_alignParentBottom="true"
+            />
+
+
+
+
+</RelativeLayout>

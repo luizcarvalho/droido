@@ -13,15 +13,16 @@ repositories {
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion "18.1.0"
+    compileSdkVersion 19
+    buildToolsVersion '19.0.0'
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 16
+        targetSdkVersion 19
     }
 }
 
 dependencies {
-	compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'com.android.support:appcompat-v7:19.0.0'
+    compile files('src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar')
 }

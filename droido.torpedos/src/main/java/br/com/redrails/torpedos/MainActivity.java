@@ -24,9 +24,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.ads.*;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +77,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
                 categorias);
         dropdownAdapter.notifyDataSetChanged();//Notifica a interface que o adapter recebeu dados novos
-
-
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);//Seta o Dropdown de Categorias no ActionBar
 
         mainContext = this;// Adicionar o Contexto MAIN para ser utilziado na questão do Listener da ListView
@@ -96,6 +99,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         task = new MessageLoadTask();
         reload();
         firstRunActions(this);
+
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        adView.loadAd(new AdRequest());
+
+
+
     }
 
     private void reload(){
@@ -477,6 +486,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 //SHOW MORE APPS
                 //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
             }
+
         }
         @Override
         protected void onCancelled(){
