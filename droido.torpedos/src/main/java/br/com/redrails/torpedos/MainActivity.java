@@ -259,7 +259,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public boolean onNavigationItemSelected(int i, long l) {
 
         Categoria categoria = dropdownAdapter.getItem(i);
-        mensagemDao.filtro.setCategoria(categoria.getId());
+        mensagemDao.filtro.setCategoria(categoria);
         reload();
         return false;
     }

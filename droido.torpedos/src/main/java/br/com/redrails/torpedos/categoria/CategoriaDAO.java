@@ -73,7 +73,7 @@ public class CategoriaDAO {
         Categoria categoriaTodas = new Categoria(Categoria.TODAS,"Todas", null);
         categoriaTodas.setTipoFixa();
         Categoria categoriaFavoritas = new Categoria(Categoria.FAVORITAS,"Favoritas", null);
-        categoriaTodas.setTipoFixa();
+        categoriaFavoritas.setTipoFixa();
         categoriasFixas.add(categoriaTodas);
         categoriasFixas.add(categoriaFavoritas);
 

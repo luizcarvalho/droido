@@ -2,8 +2,8 @@ package br.com.redrails.torpedos.categoria;
 
 
 public class Categoria {
-    private int TIPO_FIXA = 1;
-    private int TIPO_DINAMICA = 2;
+    static public int TIPO_FIXA = 1;
+    static public int TIPO_DINAMICA = 2;
 
     static public int TODAS = 1;
     static public int FAVORITAS = 2;

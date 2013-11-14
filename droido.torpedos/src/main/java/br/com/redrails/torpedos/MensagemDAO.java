@@ -41,7 +41,6 @@ public class MensagemDAO {
 
     private SQLiteDatabase dataBase = null;
 
-
     private static MensagemDAO instance;
     public Filtro filtro;
 
@@ -205,21 +204,32 @@ public class MensagemDAO {
     public class Filtro{
         private String busca;
         private int ordem = ORDEM_ALEATORIA;
-        private ArrayList<Integer> categorias = new ArrayList<Integer>();
+        private ArrayList<Categoria> categorias = new ArrayList<Categoria>();
+        private ArrayList<Categoria> staticCategorias = new ArrayList<Categoria>();
+        boolean hasClausula=false;
 
         public Filtro(){
         }
 
-        public void addCategoria(int categoriaID){
-            this.categorias.add(categoriaID);
+        public void addCategoria(Categoria categoria){
+            this.categorias.add(categoria);
+            if(categoria.getTipo()==Categoria.TIPO_DINAMICA){
+                this.categorias.add(categoria);
+            }else{
+                this.staticCategorias.add(categoria);
+            }
         }
-        public void setCategoria(int categoriaID){
-            ArrayList<Integer> array = new ArrayList<Integer>();
-            array.add(categoriaID);
-            this.categorias = array;
+        public void setCategoria(Categoria categoria){
+            ArrayList<Categoria> array = new ArrayList<Categoria>();
+            array.add(categoria);
+            if(categoria.getTipo()==Categoria.TIPO_DINAMICA){
+                this.categorias = array;
+            }else{
+                this.staticCategorias = array;
+            }
         }
 
-        public ArrayList<Integer> getCategorias(){
+        public ArrayList<Categoria> getCategorias(){
             return categorias;
         }
 
@@ -253,16 +263,14 @@ public class MensagemDAO {
         }
 
 
-        private String sqlForCategorias(){
+        private String sqlParaCategoriasDinamicas(){
             String sql = "";
+
             if(!categorias.isEmpty()){
                 int categorias_size = categorias.size();
-                if(!categorias.isEmpty()){
-                    sql+=" LEFT JOIN mensagem_categorias ON mensagem_categorias.mensagem_id = mensagens._id  ";
-                }
-                sql+=" WHERE ";
+
                 for(int i=0;i<categorias_size;i++){
-                    sql+=" mensagem_categorias.categoria_id= '"+categorias.get(i)+"' ";
+                    sql+=" mensagem_categorias.categoria_id= '"+categorias.get(i).getId()+"' ";
                     if((i+1)<categorias_size){
                         sql+=" and ";
                     }
@@ -274,10 +282,61 @@ public class MensagemDAO {
             return sql;
         }
 
+        private String sqlParaCategoriasEstaticas(){
+            String sql = "";
+            for(int i=0; i<staticCategorias.size();i++){
+                if(staticCategorias.get(i).getId()==Categoria.TODAS){
+                    hasClausula=false;
+                    return "";
+
+                }
+                if(staticCategorias.get(i).getId()==Categoria.FAVORITAS){
+                    sql+=" favoritada='true' ";
+                    hasClausula=true;
+                }
+            }
+
+
+            return sql;
+        }
+
+
+        /*
+        * # se staticas vazias e dinamicas vazias
+        *   => ""
+        *
+        * # se estaticas=1+ e dinamicas vazias
+        *  =>  WHERE favoritada = 'true' and*
+        *
+        * # se estática 1+ e dinâmica 1+
+        *  => LEFT JOIN mensagem_categorias ON mensagem_categorias.mensagem_id = mensagens._id   WHERE  mensagem_categorias.categoria_id= '1'
+        *
+        *
+        * */
+
+
+
+        private String sqlForCategorias(){
+
+            String sql = "";
+            String sqlDinamica = sqlParaCategoriasDinamicas();
+            String sqlEstatica =  sqlParaCategoriasEstaticas();
+            if(sqlDinamica!=""){
+                sql+=" LEFT JOIN mensagem_categorias ON mensagem_categorias.mensagem_id = mensagens._id  ";
+                hasClausula=true;
+            }
+            if(hasClausula){
+                sql+=" WHERE ";
+            }
+            sql+=sqlDinamica+sqlEstatica;
+            Log.w("Droido","SQL GERADA: "+sql);
+            return sql;
+        }
+
         private String sqlForBusca(){
             String sql = "";
             if(busca!=null){
-                if(categorias.isEmpty()){
+                if(categorias.isEmpty() && staticCategorias.isEmpty()){
                     sql+=" WHERE "+sql;
                 }else{
                     sql+=" and ";
