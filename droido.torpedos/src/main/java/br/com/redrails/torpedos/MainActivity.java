@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -34,6 +35,7 @@ import com.google.ads.*;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.com.redrails.torpedos.categoria.Categoria;
@@ -299,6 +301,16 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             case R.id.menu_sobre:
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menu_avaliar:
+                Intent intentRating = new Intent(Intent.ACTION_VIEW);
+                intentRating.setData(Uri.parse("market://details?id=br.com.redrails.torpedos"));
+                startActivity(intentRating);
+                return true;
+            case R.id.menu_mais_apps:
+                Intent intentmoreApps = new Intent(Intent.ACTION_VIEW);
+                intentmoreApps.setData(Uri.parse("market://search?q=pub:RedRails"));
+                startActivity(intentmoreApps);
                 return true;
             default:
                 Toast.makeText(this,item.getTitle() , Toast.LENGTH_LONG).show();
