@@ -9,7 +9,10 @@
     xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
 
     >
-
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
 
 
 
@@ -19,8 +22,7 @@
         android:layout_height="fill_parent"
         tools:context=".MainActivity"
         android:divider="@null"
-        android:listSelector="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"
+
         android:layout_alignParentTop="true"
         android:layout_marginBottom="50dp"
 

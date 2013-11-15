@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -25,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +33,6 @@ import com.google.ads.*;
 
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import br.com.redrails.torpedos.categoria.Categoria;
@@ -98,8 +95,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         lista.setAdapter(adapter);
 
 
-        //task = new MessageLoadTask();
-        //loadMensagens();
         reload();
         firstRunActions(this);
 
@@ -113,8 +108,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         quantidade_restante=0;
         mArrayList.clear();
 
-//        task = new MessageLoadTask();
-//        task.execute();
+
         loadMensagens();
         adapter.notifyDataSetChanged();
     }
@@ -155,8 +149,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         reload();
                         return true;
                 }
-
-
                 return false;
             }
         });
@@ -179,7 +171,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                             toggleFavorite(rowView, position);
                             return true;
                         case R.id.mensagem_share:
-                            shareMessage(v, mensagem);
+                            shareMessage(v, mensagem,position );
                             return true;
                         case R.id.mensagem_copiar:
                             copiarMenssagem(mensagem.getTexto());
@@ -221,7 +213,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         if(mensagem.getEnviada()){
             sendIcon.setImageResource(R.drawable.ic_sended);
             Toast.makeText(this, "Marcada como enviada", Toast.LENGTH_LONG).show();
-
         }else{
             sendIcon.setImageResource(R.drawable.ic_unsended);
             Toast.makeText(this, "Marcada como não enviada", Toast.LENGTH_LONG).show();
@@ -229,25 +220,22 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     }
 
-    public void shareMessage(View v, Mensagem mensagem){
+    public void shareMessage(View v, Mensagem mensagem, int position){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getTexto());
         sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "+( http://goo.gl/xninpd )");
 
+
         copiarMenssagem(mensagem.getTexto() + "\n\n +( http://goo.gl/xninpd )");
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-        try {
-            mensagem.setEnviada(true);
-            mensagemDao.atualizar(mensagem);
-        } catch (Exception e) {
-            Toast.makeText(this,"Não conseguimos marcar sua mensagem como lida =(",Toast.LENGTH_LONG);
-        }
+
     }
 
     @SuppressWarnings("deprecation")
     public void copiarMenssagem(String text){
+        Toast.makeText(this, getResources().getText(R.string.success_clipboarded), Toast.LENGTH_LONG).show();
         int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES. HONEYCOMB) {
             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -257,7 +245,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             android.content.ClipData clip = ClipData.newPlainText("simple text",text);
             clipboard.setPrimaryClip(clip);
         }
-        Toast.makeText(this, getResources().getText(R.string.success_clipboarded), Toast.LENGTH_LONG).show();
+
 
     }
 
@@ -387,7 +375,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = inflater.inflate(R.layout.row, null);
+            final View finalView = inflater.inflate(R.layout.row, null);
+            convertView = finalView;
             final Mensagem mensagem = messageArrayList.get(position);
             TextView menssagemView = (TextView) convertView.findViewById(R.id.mensagem);
             TextView autorText = (TextView) convertView.findViewById(R.id.author);
@@ -415,13 +404,15 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             menssagemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shareMessage(v, mensagem);
+                    toggleSend(finalView, position);
+                    shareMessage(v, mensagem,position);
                 }
             });
 
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     toggleFavorite(v, position);
 
                 }
@@ -497,81 +488,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
         }
     }
-
-    //------------------------------------------------------------------------------------------
-    // -----------     CLASSE TASK -------------------------------------------------------------
-    //------------------------------------------------------------------------------------------
-/*
-    class MessageLoadTask extends AsyncTask<Void, Void, Void>
-    {
-        int MAX_ITEMS_PER_PAGE = 20;
-
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            if(mensagemDao.getQuantidadeTotal() > quantidade_carregada){
-                //SystemClock.sleep(1000);
-                isloading = true;
-                List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
-
-                TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
-                //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
-
-
-                quantidade_restante = TOTAL_ITEMS;
-                if(MAX_ITEMS_PER_PAGE>quantidade_restante){
-                    MAX_ITEMS_PER_PAGE= quantidade_restante;
-                    quantidade_restante=0;
-                }else{
-                    quantidade_restante-=quantidade_carregada;
-                }
-
-                quantidade_carregada += MAX_ITEMS_PER_PAGE;
-
-
-                pagina_atual+=1;
-                for (int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
-                    try{
-                        mArrayList.add(mensagens.get(i));
-                    }catch (Exception e){
-                        String dados = "qtd_restante: "+quantidade_restante+" qtde_carregada:  "
-                                +quantidade_carregada+" pg "+pagina_atual+" MAX_P_PAGE "+MAX_ITEMS_PER_PAGE
-                                +"TOTAL "+TOTAL_ITEMS;
-                        Log.e("Droido","Out bound Error: "+e.getStackTrace()+"\n "+dados);
-                    }
-                }
-
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            //Log.w("DROIDO", "Notificando DATASET CHANGED");
-            adapter.notifyDataSetChanged();
-            //Log.i("DROIDO", "Notificado!!!");
-            isloading = false;
-            //Se carregou todos os itens
-            if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){
-                lista.setOnScrollListener(null);//Para a escuta do scroll
-                lista.removeFooterView(footer);// remove o footer
-            }
-            else{
-                if(lista.getFooterViewsCount()==0){
-                    lista.setOnScrollListener((AbsListView.OnScrollListener) mainContext);
-                    lista.addFooterView(footer);
-                }
-                //SHOW MORE APPS
-                //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
-            }
-
-        }
-        @Override
-        protected void onCancelled(){
-            adapter.notifyDataSetChanged();
-        }
-    }
-    */
 
     public void firstRunActions(Context context){
         SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);

@@ -16,6 +16,7 @@
         android:layout_marginRight="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:src="@drawable/text_animation"
         />
 
     <ImageView
