@@ -51,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private ListView lista; //Lista de Mensagens
     private boolean isloading = false;//Verifica se a lista está no modo LOAD
     private MessageAdapter adapter;//Adapter que carrega as mensagens para a ListView
-    private MessageLoadTask task; //Controle de exibição das mensagens em thread
+    //private MessageLoadTask task; //Controle de exibição das mensagens em thread
     private TextView footer; //Adicionar o "carregando" no final da ListView
     MensagemDAO mensagemDao;//Gerencia todos os métodos do banco de dados
     Context mainContext;//Usado para 
@@ -98,14 +98,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         lista.setAdapter(adapter);
 
 
-        task = new MessageLoadTask();
+        //task = new MessageLoadTask();
+        //loadMensagens();
         reload();
         firstRunActions(this);
-
-        AdView adView = (AdView)this.findViewById(R.id.adView);
-        adView.loadAd(new AdRequest());
-
-
 
     }
 
@@ -117,8 +113,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         quantidade_restante=0;
         mArrayList.clear();
 
-        task = new MessageLoadTask();
-        task.execute();
+//        task = new MessageLoadTask();
+//        task.execute();
+        loadMensagens();
         adapter.notifyDataSetChanged();
     }
 
@@ -236,9 +233,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getTexto());
-        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "via Droido ( http://goo.gl/5fN2N )");
+        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "+( http://goo.gl/xninpd )");
 
-        copiarMenssagem(mensagem.getTexto() + "\n\n via Droido ( http://goo.gl/5fN2N )");
+        copiarMenssagem(mensagem.getTexto() + "\n\n +( http://goo.gl/xninpd )");
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
         try {
@@ -342,13 +339,19 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     //---------- SCROLL CALLBACKS ---------
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int loadedItems = firstVisibleItem + visibleItemCount;
-        if((loadedItems == totalItemCount) && !isloading){
-            if(task != null && (task.getStatus() == AsyncTask.Status.FINISHED)){
-                task = new MessageLoadTask();
-                task.execute();
+         int loadedItems = firstVisibleItem + visibleItemCount;
+//        if((loadedItems == totalItemCount) && !isloading){
+//            if(task != null && (task.getStatus() == AsyncTask.Status.FINISHED)){
+//                task = new MessageLoadTask();
+//                task.execute();
+//            }
+//        }
+        if(loadedItems == totalItemCount){
+            if(adapter!=null){
+                loadMensagens();
             }
         }
+
     }
 
     @Override
@@ -435,10 +438,70 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         }
     }
 
+
+
+    public void loadMensagens(){
+        int MAX_ITEMS_PER_PAGE = 20;
+        if(mensagemDao.getQuantidadeTotal() > quantidade_carregada){
+            //SystemClock.sleep(1000);
+            isloading = true;
+            List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
+
+            TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
+            //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
+
+
+            quantidade_restante = TOTAL_ITEMS;
+            if(MAX_ITEMS_PER_PAGE>quantidade_restante){
+                MAX_ITEMS_PER_PAGE= quantidade_restante;
+                quantidade_restante=0;
+            }else{
+                quantidade_restante-=quantidade_carregada;
+            }
+
+            quantidade_carregada += MAX_ITEMS_PER_PAGE;
+
+
+            pagina_atual+=1;
+            for (int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
+                try{
+                    mArrayList.add(mensagens.get(i));
+                }catch (Exception e){
+                    String dados = "qtd_restante: "+quantidade_restante+" qtde_carregada:  "
+                            +quantidade_carregada+" pg "+pagina_atual+" MAX_P_PAGE "+MAX_ITEMS_PER_PAGE
+                            +"TOTAL "+TOTAL_ITEMS;
+                    Log.e("Droido","Out bound Error: "+e.getStackTrace()+"\n "+dados);
+                }
+            }
+            finalizeLoad();
+        }
+    }
+
+    protected void finalizeLoad(){
+        adapter.notifyDataSetChanged();
+        //Log.i("DROIDO", "Notificado!!!");
+        isloading = false;
+        //Se carregou todos os itens
+        if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){
+            lista.setOnScrollListener(null);//Para a escuta do scroll
+            lista.removeFooterView(footer);// remove o footer
+        }
+        else{
+            if(lista.getFooterViewsCount()==0){
+                lista.setOnScrollListener((AbsListView.OnScrollListener) mainContext);
+                lista.addFooterView(footer);
+            }
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        adView.loadAd(new AdRequest());
+            //SHOW MORE APPS
+            //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
+        }
+    }
+
     //------------------------------------------------------------------------------------------
     // -----------     CLASSE TASK -------------------------------------------------------------
     //------------------------------------------------------------------------------------------
-
+/*
     class MessageLoadTask extends AsyncTask<Void, Void, Void>
     {
         int MAX_ITEMS_PER_PAGE = 20;
@@ -471,7 +534,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     try{
                         mArrayList.add(mensagens.get(i));
                     }catch (Exception e){
-                        Log.e("Droido","Error: "+e.getStackTrace());
+                        String dados = "qtd_restante: "+quantidade_restante+" qtde_carregada:  "
+                                +quantidade_carregada+" pg "+pagina_atual+" MAX_P_PAGE "+MAX_ITEMS_PER_PAGE
+                                +"TOTAL "+TOTAL_ITEMS;
+                        Log.e("Droido","Out bound Error: "+e.getStackTrace()+"\n "+dados);
                     }
                 }
 
@@ -505,6 +571,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             adapter.notifyDataSetChanged();
         }
     }
+    */
 
     public void firstRunActions(Context context){
         SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
