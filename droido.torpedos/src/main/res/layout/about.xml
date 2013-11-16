@@ -13,26 +13,27 @@
          android:layout_centerVertical="true"
          android:layout_centerHorizontal="true"
          android:src="@drawable/biglogo"
-
-
+         android:id="@+id/bigLogo"
          />
     <TextView
+        android:id="@+id/app_name"
         android:text="@string/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="110dp"
+        android:layout_below="@id/bigLogo"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:textSize="18sp"
         />
 
     <TextView
+        android:layout_below="@+id/app_name"
         android:text="@string/app_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="160dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
         />
 
 </RelativeLayout>

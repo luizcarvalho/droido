@@ -1,6 +1,7 @@
 package br.com.redrails.torpedos;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -46,7 +48,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     //Dynamic Load
     private ArrayList<Mensagem> mArrayList = new ArrayList<Mensagem>();//Array de Objetos Mensagem para o adapter
     private ListView lista; //Lista de Mensagens
-    private boolean isloading = false;//Verifica se a lista está no modo LOAD
+    private boolean notificado = false;//Verifica se a lista está no modo LOAD
     private MessageAdapter adapter;//Adapter que carrega as mensagens para a ListView
     //private MessageLoadTask task; //Controle de exibição das mensagens em thread
     private TextView footer; //Adicionar o "carregando" no final da ListView
@@ -340,6 +342,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             }
         }
 
+
     }
 
     @Override
@@ -429,13 +432,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         }
     }
 
-
-
     public void loadMensagens(){
         int MAX_ITEMS_PER_PAGE = 20;
         if(mensagemDao.getQuantidadeTotal() > quantidade_carregada){
             //SystemClock.sleep(1000);
-            isloading = true;
+
             List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
 
             TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
@@ -471,7 +472,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     protected void finalizeLoad(){
         adapter.notifyDataSetChanged();
         //Log.i("DROIDO", "Notificado!!!");
-        isloading = false;
+
         //Se carregou todos os itens
         if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){
             lista.setOnScrollListener(null);//Para a escuta do scroll

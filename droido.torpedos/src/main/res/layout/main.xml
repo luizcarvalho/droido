@@ -9,10 +9,7 @@
     xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
 
     >
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        />
+
 
 
 
@@ -22,11 +19,9 @@
         android:layout_height="fill_parent"
         tools:context=".MainActivity"
         android:divider="@null"
-
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="50dp"
-
+        android:layout_above="@+id/adView"
         />
+
 
 
         <com.google.ads.AdView android:id="@+id/adView"
@@ -36,9 +31,20 @@
             ads:adSize="BANNER"
             ads:testDevices="TEST_EMULATOR"
             ads:loadAdOnCreate="true"
+
             android:layout_alignParentBottom="true"
             />
 
+    <TextView
+        android:id="@+id/notificacao"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/white"
+        android:visibility="invisible"/>
 
 
 

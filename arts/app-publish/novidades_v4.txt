@@ -1,0 +1,20 @@
+VERSÃO 4.0.20 (10-2013)
+
+Completamente Grátis e Offline, Droido Mensagens SMS Prontas é o Melhor Aplicativo com Modelos de Torpedos prontos e trás pra você uma coleção de menssagens SMS selecionadas divididas em categorias, sendo assim você não vai mais gastar seu tempo procurando uma mensagem no meio de tantas sem graça.
+
+Para facilitar e agilizar ainda mais a busca de mensagens e que realmente interessão a você, o aplicativo ainda oferece várias formas de ordenação de mensagens como Ordenar por melhores avaliadas pela comunidade, por mensagens mais novas, suas mensagens favoritas, mensagens que ainda não foram enviadas e ainda mensagens que você já enviou. 
+
+Ainda não está satisfeito? pois bem oferecemos ainda a  você um busca avançada para que você ache qualquer mensagens que esteja em nosso aplicativo rapidinho. Bom né? mas espera ai ainda tem mais...
+
+Esta nova versão, além de muitas outras mensagens, traz uma nova interface projetada especialmente para proporcionar uma boa leitura e acesso fácil a todas as funcionalidades disponibilizadas pelo Droido, como compartilhar, marcar como favorita, copiar mensagem.
+
+Melhorias da nova versão:
+► Aplicativo foi reescrito do inicio;
+► Correção ortográfica das mensagens;
+► Criação de nova interface baseada nos padrões Google de Qualidade;
+► Agora mensagens enviadas são marcadas, tipo Whatsapp.
+► Possibilidade de ordenar mensagens: por mais novas, favoritas, enviadas, não enviadas e mais votadas pela comunidade Droido;
+► Possibilidade de favoritar e marcar/desmarcar como lida com um toque;
+► Menu individual em cada mensagem para opções avançadas;
+► Toque na mensagem continua sendo atalho para compartilha-la;
+► Adicionado Autoria para as Mensagens

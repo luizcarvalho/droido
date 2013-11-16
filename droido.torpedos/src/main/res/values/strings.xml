@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Droido - Torpedos</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Droido - Mensagens SMS prontas</string>
+    <string name="version_name">4.0</string>
+    <string name="version_code">20</string>
     <string name="footer_loading">Carregando...</string>
-    <string name="message_author">Leonardo H.</string>
     <string name="row_options">Opções</string>
     <!-- ACTION BAR -->
     <string name="action_search">Buscar</string>
@@ -43,11 +43,20 @@
     <string name="success_clipboarded">Sua mensagem foi copiada para área de transferêcia caso queira cola-la em algum lugar :)</string>
     <string name="mensagem_btn_fav">Favoritar</string>
     <string name="novidades_titulo">O que há de novo?</string>
-    <string name="novidades">Novidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)\nNovidades desta versão :)</string>
+    <string name="novidades"> ► Aplicativo foi reescrito do inicio;\n
+► Correção ortográfica das mensagens;\n
+► Criação de nova interface baseada nos padrões Google de Qualidade;\n
+► Agora mensagens enviadas são marcadas, tipo Whatsapp.\n
+► Possibilidade de ordenar mensagens: por mais novas, favoritas, enviadas, não enviadas e mais votadas pela comunidade Droido;\n
+► Possibilidade de favoritar e marcar/desmarcar como lida com um toque;\n
+► Menu individual em cada mensagem para opções avançadas;\n
+► Toque na mensagem continua sendo atalho para compartilha-la;\n
+► Adicionado Autoria para as Mensagens</string>
     <string name="novidade_dismiss">Legal!</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="action_settings">Settings</string>
     <string name="app_version">Versão: 2.0.14</string>
+    <string name="message_author">Luiz Carvalho</string>
 
 
 </resources>
