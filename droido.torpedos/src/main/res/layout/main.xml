@@ -6,9 +6,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity"
     android:id="@+id/mainLayout"
-    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
-
-    >
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads">
 
 
 
@@ -29,9 +27,7 @@
             android:layout_height="wrap_content"
             ads:adUnitId="ca-app-pub-6662263716470706/5987486187"
             ads:adSize="BANNER"
-            ads:testDevices="TEST_EMULATOR"
             ads:loadAdOnCreate="true"
-
             android:layout_alignParentBottom="true"
             />
 

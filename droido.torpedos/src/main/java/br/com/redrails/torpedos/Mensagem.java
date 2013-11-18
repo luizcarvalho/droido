@@ -13,13 +13,13 @@ public class Mensagem {
 
     }
 
-    public Mensagem(int id, String texto, boolean favoritada, boolean enviada, String autor) {
+    public Mensagem(int id, String texto, boolean favoritada, boolean enviada, String autor, String slug) {
         super();
         this.id = id;
         this.texto = texto;
         this.favoritada = favoritada;
         this.enviada = enviada;
-        this.slug = "slug"+id;
+        this.slug = slug;
         this.autor = autor;
     }
 
@@ -31,6 +31,14 @@ public class Mensagem {
 
     public void setTexto(String texto) {
         this.texto = texto;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String texto) {
+        this.slug = slug;
     }
 
     public Boolean getFavoritada() {

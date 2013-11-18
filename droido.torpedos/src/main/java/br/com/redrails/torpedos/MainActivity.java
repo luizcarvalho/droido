@@ -22,7 +22,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -71,7 +70,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mActionBar.setDisplayShowTitleEnabled(false);//Desativa o Título
         mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
-        
+
         CategoriaDAO categoriaDao = CategoriaDAO.getInstance(this);
         List<Categoria> categorias = categoriaDao.recuperarTodas();
         dropdownAdapter = new ArrayAdapter<Categoria>(this,

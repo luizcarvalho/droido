@@ -90,17 +90,15 @@ def categorizar_mensagens()
 end
 
 def tmp_text(num)
-	Mensagem.delete_all()
-	20.times do |i|
-		m = Mensagem.create(:texto=>"texto #{num}",:categoria_id=>1, :avaliacao=>3, :enviada=>"true", :favoritada=>"true", :data=>1, :autor=>"LC")
-		m.slug = "#{m.id}.droido"
-		m.save()
-	end
+    ms = Mensagem.delete_all()
+    ms.each do |m|
+        MensagemCategoria.create(:categoria_id=>m.categoria_id, :mensagem_id=>m.id)
+    end 
 	
 end
 
 
 
 
-tmp_text("bem louco")
+set_autor()
 

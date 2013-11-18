@@ -21,7 +21,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
  
     private static String DB_NAME = "database.sqlite";
     
-    private static int DB_VERSION=20;//change to version of code
+    private static int DB_VERSION=29;//change to version of code
  
     private SQLiteDatabase myDataBase;
 
@@ -50,6 +50,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         }
 
         return instance;
+    }
+
+    public static int getDbVersion(){
+        return DB_VERSION;
     }
  
   /**
@@ -167,7 +171,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         	try {
         		Log.w("Droido","OnUpgrading...");
         		Log.w("Droido","Deleting Database result => "+myContext.deleteDatabase(DB_NAME));
-    			copyDataBase(); 
+    			copyDataBase();
+
     		} catch (IOException e) { 
         		throw new Error("Error copying database"); 
         	}

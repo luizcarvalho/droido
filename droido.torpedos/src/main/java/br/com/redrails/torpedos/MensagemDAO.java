@@ -22,9 +22,11 @@ public class MensagemDAO {
     public static final String NOME_TABELA = "mensagens";
     public static final String COLUNA_ID = "_id";
     public static final String COLUNA_TEXTO = "texto";
+    public static final String COLUNA_SLUG = "slug";
     public static final String COLUNA_FAVORITADA = "favoritada";
     public static final String COLUNA_ENVIADA = "enviada";
     public static final String COLUNA_AUTOR = "autor";
+    public static final String COLUNA_AVALIACAO = "avaliacao";
 
     public static final int ORDEM_AVALIACAO = 1;
     public static final int ORDEM_FAVORITOS = 2;
@@ -51,7 +53,24 @@ public class MensagemDAO {
         return instance;
     }
 
+
     private MensagemDAO(Context context) {
+        DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
+        filtro = new Filtro();
+        dataBase = persistenceHelper.getWritableDatabase();
+    }
+
+
+
+
+    public static MensagemDAO getInstance(Context context, int type) {
+        if(instance == null)
+            instance = new MensagemDAO(context, type);
+        return instance;
+    }
+
+
+    private MensagemDAO(Context context, int type) {
         DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
         filtro = new Filtro();
         dataBase = persistenceHelper.getWritableDatabase();
@@ -60,6 +79,7 @@ public class MensagemDAO {
     public void salvar(Mensagem mensagem) {
         ContentValues values = gerarContentValeuesMenssagem(mensagem);
         dataBase.insert(NOME_TABELA, null, values);
+
     }
 
     public Mensagem getMensagem(int id){
@@ -75,7 +95,7 @@ public class MensagemDAO {
         return null;
     }
 
-    public List<Mensagem> recuperarTodos() {
+    public List<Mensagem> recuperarTodas() {
         String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
         Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
 
@@ -84,10 +104,10 @@ public class MensagemDAO {
 
     private String parametrize(int tipo, Integer pagina){
         String retorno = " * ";
+        String paginacao = paginate(pagina);
         if(tipo==TIPO_BUSCA_COUNT){
             retorno = " COUNT(*) ";
         }
-        String paginacao = paginate(pagina);
 
         String query = "SELECT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula()+paginacao;
         Log.w("Droido","Executando SQL: "+query);
@@ -99,6 +119,7 @@ public class MensagemDAO {
         Cursor cursor = dataBase.rawQuery(parametrize(TIPO_BUSCA_SELECT,pagina), null);
         return converterCursorEmMensagens(cursor);
     }
+
 
     public void deletar(Mensagem mensagem) {
         String[] valoresParaSubstituir = {
@@ -148,14 +169,16 @@ public class MensagemDAO {
                     int indexFavoritada = cursor.getColumnIndex(COLUNA_FAVORITADA);
                     int indexEnviada = cursor.getColumnIndex(COLUNA_ENVIADA);
                     int indexAutor = cursor.getColumnIndex(COLUNA_AUTOR);
+                    int indexSlug = cursor.getColumnIndex(COLUNA_SLUG);
 
                     int id = cursor.getInt(indexID);
                     String texto = cursor.getString(indexTexto);
-                    boolean favoritada = cursor.getString(indexFavoritada).contentEquals("true");
+                    boolean favoritada = cursor.getInt(indexFavoritada)==1;
 
-                    boolean enviada = cursor.getString(indexEnviada).contentEquals("true");
+                    boolean enviada = cursor.getInt(indexEnviada)==1;
                     String autor = cursor.getString(indexAutor);
-                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor);
+                    String slug = cursor.getString(indexSlug);
+                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor, slug);
 
                     mensagens.add(mensagem);
 
@@ -195,11 +218,33 @@ public class MensagemDAO {
 
     }
 
+    public void createOrUpdate(Mensagem mensagem, String categorias){
+        String  query = "INSERT OR REPLACE INTO "+NOME_TABELA+
+                " ("+COLUNA_TEXTO+","+COLUNA_SLUG+", "+COLUNA_AUTOR+") \n" +
+                "  VALUES ( \"" +
+                mensagem.getTexto()+"\", \""+
+                mensagem.getSlug()+"\", \""+
+                mensagem.getAutor()+
+                "\"          ) ;";
+        String  query2 = "INSERT INTO "+NOME_TABELA+
+                " ("+COLUNA_TEXTO+","+COLUNA_SLUG+", "+COLUNA_AUTOR+") \n" +
+                "  VALUES ( \"" +
+                mensagem.getTexto()+"\", \""+
+                mensagem.getSlug()+"\", \""+
+                mensagem.getAutor()+
+                "\"          ) ;";
+
+        Log.w("Droido",query2);
+        dataBase.execSQL(query2);
+
+    }
+
 
 
     public Filtro getFiltro(){
         return instance.filtro;
     }
+
 
     public class Filtro{
         private String busca;
