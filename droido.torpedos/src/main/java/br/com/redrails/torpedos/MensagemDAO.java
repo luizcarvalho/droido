@@ -27,6 +27,7 @@ public class MensagemDAO {
     public static final String COLUNA_ENVIADA = "enviada";
     public static final String COLUNA_AUTOR = "autor";
     public static final String COLUNA_AVALIACAO = "avaliacao";
+    public static final String COLUNA_DATA = "data";
 
     public static final int ORDEM_AVALIACAO = 1;
     public static final int ORDEM_FAVORITOS = 2;
@@ -38,13 +39,27 @@ public class MensagemDAO {
     public static long QUANTIDADE_TOTAL=0;
     public static int QUANTIDADE_POR_PAGINA=20;
 
+    public static String SQL_CREATION = "CREATE TABLE \""+NOME_TABELA+"\" (\n" +
+            "  \""+COLUNA_ID+"\" INTEGER PRIMARY KEY ,\n" +
+            "  \""+COLUNA_TEXTO+"\" TEXT,\n" +
+            "  \""+COLUNA_SLUG+"\" TEXT(16),\n" +
+            "  \""+COLUNA_AVALIACAO+"\" REAL DEFAULT (2.5) ,\n" +
+            "  \""+COLUNA_ENVIADA+"\" TEXT(5) DEFAULT ('false') ,\n" +
+            "  \""+COLUNA_FAVORITADA+"\" TEXT(5) DEFAULT ('false') ,\n" +
+            "  \""+COLUNA_DATA+"\" INTEGER DEFAULT (0) ,\n" +
+            "  \""+COLUNA_AUTOR+"\" TEXT(64) DEFAULT ('Luiz Carvalho') \n" +
+            ");\n"+
+            "CREATE UNIQUE INDEX idx_slug ON "+NOME_TABELA+"("+COLUNA_SLUG+");";
+
+    public Filtro filtro;
+
     private int TIPO_BUSCA_SELECT = 1;
     private int TIPO_BUSCA_COUNT = 2;
 
     private SQLiteDatabase dataBase = null;
 
     private static MensagemDAO instance;
-    public Filtro filtro;
+
 
 
     public static MensagemDAO getInstance(Context context) {
@@ -173,9 +188,9 @@ public class MensagemDAO {
 
                     int id = cursor.getInt(indexID);
                     String texto = cursor.getString(indexTexto);
-                    boolean favoritada = cursor.getInt(indexFavoritada)==1;
+                    boolean favoritada = cursor.getString(indexFavoritada).equalsIgnoreCase("true");
 
-                    boolean enviada = cursor.getInt(indexEnviada)==1;
+                    boolean enviada = cursor.getString(indexEnviada).equalsIgnoreCase("true");
                     String autor = cursor.getString(indexAutor);
                     String slug = cursor.getString(indexSlug);
                     Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor, slug);
@@ -220,8 +235,9 @@ public class MensagemDAO {
 
     public void createOrUpdate(Mensagem mensagem, String categorias){
         String  query = "INSERT OR REPLACE INTO "+NOME_TABELA+
-                " ("+COLUNA_TEXTO+","+COLUNA_SLUG+", "+COLUNA_AUTOR+") \n" +
-                "  VALUES ( \"" +
+                " ("+COLUNA_ID+","+COLUNA_TEXTO+","+COLUNA_SLUG+", "+COLUNA_AUTOR+") \n" +
+                "  VALUES ( " +
+                "(SELECT "+COLUNA_ID+" FROM "+NOME_TABELA+" WHERE "+COLUNA_SLUG+"=\""+mensagem.getSlug()+"\") , \""+
                 mensagem.getTexto()+"\", \""+
                 mensagem.getSlug()+"\", \""+
                 mensagem.getAutor()+
@@ -234,8 +250,8 @@ public class MensagemDAO {
                 mensagem.getAutor()+
                 "\"          ) ;";
 
-        Log.w("Droido",query2);
-        dataBase.execSQL(query2);
+        Log.w("Droido",query);
+        dataBase.execSQL(query);
 
     }
 

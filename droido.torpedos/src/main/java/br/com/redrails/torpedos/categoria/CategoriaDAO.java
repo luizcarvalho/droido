@@ -25,6 +25,15 @@ public class CategoriaDAO {
     public static final String COLUNA_NOME = "nome";
     public static final String COLUNA_SLUG = "slug";
 
+
+    public static String SQL_CREATION = "CREATE TABLE "+NOME_TABELA+" (\n" +
+            "  "+COLUNA_ID+" INTEGER PRIMARY KEY,\n" +
+            "  "+COLUNA_NOME+" TEXT(32),\n" +
+            "  "+COLUNA_SLUG+" TEXT(16)\n" +
+            ");";
+
+
+
     private int BUSCA_COUNT = 1;
     private int BUSCA_SELECT = 2;
 

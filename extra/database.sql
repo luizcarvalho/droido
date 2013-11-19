@@ -1,4 +1,4 @@
-CREATE TABLE `android_metadata` (`locale` text DEFAULT 'en_US');
+CREATE TABLE `android_metadata` (`locale` text DEFAULT 'pt_BR');
 CREATE TABLE categorias (
   _id INTEGER PRIMARY KEY,
   nome TEXT(32),
@@ -7,7 +7,7 @@ CREATE TABLE categorias (
 CREATE TABLE log (
   _id INTEGER PRIMARY KEY,
   tipo INTEGER,
-  mensagem_slug INTEGER,
+  mensagem_slug TEXT(16),
   mensagem TEXT,
   user TEXT(64)
 );
@@ -16,4 +16,14 @@ CREATE TABLE mensagem_categorias (
   mensagem_id INTEGER,
   categoria_id INTEGER
 );
-CREATE TABLE "mensagens" ("_id" INTEGER PRIMARY KEY ,"texto" TEXT,"slug" TEXT(16),"avaliacao" INTEGER DEFAULT (2) ,"enviada" INTEGER DEFAULT (0) ,"favoritada" INTEGER DEFAULT (0) ,"data" INTEGER DEFAULT (0) ,"autor" TEXT(64) DEFAULT ('Luiz Carvalho') );
+
+CREATE TABLE "mensagens" (
+  "_id" INTEGER PRIMARY KEY ,
+  "texto" TEXT,
+  "slug" TEXT(16),
+  "avaliacao" REAL DEFAULT (2.5) ,
+  "enviada" INTEGER DEFAULT (0) ,
+  "favoritada" INTEGER DEFAULT (0) ,
+  "data" INTEGER DEFAULT (0) ,
+  "autor" TEXT(64) DEFAULT ('Luiz Carvalho') 
+);
