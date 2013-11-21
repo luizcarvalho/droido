@@ -120,7 +120,8 @@ public class LoadScreenActivity extends Activity
                         if(dbVersion>=20){
 
                             mensagemDao = MensagemDAO.getInstance(LoadScreenActivity.this);
-                            loadResorces();
+
+                            //loadResorces();
 
 
                             SharedPreferences.Editor ed = prefs.edit();
@@ -140,8 +141,6 @@ public class LoadScreenActivity extends Activity
             }
             catch (InterruptedException e)
             {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;

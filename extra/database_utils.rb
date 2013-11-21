@@ -6,7 +6,7 @@ require 'active_record'
 
 ActiveRecord::Base.establish_connection(
     :adapter => "sqlite3",
-    :database  => "../droido.torpedos/src/main/assets/database.sqlite"
+    :database  => "../droido.torpedos/src/main/assets/database_temp.sqlite"
     #:database  => "database.sqlite"
 )
 =begin
@@ -110,7 +110,7 @@ def tmp_text(num)
         if(i>8)
             send = 'true'
         end
-        texto = "texto #{num} #{fav}"
+        texto = "TEMPORARYYY #{num} #{fav}"
 		m = Mensagem.create(:texto=>texto, :avaliacao=>3, :enviada=>fav, :favoritada=>send, :data=>1, :autor=>"Luiz")
 		m.slug = "#{m.id}.droido"
         m.categorias = [categorias[c]]
