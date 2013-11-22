@@ -17,9 +17,10 @@ public class DataBaseUpgrade {
     public static void importUserData(String path, String tempDbName, String newDbName){
         String pathNewdb = path+newDbName;
         String pathtempDb = path+tempDbName;
-        SQLiteDatabase newDatabase =  SQLiteDatabase.openDatabase(pathNewdb, null, SQLiteDatabase.OPEN_READONLY);
+        SQLiteDatabase newDatabase =  SQLiteDatabase.openDatabase(pathNewdb, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         SQLiteDatabase tempDatabase =  SQLiteDatabase.openDatabase(pathtempDb, null, SQLiteDatabase.OPEN_READONLY);
-        importFavsESends(tempDatabase, newDatabase);
+        //importFavsESends(tempDatabase, newDatabase);
+        //testData(newDatabase, pathtempDb);
     }
 
     private static void importFavsESends(SQLiteDatabase tempDatabase, SQLiteDatabase newDatabase){
@@ -47,9 +48,19 @@ public class DataBaseUpgrade {
         }
     }
 
-    private static void testData(SQLiteDatabase database){
-        String str = "SELECT texto FROM database_temp.sqlite";
-        database.rawQuery();
+    private static void testData(SQLiteDatabase database, String tempPathDb){
+
+        String attach = "Attach 'database_temp.sqlite' as temp_db";
+        Log.w("Droido", "ATAACCHIINNGGG");
+        database.execSQL("attach database ? as temp_db", new String[]{tempPathDb});
+        database.beginTransaction();
+        String str = "SELECT texto FROM temp_db.mensagens";
+        Cursor c = database.rawQuery(str, null);
+        c.moveToFirst();
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        database.close();
+
     }
 
 

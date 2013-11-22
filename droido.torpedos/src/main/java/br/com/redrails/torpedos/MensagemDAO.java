@@ -421,5 +421,20 @@ public class MensagemDAO {
 
     }
 
+    public void testData(){
+
+        String attach = "Attach 'database_temp.sqlite' as temp_db";
+        Log.w("Droido", "ATAACCHIINNGGG");
+        dataBase.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+"database_temp.sqlite"});
+        //dataBase.beginTransaction();
+        String str = "SELECT texto FROM temp_db.mensagens";
+        Cursor c = dataBase.rawQuery(str, null);
+        c.moveToFirst();
+        //dataBase.setTransactionSuccessful();
+        //dataBase.endTransaction();
+        //dataBase.close();
+
+    }
+
 }
 

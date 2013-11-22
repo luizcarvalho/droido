@@ -118,17 +118,21 @@ public class LoadScreenActivity extends Activity
                     int dbVersion = DataBaseHelper.getDbVersion();
                     if(oldVersion<dbVersion){
                         if(dbVersion>=20){
+                            SharedPreferences.Editor ed = prefs.edit();
+                            ed.putInt("currentVersion", dbVersion);
+                            ed.commit();
 
                             mensagemDao = MensagemDAO.getInstance(LoadScreenActivity.this);
+                            mensagemDao.testData();
+
 
                             //loadResorces();
 
 
-                            SharedPreferences.Editor ed = prefs.edit();
-                            ed.putInt("currentVersion", dbVersion);
-                            ed.commit();
+
                         }
                     }
+
 
                         //Wait 850 milliseconds
                         this.wait(1);

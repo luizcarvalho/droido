@@ -20,12 +20,12 @@ import br.com.redrails.torpedos.util.DataBaseUpgrade;
 public class DataBaseHelper extends SQLiteOpenHelper{
 
     //The Android's default system path of your application database.
-    private static String DB_PATH = "/data/data/br.com.redrails.torpedos/databases/";
+    public static String DB_PATH = "/data/data/br.com.redrails.torpedos/databases/";
 
     private static String DB_NAME = "database.sqlite";
     private static String TEMP_DB_NAME = "database_temp.sqlite";
 
-    private static int DB_VERSION=22;//change to version of code
+    private static int DB_VERSION=43;//change to version of code
 
     private SQLiteDatabase myDataBase;
     private SQLiteDatabase tempDatabase;
@@ -197,7 +197,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 Log.w("Droido","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
                 renameDatabase();
                 copyDataBase();
-                DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
+                //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
 
             } catch (IOException e) {
                 throw new Error("Error copying database");
