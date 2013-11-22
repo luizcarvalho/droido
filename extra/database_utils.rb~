@@ -6,8 +6,8 @@ require 'active_record'
 
 ActiveRecord::Base.establish_connection(
     :adapter => "sqlite3",
-    #:database  => "../droido.torpedos/src/main/assets/database.sqlite"
-    :database  => "database.sqlite"
+    :database  => "../droido.torpedos/src/main/assets/database_temp.sqlite"
+    #:database  => "database.sqlite"
 )
 =begin
 ActiveRecord::Schema.define do
@@ -54,6 +54,13 @@ class MensagemCategoria < ActiveRecord::Base
 end
 
 
+def create_categorias()
+    categorias = ["engraçadas", "piadas", "minhas"]
+    categorias.each do |categoria_nome|
+        Categoria.create(:nome=>categoria_nome.capitalize,:slug=>categoria_nome)
+    end
+    return Categoria.all()
+end
 
 
 
@@ -90,15 +97,36 @@ def categorizar_mensagens()
 end
 
 def tmp_text(num)
-    ms = Mensagem.delete_all()
-    ms.each do |m|
-        MensagemCategoria.create(:categoria_id=>m.categoria_id, :mensagem_id=>m.id)
-    end 
+	Mensagem.delete_all()
+    categorias = create_categorias()
+    c = 0
+
+	10.times do |i|
+        fav = send = 'false'
+        if(i>6)
+            fav = 'true'
+        end
+
+        if(i>7)
+            send = 'true'
+        end
+
+        texto = "GATE Way #{num} #{fav}"
+		m = Mensagem.create(:texto=>texto, :avaliacao=>3, :enviada=>send, :favoritada=>fav, :data=>1, :autor=>"Luiz")
+		m.slug = "#{m.id}.droido"
+        m.categorias = [categorias[c]]
+		m.save()
+        puts "Criado #{texto}"
+        c+=1
+        c = 0 if c>=3
+	end
+
+
 	
 end
 
 
 
 
-set_autor()
+tmp_text("bem louco")
 

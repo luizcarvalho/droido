@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import br.com.redrails.torpedos.util.DataBaseUpgrade;
+
 public class LoadScreenActivity extends Activity
 {
     //A ProgressDialog object
@@ -111,23 +113,31 @@ public class LoadScreenActivity extends Activity
                     SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
                     int oldVersion = prefs.getInt("currentVersion", 0);
 
-
+                    DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
+                    dataUpgrade.importData();
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
                     int dbVersion = DataBaseHelper.getDbVersion();
+                    Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
                     if(oldVersion<dbVersion){
                         if(dbVersion>=20){
 
-                            mensagemDao = MensagemDAO.getInstance(LoadScreenActivity.this);
-                            loadResorces();
+
+                            //mensagemDao = MensagemDAO.getInstance(LoadScreenActivity.this);
 
 
-                            SharedPreferences.Editor ed = prefs.edit();
-                            ed.putInt("currentVersion", dbVersion);
-                            ed.commit();
+
+                            //loadResorces();
+
+
+
                         }
                     }
+                    SharedPreferences.Editor ed = prefs.edit();
+                    ed.putInt("currentVersion", dbVersion);
+                    ed.commit();
+
 
                         //Wait 850 milliseconds
                         this.wait(1);
@@ -140,8 +150,6 @@ public class LoadScreenActivity extends Activity
             }
             catch (InterruptedException e)
             {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
