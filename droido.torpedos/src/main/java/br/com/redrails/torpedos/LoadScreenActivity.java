@@ -114,29 +114,21 @@ public class LoadScreenActivity extends Activity
                     int oldVersion = prefs.getInt("currentVersion", 0);
 
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
-                    dataUpgrade.importData();
+
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
                     int dbVersion = DataBaseHelper.getDbVersion();
                     Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
                     if(oldVersion<dbVersion){
-                        if(dbVersion>=20){
-
-
-                            //mensagemDao = MensagemDAO.getInstance(LoadScreenActivity.this);
-
-
-
-                            //loadResorces();
-
-
-
+                        if(oldVersion>=20){
+                            dataUpgrade.importData();
                         }
                     }
                     SharedPreferences.Editor ed = prefs.edit();
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
+                    dataUpgrade.deleteTempDb();
 
 
                         //Wait 850 milliseconds

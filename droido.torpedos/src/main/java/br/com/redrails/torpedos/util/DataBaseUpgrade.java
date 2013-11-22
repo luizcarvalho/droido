@@ -56,14 +56,16 @@ public class DataBaseUpgrade {
     }
 
     public void importData(){
-
         Log.w("Droido", "ATAACCHIINNGGG");
-        database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
-
-        importFavsESends();
-        Log.w("Droido", "Deleting temp DB: "+myContext.deleteDatabase(DataBaseHelper.TEMP_DB_NAME));
-
+        //database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
+        //importFavsESends();
     }
+
+    public void deleteTempDb(){
+        Log.w("Droido", "Deleting temp DB: "+myContext.deleteDatabase(DataBaseHelper.TEMP_DB_NAME));
+    }
+
+
 
 
 

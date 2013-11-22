@@ -1,6 +1,7 @@
 package br.com.redrails.torpedos;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
 
 
@@ -25,7 +27,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
 
-    private static int DB_VERSION=56;//change to version of code
+    private static int DB_VERSION=20;//change to version of code
 
     private SQLiteDatabase myDataBase;
     private SQLiteDatabase tempDatabase;
@@ -70,7 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
         if(dbExist){
             Log.w("Droido","nothing here- database already exist");
-            listDBfolder();
+            //listDBfolder();
             this.getReadableDatabase();
         }else{
 
@@ -143,23 +145,31 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         myInput.close();
     }
 
-    private boolean renameDatabase() {
-        Log.w("Droido","Renomeando banco de dados  "+DB_NAME+" => "+TEMP_DB_NAME);
-        // File (or directory) with old name
-        File file = new File(DB_PATH+DB_NAME);
+    private void createTempFile() throws IOException{
+        Log.w("Droido","OMG the database ("+DB_NAME+") backuping... YEP!!");
+        //Open your local db as the input stream
+        File inFileName = new File(DB_PATH+DB_NAME);
+        InputStream myInput = new FileInputStream(inFileName);
 
-        // File (or directory) with new name
-        File file2 = new File(DB_PATH+TEMP_DB_NAME);
-        // Rename file (or directory)
-        boolean success = file.renameTo(file2);
-        if (success) {
-            Log.w("Droido","SUCESSOooooooOOO!!");
-            return true;
-        }else{
-            Log.e("Droido","Não foi possível renomear!!");
-            return false;
+        // Path to the just created empty db
+        String outFileName = DB_PATH + TEMP_DB_NAME;
+
+        //Open the empty db as the output stream
+        OutputStream myOutput = new FileOutputStream(outFileName);
+
+        //transfer bytes from the inputfile to the outputfile
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = myInput.read(buffer))>0){
+            myOutput.write(buffer, 0, length);
         }
+
+        //Close the streams
+        myOutput.flush();
+        myOutput.close();
+        myInput.close();
     }
+
 
     public SQLiteDatabase getNewDataBase() throws SQLException{
         String myPath = DB_PATH + DB_NAME;
@@ -198,11 +208,11 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             try {
                 Log.w("Droido","OnUpgrading...");
                 Log.w("Droido","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
-                listDBfolder();
-                renameDatabase();
-                listDBfolder();
+                //listDBfolder();
+                createTempFile();
+                //listDBfolder();
                 copyDataBase();
-                listDBfolder();
+                //listDBfolder();
                 //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
 
             } catch (IOException e) {
