@@ -72,10 +72,12 @@ CREATE TABLE mensagens_temp (
 INSERT INTO mensagens_temp ( texto,favoritada,enviada )
 SELECT texto,favoritada,enviada FROM mensagens  LEFT JOIN mensagem_categorias ON mensagem_categorias.mensagem_id = mensagens._id   WHERE favoritada='true' OR enviada='true' OR mensagem_categorias.categoria_id =3
 
+-- restaurarBackup()
 -- copiarDados()
 
--- restaurarBackup()
-
--- deletarTabelaTemporaria()
+-- deletar XML
+-- deletar old Table
+-- deletarTabelasTemporarias()
+-- endTransaction
 
 
