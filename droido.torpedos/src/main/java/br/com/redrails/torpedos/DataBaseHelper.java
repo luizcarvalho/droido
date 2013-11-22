@@ -25,7 +25,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
 
-    private static int DB_VERSION=51;//change to version of code
+    private static int DB_VERSION=56;//change to version of code
 
     private SQLiteDatabase myDataBase;
     private SQLiteDatabase tempDatabase;
@@ -70,6 +70,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
         if(dbExist){
             Log.w("Droido","nothing here- database already exist");
+            listDBfolder();
             this.getReadableDatabase();
         }else{
 
@@ -197,14 +198,38 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             try {
                 Log.w("Droido","OnUpgrading...");
                 Log.w("Droido","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
+                listDBfolder();
                 renameDatabase();
+                listDBfolder();
                 copyDataBase();
+                listDBfolder();
                 //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
 
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }
         }
+    }
+
+    private void listDBfolder(){
+        // Directory path here
+
+        String files;
+        File folder = new File(DB_PATH);
+        File[] listOfFiles = folder.listFiles();
+        Log.w("Droido","------- Listing Database Path -------");
+
+
+        for (int i = 0; i < listOfFiles.length; i++)
+        {
+
+            if (listOfFiles[i].isFile())
+            {
+                files = listOfFiles[i].getName();
+                Log.w("Droido",files);
+            }
+        }
+        Log.w("Droido","------------------------");
     }
 
     // Add your public helper methods to access and get content from the database.
