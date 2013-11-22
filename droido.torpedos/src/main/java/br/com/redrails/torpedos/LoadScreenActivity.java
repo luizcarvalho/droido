@@ -129,15 +129,8 @@ public class LoadScreenActivity extends Activity
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
                     dataUpgrade.deleteTempDb();
-
-
-                        //Wait 850 milliseconds
-                        this.wait(1);
-                        //Increment the counter
-                        //Set the current progress.
-                        //This value is going to be passed to the onProgressUpdate() method.
-                        publishProgress(1);
-
+                    this.wait(1);
+                    publishProgress(1);
                 }
             }
             catch (InterruptedException e)

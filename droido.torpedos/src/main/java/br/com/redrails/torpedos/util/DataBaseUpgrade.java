@@ -39,12 +39,14 @@ public class DataBaseUpgrade {
             int indexEnviada = cursor.getColumnIndex(MensagemDAO.COLUNA_ENVIADA);
             int indexSlug = cursor.getColumnIndex(MensagemDAO.COLUNA_SLUG);
 
-            String favoritada = cursor.getString(indexFavoritada);
-            String enviada = cursor.getString(indexEnviada);
-            String slug = cursor.getString(indexSlug);
             String updateSql;
 
             do {
+
+                String favoritada = cursor.getString(indexFavoritada);
+                String enviada = cursor.getString(indexEnviada);
+                String slug = cursor.getString(indexSlug);
+
                 updateSql = "UPDATE main."+MensagemDAO.NOME_TABELA+" SET "+
                         MensagemDAO.COLUNA_FAVORITADA+"='"+favoritada+"', "+
                         MensagemDAO.COLUNA_ENVIADA+"='"+enviada+"' WHERE "+
@@ -57,8 +59,8 @@ public class DataBaseUpgrade {
 
     public void importData(){
         Log.w("Droido", "ATAACCHIINNGGG");
-        //database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
-        //importFavsESends();
+        database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
+        importFavsESends();
     }
 
     public void deleteTempDb(){

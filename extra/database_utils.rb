@@ -96,7 +96,7 @@ def categorizar_mensagens()
     end 
 end
 
-def tmp_text(num)
+def tmp_text()
 	Mensagem.delete_all()
     categorias = create_categorias()
     c = 0
@@ -104,19 +104,20 @@ def tmp_text(num)
 	10.times do |i|
         fav = send = 'false'
         if(i>6)
-            fav = 'true'
+            #fav = 'true'
         end
 
         if(i>7)
-            send = 'true'
+            #send = 'true'
         end
-
-        texto = "GATE Way #{num} #{fav}"
-		m = Mensagem.create(:texto=>texto, :avaliacao=>3, :enviada=>send, :favoritada=>fav, :data=>1, :autor=>"Luiz")
-		m.slug = "#{m.id}.droido"
+        texto = "Era uma csa muito engraçada não tinha teto n tinha nada f: #{fav} s:#{send}"
+        otexto = "SO OLD f: #{fav} s:#{send}"
+		m = Mensagem.create(:avaliacao=>3, :enviada=>send, :favoritada=>fav, :data=>1, :autor=>"Luiz")
+        m.slug = "#{m.id}.droido"
+        m.texto = "#{texto} -  #{m.slug}"
         m.categorias = [categorias[c]]
 		m.save()
-        puts "Criado #{texto}"
+        puts m.texto
         c+=1
         c = 0 if c>=3
 	end
@@ -128,5 +129,5 @@ end
 
 
 
-tmp_text("bem louco")
+tmp_text()
 
