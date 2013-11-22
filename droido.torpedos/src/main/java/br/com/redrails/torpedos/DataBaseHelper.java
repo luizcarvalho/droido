@@ -23,9 +23,9 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public static String DB_PATH = "/data/data/br.com.redrails.torpedos/databases/";
 
     private static String DB_NAME = "database.sqlite";
-    private static String TEMP_DB_NAME = "database_temp.sqlite";
+    public static String TEMP_DB_NAME = "database_temp.sqlite";
 
-    private static int DB_VERSION=43;//change to version of code
+    private static int DB_VERSION=51;//change to version of code
 
     private SQLiteDatabase myDataBase;
     private SQLiteDatabase tempDatabase;
@@ -119,7 +119,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * This is done by transfering bytestream.
      * */
     private void copyDataBase() throws IOException{
-        Log.w("Droido","OMG the database is coping...");
+        Log.w("Droido","OMG the database ("+DB_NAME+") is coping...");
         //Open your local db as the input stream
         InputStream myInput = myContext.getAssets().open(DB_NAME);
 
@@ -151,11 +151,13 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         File file2 = new File(DB_PATH+TEMP_DB_NAME);
         // Rename file (or directory)
         boolean success = file.renameTo(file2);
-        if (!success) {
-            Log.w("Droido","SUCESSO!!");
+        if (success) {
+            Log.w("Droido","SUCESSOooooooOOO!!");
             return true;
-        }else
+        }else{
+            Log.e("Droido","Não foi possível renomear!!");
             return false;
+        }
     }
 
     public SQLiteDatabase getNewDataBase() throws SQLException{

@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import br.com.redrails.torpedos.util.DataBaseUpgrade;
+
 public class LoadScreenActivity extends Activity
 {
     //A ProgressDialog object
@@ -111,7 +113,8 @@ public class LoadScreenActivity extends Activity
                     SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
                     int oldVersion = prefs.getInt("currentVersion", 0);
 
-
+                    DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
+                    dataUpgrade.importData();
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
@@ -122,8 +125,8 @@ public class LoadScreenActivity extends Activity
                             ed.putInt("currentVersion", dbVersion);
                             ed.commit();
 
-                            mensagemDao = MensagemDAO.getInstance(LoadScreenActivity.this);
-                            mensagemDao.testData();
+                            //mensagemDao = MensagemDAO.getInstance(LoadScreenActivity.this);
+
 
 
                             //loadResorces();

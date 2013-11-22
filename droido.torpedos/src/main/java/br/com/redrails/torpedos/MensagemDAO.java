@@ -39,18 +39,6 @@ public class MensagemDAO {
     public static long QUANTIDADE_TOTAL=0;
     public static int QUANTIDADE_POR_PAGINA=20;
 
-    public static String SQL_CREATION = "CREATE TABLE \""+NOME_TABELA+"\" (\n" +
-            "  \""+COLUNA_ID+"\" INTEGER PRIMARY KEY ,\n" +
-            "  \""+COLUNA_TEXTO+"\" TEXT,\n" +
-            "  \""+COLUNA_SLUG+"\" TEXT(16),\n" +
-            "  \""+COLUNA_AVALIACAO+"\" REAL DEFAULT (2.5) ,\n" +
-            "  \""+COLUNA_ENVIADA+"\" TEXT(5) DEFAULT ('false') ,\n" +
-            "  \""+COLUNA_FAVORITADA+"\" TEXT(5) DEFAULT ('false') ,\n" +
-            "  \""+COLUNA_DATA+"\" INTEGER DEFAULT (0) ,\n" +
-            "  \""+COLUNA_AUTOR+"\" TEXT(64) DEFAULT ('Luiz Carvalho') \n" +
-            ");\n"+
-            "CREATE UNIQUE INDEX idx_slug ON "+NOME_TABELA+"("+COLUNA_SLUG+");";
-
     public Filtro filtro;
 
     private int TIPO_BUSCA_SELECT = 1;
