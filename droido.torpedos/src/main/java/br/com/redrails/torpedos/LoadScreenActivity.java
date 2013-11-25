@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -80,6 +81,8 @@ public class LoadScreenActivity extends Activity
                     int dbVersion = DataBaseHelper.getDbVersion();
                     Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
                     if(oldVersion<dbVersion){
+                        publishProgress(1);
+
                         if(oldVersion>=20){
                             dataUpgrade.importData();
                         }
@@ -89,7 +92,7 @@ public class LoadScreenActivity extends Activity
                     ed.commit();
                     dataUpgrade.deleteTempDb();
                     this.wait(1);
-                    publishProgress(1);
+
                 }
             }
             catch (InterruptedException e)
@@ -104,6 +107,9 @@ public class LoadScreenActivity extends Activity
         @Override
         protected void onProgressUpdate(Integer... values)
         {
+
+            TextView loadText = (TextView) findViewById(R.id.load_messages);
+            loadText.setText("Ebaa Mensagens novas!!");
             //set the current progress of the progress dialog
              //workingSprite.setImageResource(R.drawable.working2);
 

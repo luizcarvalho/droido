@@ -464,8 +464,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     Log.e("Droido","Out bound Error: "+e.getStackTrace()+"\n "+dados);
                 }
             }
-            finalizeLoad();
         }
+        finalizeLoad();
     }
 
     protected void finalizeLoad(){
@@ -474,8 +474,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         //Se carregou todos os itens
         if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){
-            lista.setOnScrollListener(null);//Para a escuta do scroll
-            lista.removeFooterView(footer);// remove o footer
+            if(adapter.getCount()==0){
+                footer.setText("Não há mensagens aqui ainda!");
+            }else{
+                lista.setOnScrollListener(null);//Para a escuta do scroll
+                lista.removeFooterView(footer);// remove o footer
+            }
         }
         else{
             if(lista.getFooterViewsCount()==0){
