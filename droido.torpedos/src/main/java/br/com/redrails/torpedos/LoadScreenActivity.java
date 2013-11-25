@@ -33,8 +33,6 @@ public class LoadScreenActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-
         //Initialize a LoadViewTask object and call the execute() method
         new LoadViewTask().execute();
 
@@ -43,45 +41,6 @@ public class LoadScreenActivity extends Activity
     //To use the AsyncTask, it must be subclassed
     private class LoadViewTask extends AsyncTask<Void, Integer, Void>
     {
-        List<Mensagem> mensagens;
-        String FILE_NAME = "mensagens.csv";
-        int TEXTO=0;
-        int SLUG = 1;
-        int CATEGORIAS=2;
-        int AVALIACAO=3;
-        int AUTOR = 5;
-
-
-    public void updateOrCreate(String[] dados){
-        Mensagem mensagem = new Mensagem(0,dados[TEXTO],false, false,dados[AUTOR], dados[SLUG]);
-        mensagemDao.createOrUpdate(mensagem, null);
-        //mensagemDao.salvar(mensagem);
-    }
-
-    public void loadResorces() throws IOException {
-
-        try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            LoadScreenActivity.this.getAssets().open(FILE_NAME), "UTF-8"));
-
-            // do reading, usually loop until end of file reading
-            String mLine = reader.readLine();
-            while (mLine != null) {
-                String[] result = mLine.split(";");
-                updateOrCreate(result);
-                mLine = reader.readLine();
-            }
-
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-
 
         //Before running code in separate thread
         @Override
@@ -114,7 +73,6 @@ public class LoadScreenActivity extends Activity
                     int oldVersion = prefs.getInt("currentVersion", 0);
 
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
-
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.

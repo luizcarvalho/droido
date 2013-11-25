@@ -23,7 +23,6 @@ public class DataBaseUpgrade {
         return instance;
     }
 
-
     private DataBaseUpgrade(Context context) {
         DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
         database = persistenceHelper.getWritableDatabase();

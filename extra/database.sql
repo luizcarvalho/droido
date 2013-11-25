@@ -22,8 +22,8 @@ CREATE TABLE "mensagens" (
   "texto" TEXT,
   "slug" TEXT(16),
   "avaliacao" REAL DEFAULT (2.5) ,
-  "enviada" INTEGER DEFAULT (0) ,
-  "favoritada" INTEGER DEFAULT (0) ,
+  "enviada" TEXT(8) DEFAULT "false" ,
+  "favoritada" TEXT(8) DEFAULT "false" ,
   "data" INTEGER DEFAULT (0) ,
   "autor" TEXT(64) DEFAULT ('Luiz Carvalho') 
 );

@@ -53,11 +53,24 @@ class MensagemCategoria < ActiveRecord::Base
     belongs_to :mensagem
 end
 
+def to_ms(time)
+        start = Time.new(1970,1,1)
+        ((time.to_f - start.to_f) * 1000.0).to_i
+end
 
 def create_categorias()
-    categorias = ["engraçadas", "piadas", "minhas"]
-    categorias.each do |categoria_nome|
-        Categoria.create(:nome=>categoria_nome.capitalize,:slug=>categoria_nome)
+    Categoria.delete_all()
+    categorias = [
+                    {:id=>1, :nome=>'Diversas',:slug=>'diversas'}, 
+                    {:id=>2, :nome=>'Engraçadas',:slug=>'engracadas'}, 
+                    {:id=>3, :nome=>'Piadas',:slug=>'piadas'}, 
+                    {:id=>4, :nome=>'Amizade',:slug=>'amizade'}, 
+                    {:id=>5, :nome=>'Amor',:slug=>'amor'}, 
+                    {:id=>6, :nome=>'Religiosas',:slug=>'religiosas'}, 
+                    {:id=>7, :nome=>'Frases',:slug=>'frases'}
+                ]
+    categorias.each do |categoria|
+        Categoria.create(:_id=>categoria[:id],:nome=>categoria[:nome],:slug=>categoria[:slug])
     end
     return Categoria.all()
 end
@@ -69,6 +82,14 @@ def setar_defaults()
     ms.each do |m|
         m.enviada = false
         m.favoritada = false
+        m.save
+    end 
+end
+
+def set_slug()
+    ms = Mensagem.all()
+    ms.each do |m|
+        m.slug = "#{m.id}.droido"
         m.save
     end 
 end
@@ -101,7 +122,7 @@ def tmp_text()
     categorias = create_categorias()
     c = 0
 
-	10.times do |i|
+	500.times do |i|
         fav = send = 'false'
         if(i>6)
             #fav = 'true'
@@ -110,7 +131,7 @@ def tmp_text()
         if(i>7)
             #send = 'true'
         end
-        texto = "Era uma csa muito engraçada não tinha teto n tinha nada f: #{fav} s:#{send}"
+        texto = "AFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA f: #{fav} s:#{send}"
         otexto = "SO OLD f: #{fav} s:#{send}"
 		m = Mensagem.create(:avaliacao=>3, :enviada=>send, :favoritada=>fav, :data=>1, :autor=>"Luiz")
         m.slug = "#{m.id}.droido"
@@ -120,14 +141,24 @@ def tmp_text()
         puts m.texto
         c+=1
         c = 0 if c>=3
-	end
-
-
-	
+	end	
 end
 
 
 
+def create_from_legacy(mlegs)    
+    mlegs.each do |ml|
+        mensagem = Mensagem.create(
+                    :texto=>ml.texto,
+                    :avaliacao=>ml.score, 
+                    :favoritada=>"false",
+                    :enviada=>"false",
+                    :data=>to_ms(DateTime.now)                
+                     )
+        mensagem.slug = "#{mensagem.id}.droid"
+        mensagem.categoria_ids = [ml.categoria_id]
+        mensagem.save!
+    end
+end
 
-tmp_text()
 
