@@ -146,8 +146,14 @@ end
 
 
 
-def create_from_legacy(mlegs)    
+def create_from_legacy(mlegs)
+    Mensagem.delete_all
+    count = 0
+    goal = 50
     mlegs.each do |ml|
+        print "."
+        count+=1
+        print count; goal+=50 if count > goal
         mensagem = Mensagem.create(
                     :texto=>ml.texto,
                     :avaliacao=>ml.score, 
@@ -159,6 +165,7 @@ def create_from_legacy(mlegs)
         mensagem.categoria_ids = [ml.categoria_id]
         mensagem.save!
     end
+    "YEAH"
 end
 
 
