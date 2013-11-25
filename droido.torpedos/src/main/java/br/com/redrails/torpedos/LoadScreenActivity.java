@@ -33,7 +33,7 @@ public class LoadScreenActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //Initialize a LoadViewTask object and call the execute() method
+        setContentView(R.layout.activity_load_screen);
         new LoadViewTask().execute();
 
     }
@@ -69,6 +69,7 @@ public class LoadScreenActivity extends Activity
                     //While the counter is smaller than four
 
 
+
                     SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
                     int oldVersion = prefs.getInt("currentVersion", 0);
 
@@ -95,6 +96,7 @@ public class LoadScreenActivity extends Activity
             {
                 e.printStackTrace();
             }
+
             return null;
         }
 
