@@ -25,6 +25,8 @@ class MensagemCategoria < ActiveRecord::Base
 end
 
 
+#================================= VERIFICAR DUPLICIDADE ========================
+
 def get_words(mensagem_texto)
     mensagem_texto.scan(/[\w-]+/)
 end
@@ -45,8 +47,6 @@ end
 def verify_similar(mensagem, mensagens, file)    
     words = get_words(mensagem.texto)
     
-      
-    
     mensagens.each do |m2|        
         words_capituradas = []
         similar_level = 0
@@ -60,17 +60,7 @@ def verify_similar(mensagem, mensagens, file)
             end
         end
         if similar_level>4 and mensagem.id != m2.id
-            #puts "---------- Similar Mensagem  Detected-----------"
-            #puts "Similar Level #{similar_level}"
-            #puts "Mensagem original #{mensagem.id}"
-            #puts mensagem.texto
-            #puts "-------"
-            #puts "Mensagem comparada #{m2.id}"
-            #puts m2.texto
-            #puts "Palavras: #{words_capituradas.join(',')}"
-            #puts "\n\n"
             result = "<tr><td>#{mensagem.id}</td> <td>#{m2.id}</td> <td> \"#{mensagem.texto}\"</td> <td> \"#{m2.texto}\"</td> <td> \"#{words_capituradas.join(',')}\" </td></tr>\n"
-            #puts result
             file.write(result)
         end
     end
@@ -90,4 +80,37 @@ def scan()
     file.puts "</table>"
 end
 
-scan()
+#================================= VERIFICAR DUPLICIDADE ========================
+
+
+
+
+
+#================================= EXPORTAR =====================================
+
+
+def export_xml()
+    mensagens = Mensagem.all()
+    puts "Mensagens totais: #{mensagens.size}"
+    total = 0
+    file = File.open("mensagens.xml", "w+")
+    
+    mensagens.each do |mensagem|
+        print "#{total+=1} / "
+        file.puts "<mensagem>"
+        file.puts "<texto>"
+        file.puts "</texto>"
+        file.puts "<slug>"
+        file.puts "</slug>"
+        file.puts "</mensagem>"
+    end
+    
+end
+
+
+
+
+
+
+#================================= EXPORTAR =====================================
+

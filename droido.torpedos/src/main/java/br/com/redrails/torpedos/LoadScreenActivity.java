@@ -81,17 +81,23 @@ public class LoadScreenActivity extends Activity
                     int dbVersion = DataBaseHelper.getDbVersion();
                     Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
                     if(oldVersion<dbVersion){
-                        publishProgress(1);
-
                         if(oldVersion>=20){
-                            dataUpgrade.importData();
+                            if(DataBaseHelper.upgrading){
+                                publishProgress(1);
+                                dataUpgrade.importData();
+                                DataBaseHelper.upgrading=false;
+                            }else{
+                                publishProgress(0);
+                                DataBaseHelper.upgrading=false;
+                                this.wait(1000);
+                            }
                         }
                     }
                     SharedPreferences.Editor ed = prefs.edit();
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
                     dataUpgrade.deleteTempDb();
-                    this.wait(1);
+
 
                 }
             }
@@ -108,8 +114,14 @@ public class LoadScreenActivity extends Activity
         protected void onProgressUpdate(Integer... values)
         {
 
-            TextView loadText = (TextView) findViewById(R.id.load_messages);
-            loadText.setText("Ebaa Mensagens novas!!");
+            if(values[0]==1){
+                TextView loadText = (TextView) findViewById(R.id.load_messages);
+                loadText.setText("Ebaa Mensagens novas!!");
+            }else{
+                TextView loadText = (TextView) findViewById(R.id.load_messages);
+                loadText.setText("=( Infelizmente não conseguimos copiar as novas mensagens para você!");
+
+            }
             //set the current progress of the progress dialog
              //workingSprite.setImageResource(R.drawable.working2);
 
