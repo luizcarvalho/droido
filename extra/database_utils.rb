@@ -118,11 +118,11 @@ def categorizar_mensagens()
 end
 
 def tmp_text()
-	Mensagem.delete_all()
-    categorias = create_categorias()
+	#Mensagem.delete_all()
+    categorias = Categoria.all()
     c = 0
 
-	500.times do |i|
+	10.times do |i|
         fav = send = 'false'
         if(i>6)
             #fav = 'true'
@@ -133,7 +133,7 @@ def tmp_text()
         end
         texto = "AFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA fAFAGA FAGA FAGA FAGA f: #{fav} s:#{send}"
         otexto = "SO OLD f: #{fav} s:#{send}"
-		m = Mensagem.create(:avaliacao=>3, :enviada=>send, :favoritada=>fav, :data=>1, :autor=>"Luiz")
+		m = Mensagem.create(:avaliacao=>5, :enviada=>send, :favoritada=>fav, :data=>1, :autor=>"Luiz")
         m.slug = "#{m.id}.droido"
         m.texto = "#{texto} -  #{m.slug}"
         m.categorias = [categorias[c]]
@@ -169,3 +169,4 @@ def create_from_legacy(mlegs)
 end
 
 
+tmp_text

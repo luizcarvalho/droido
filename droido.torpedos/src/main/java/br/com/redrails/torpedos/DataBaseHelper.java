@@ -26,8 +26,16 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
+    private static int DB_VERSION=25;//change to version of code
 
-    private static int DB_VERSION=15;//change to version of code
+
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+    }
+
+
 
     private SQLiteDatabase myDataBase;
     private SQLiteDatabase tempDatabase;
