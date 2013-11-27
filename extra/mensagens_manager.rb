@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'active_record'
+require "nokogiri"
 
 ActiveRecord::Base.establish_connection(
     :adapter => "sqlite3",
@@ -91,21 +92,44 @@ end
 
 def export_xml()
     mensagens = Mensagem.all()
-    puts "Mensagens totais: #{mensagens.size}"
-    total = 0
+    puts "Mensagens totais: #{mensagens.size}"    
     file = File.open("mensagens.xml", "w+")
-    
-    mensagens.each do |mensagem|
-        print "#{total+=1} / "
-        file.puts "<mensagem>"
+    file.puts "<mensagens>"
+    mensagens.each do |mensagem|        
+        file.puts "< mensagem>"
         file.puts "<texto>"
+        file.puts mensagem.texto
         file.puts "</texto>"
         file.puts "<slug>"
+        file.puts mensagem.slug
         file.puts "</slug>"
         file.puts "</mensagem>"
     end
+    file.puts "</mensagens>"
+    file.close
     
 end
+
+def import_xml
+    f = File.open("mensagens_corrigidas.xml")
+    doc = Nokogiri::XML(f)
+    doc.encoding = 'utf-8'
+    msgs = doc.xpath("//mensagem")    
+    msgs.each do |msg|
+        texto =  msg.at("texto").text
+        slug =  msg.at("slug").text
+        #puts texto
+        puts slug.delete!("\n")
+        mensagem = Mensagem.where(:slug=>slug).first
+        mensagem.texto = texto
+        puts "Editando #{mensagem.slug} => #{mensagem.save}"        
+    end
+    f.close
+end
+
+
+
+import_xml
 
 
 
