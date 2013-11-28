@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'active_record'
+require "nokogiri"
 
 ActiveRecord::Base.establish_connection(
     :adapter => "sqlite3",
@@ -25,6 +26,8 @@ class MensagemCategoria < ActiveRecord::Base
 end
 
 
+#================================= VERIFICAR DUPLICIDADE ========================
+
 def get_words(mensagem_texto)
     mensagem_texto.scan(/[\w-]+/)
 end
@@ -45,8 +48,6 @@ end
 def verify_similar(mensagem, mensagens, file)    
     words = get_words(mensagem.texto)
     
-      
-    
     mensagens.each do |m2|        
         words_capituradas = []
         similar_level = 0
@@ -60,17 +61,7 @@ def verify_similar(mensagem, mensagens, file)
             end
         end
         if similar_level>4 and mensagem.id != m2.id
-            #puts "---------- Similar Mensagem  Detected-----------"
-            #puts "Similar Level #{similar_level}"
-            #puts "Mensagem original #{mensagem.id}"
-            #puts mensagem.texto
-            #puts "-------"
-            #puts "Mensagem comparada #{m2.id}"
-            #puts m2.texto
-            #puts "Palavras: #{words_capituradas.join(',')}"
-            #puts "\n\n"
             result = "<tr><td>#{mensagem.id}</td> <td>#{m2.id}</td> <td> \"#{mensagem.texto}\"</td> <td> \"#{m2.texto}\"</td> <td> \"#{words_capituradas.join(',')}\" </td></tr>\n"
-            #puts result
             file.write(result)
         end
     end
@@ -90,4 +81,60 @@ def scan()
     file.puts "</table>"
 end
 
-scan()
+#================================= VERIFICAR DUPLICIDADE ========================
+
+
+
+
+
+#================================= EXPORTAR =====================================
+
+
+def export_xml()
+    mensagens = Mensagem.all()
+    puts "Mensagens totais: #{mensagens.size}"    
+    file = File.open("mensagens.xml", "w+")
+    file.puts "<mensagens>"
+    mensagens.each do |mensagem|        
+        file.puts "< mensagem>"
+        file.puts "<texto>"
+        file.puts mensagem.texto
+        file.puts "</texto>"
+        file.puts "<slug>"
+        file.puts mensagem.slug
+        file.puts "</slug>"
+        file.puts "</mensagem>"
+    end
+    file.puts "</mensagens>"
+    file.close
+    
+end
+
+def import_xml
+    f = File.open("mensagens_corrigidas.xml")
+    doc = Nokogiri::XML(f)
+    doc.encoding = 'utf-8'
+    msgs = doc.xpath("//mensagem")    
+    msgs.each do |msg|
+        texto =  msg.at("texto").text
+        slug =  msg.at("slug").text
+        #puts texto
+        puts slug.delete!("\n")
+        mensagem = Mensagem.where(:slug=>slug).first
+        mensagem.texto = texto
+        puts "Editando #{mensagem.slug} => #{mensagem.save}"        
+    end
+    f.close
+end
+
+
+
+import_xml
+
+
+
+
+
+
+#================================= EXPORTAR =====================================
+
