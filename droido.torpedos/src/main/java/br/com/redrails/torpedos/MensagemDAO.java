@@ -320,6 +320,7 @@ public class MensagemDAO {
 
             if(!categorias.isEmpty()){
                 int categorias_size = categorias.size();
+                hasClausula=true;
 
                 for(int i=0;i<categorias_size;i++){
                     sql+=" mensagem_categorias.categoria_id= '"+categorias.get(i).getId()+"' ";
@@ -329,6 +330,7 @@ public class MensagemDAO {
                 }
 
             }else{
+                hasClausula=false;
                 return "";
             }
             return sql;
@@ -388,7 +390,7 @@ public class MensagemDAO {
         private String sqlForBusca(){
             String sql = "";
             if(busca!=null){
-                if(categorias.isEmpty() && staticCategorias.isEmpty()){
+                if(!hasClausula){
                     sql+=" WHERE "+sql;
                 }else{
                     sql+=" and ";
