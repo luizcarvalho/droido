@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ads.*;
+import com.google.analytics.tracking.android.EasyTracker;
 
 
 
@@ -548,8 +549,18 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         builder.create();
         builder.show();
 
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 
  }
