@@ -49,25 +49,31 @@ public class DataBaseUpgrade {
             int indexSlug = cursor.getColumnIndex(MensagemDAO.COLUNA_SLUG);
 
             String updateSql;
+            database.beginTransaction();
+            try{
+                do {
 
-            do {
-
-                String favoritada = cursor.getString(indexFavoritada);
-                String enviada = cursor.getString(indexEnviada);
-                String slug = cursor.getString(indexSlug);
-
-                updateSql = "UPDATE main."+MensagemDAO.NOME_TABELA+" SET "+
-                        MensagemDAO.COLUNA_FAVORITADA+"='"+favoritada+"', "+
-                        MensagemDAO.COLUNA_ENVIADA+"='"+enviada+"' WHERE "+
-                        MensagemDAO.COLUNA_SLUG+"='"+slug+"'";
-                Log.w("Droido", "Executando SQL de atualização " + updateSql);
-                database.execSQL(updateSql);
-            } while (cursor.moveToNext());
+                    String favoritada = cursor.getString(indexFavoritada);
+                    String enviada = cursor.getString(indexEnviada);
+                    String slug = cursor.getString(indexSlug);
+                    updateSql = "UPDATE main."+MensagemDAO.NOME_TABELA+" SET "+
+                            MensagemDAO.COLUNA_FAVORITADA+"='"+favoritada+"', "+
+                            MensagemDAO.COLUNA_ENVIADA+"='"+enviada+"' WHERE "+
+                            MensagemDAO.COLUNA_SLUG+"='"+slug+"'";
+                    Log.w("Droido", "Executando SQL de atualização " + updateSql);
+                    database.execSQL(updateSql);
+                } while (cursor.moveToNext());
+                database.setTransactionSuccessful();
+            }finally {
+                database.endTransaction();
+            }
         }
         return true;
     }
 
     public boolean importData(){
+
+
         Log.w("Droido", "ATAACCHIINNGGG");
         boolean dbExist = checkTempDataBase();
         if(dbExist){
@@ -117,18 +123,8 @@ public class DataBaseUpgrade {
 
 
     private void reportError(Exception e){
-        // May return null if EasyTracker has not yet been initialized with a
-        // property ID.
         EasyTracker easyTracker = EasyTracker.getInstance(myContext);
-
-        // StandardExceptionParser is provided to help get meaningful Exception descriptions.
-        easyTracker.send(MapBuilder
-                .createException(new StandardExceptionParser(myContext, null)              // Context and optional collection of package names
-                        // to be used in reporting the exception.
-                        .getDescription(Thread.currentThread().getName(),    // The name of the thread on which the exception occurred.
-                                e),                                  // The exception.
-                        false)                                               // False indicates a fatal exception
-                .build()
+        easyTracker.send(MapBuilder.createException(e.getMessage(), false).build()
         );
     }
 

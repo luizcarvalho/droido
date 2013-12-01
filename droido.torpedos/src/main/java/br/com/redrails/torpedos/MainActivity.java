@@ -496,12 +496,16 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     public void firstRunActions(Context context){
         SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
-        boolean firstRun = prefs.getBoolean("firstRun", true);
-        if(firstRun){
-            openNews(context);
-            createShortCut();
+        boolean newVersion = prefs.getBoolean("newVersion", true);
+        if(newVersion){
+            boolean firstRun = prefs.getBoolean("firstRun", true);
             SharedPreferences.Editor ed = prefs.edit();
-            ed.putBoolean("firstRun", false);
+            if(firstRun){
+                createShortCut();
+                ed.putBoolean("firstRun", false);
+            }
+            openNews(context);
+            ed.putBoolean("newVersion", false);
             ed.commit();
         }
     }

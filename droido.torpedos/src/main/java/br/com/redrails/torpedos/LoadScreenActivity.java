@@ -69,6 +69,7 @@ public class LoadScreenActivity extends Activity
 
                     SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
                     int oldVersion = prefs.getInt("currentVersion", 0);
+                    SharedPreferences.Editor ed = prefs.edit();
 
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
                     DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
@@ -77,6 +78,7 @@ public class LoadScreenActivity extends Activity
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
                     int dbVersion = DataBaseHelper.getDbVersion();
                     Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
+
                     if(oldVersion<dbVersion){
                         if(oldVersion>=20){
                             publishProgress(1);
@@ -92,12 +94,15 @@ public class LoadScreenActivity extends Activity
                                 }
                             }
                             DataBaseHelper.upgrading=false;
+                            ed.putBoolean("newVersion", true);//Seta true para exibir novidades
+
+                            dataUpgrade.deleteTempDb();
                         }
                     }
-                    SharedPreferences.Editor ed = prefs.edit();
+
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
-                    dataUpgrade.deleteTempDb();
+
 
 
                 }

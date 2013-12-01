@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.redrails.torpedos"
-    android:versionCode="26"
+    android:versionCode="29"
     android:versionName="@string/version_name" >
 
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="om.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -15,7 +15,8 @@
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBarTheme" >
+        android:theme="@style/CustomActionBarTheme"
+        android:debuggable="true">
         <activity
             android:name="br.com.redrails.torpedos.MainActivity"
             android:label="@string/app_name" >
