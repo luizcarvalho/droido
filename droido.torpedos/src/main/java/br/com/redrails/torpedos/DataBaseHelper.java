@@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=21;//change to version of code
+    private static int DB_VERSION=29;//change to version of code
     public static boolean upgrading = false;
 
 
@@ -231,7 +231,21 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         }
     }
 
-    private void listDBfolder(){
+    public boolean forceUpdate(){
+        try {
+            upgrading=true;
+            Log.w("Droido","OnUpgrading...");
+            Log.w("Droido","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
+            createTempFile();
+            copyDataBase();
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    static public void listDBfolder(){
         // Directory path here
 
         String files;

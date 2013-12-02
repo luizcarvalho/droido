@@ -59,5 +59,6 @@
     <string name="title_activity_load_screen">LoadScreen</string>
     <string name="hello_world">Hello world!</string>
     <string name="update_mensagens">Carregando Mensagens...</string>
+    <string name="action_ordenar">Ordenar</string>
 
 </resources>

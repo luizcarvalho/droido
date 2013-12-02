@@ -2,23 +2,15 @@ package br.com.redrails.torpedos;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
 
@@ -38,6 +30,10 @@ public class LoadScreenActivity extends Activity
         new LoadViewTask().execute();
 
     }
+
+
+
+
 
     //To use the AsyncTask, it must be subclassed
     private class LoadViewTask extends AsyncTask<Void, Integer, Void>
@@ -73,30 +69,40 @@ public class LoadScreenActivity extends Activity
 
                     SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
                     int oldVersion = prefs.getInt("currentVersion", 0);
+                    SharedPreferences.Editor ed = prefs.edit();
 
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
+                    DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
                     int dbVersion = DataBaseHelper.getDbVersion();
                     Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
+
                     if(oldVersion<dbVersion){
                         if(oldVersion>=20){
+                            publishProgress(1);
                             if(DataBaseHelper.upgrading){
-                                publishProgress(1);
-                                dataUpgrade.importData();
-                                DataBaseHelper.upgrading=false;
-                            }else{
-                                publishProgress(0);
-                                DataBaseHelper.upgrading=false;
-                                this.wait(1000);
+                                DataBaseHelper.upgrading=dataUpgrade.importData();
                             }
+                            if(!DataBaseHelper.upgrading){
+                                Log.e("Droido","Forcing Database Update");
+                                boolean result = databaseHelper.forceUpdate();
+                                if(!result){
+                                    publishProgress(0);
+                                    this.wait(3000);
+                                }
+                            }
+                            DataBaseHelper.upgrading=false;
+                            ed.putBoolean("newVersion", true);//Seta true para exibir novidades
+
+                            dataUpgrade.deleteTempDb();
                         }
                     }
-                    SharedPreferences.Editor ed = prefs.edit();
+
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
-                    dataUpgrade.deleteTempDb();
+
 
 
                 }
@@ -107,6 +113,11 @@ public class LoadScreenActivity extends Activity
             }
 
             return null;
+        }
+
+
+        private void tryAgain(){
+
         }
 
         //Update the progress
