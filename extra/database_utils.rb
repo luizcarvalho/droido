@@ -86,12 +86,22 @@ def setar_defaults()
     end 
 end
 
-def setar_avaliacai()
+def setar_avaliacao()
     ms = Mensagem.all()
     ms.each do |m|
-        m.enviada = false
-        m.favoritada = false
-        m.save
+        if m.avaliacao > 5 and m.avaliacao < 10
+            m.avaliacao=5            
+        end
+        if m.avaliacao < 10
+            m.avaliacao = m.avaliacao*10
+        end
+        
+        begin
+            m.save
+            puts m.avaliacao
+        rescue => e
+            puts e
+        end
     end 
 end
 
@@ -178,4 +188,4 @@ def create_from_legacy(mlegs)
 end
 
 
-tmp_text
+setar_avaliacao
