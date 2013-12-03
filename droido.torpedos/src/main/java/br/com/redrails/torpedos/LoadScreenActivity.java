@@ -85,19 +85,21 @@ public class LoadScreenActivity extends Activity
                             if(DataBaseHelper.upgrading){
                                 DataBaseHelper.upgrading=dataUpgrade.importData();
                             }
-                            if(!DataBaseHelper.upgrading){
-                                Log.e("Droido","Forcing Database Update");
-                                boolean result = databaseHelper.forceUpdate();
-                                if(!result){
-                                    publishProgress(0);
-                                    this.wait(3000);
-                                }
-                            }
-                            DataBaseHelper.upgrading=false;
-                            ed.putBoolean("newVersion", true);//Seta true para exibir novidades
-
-                            dataUpgrade.deleteTempDb();
                         }
+
+                        if(!DataBaseHelper.upgrading){
+                            Log.e("Droido","Forcing Database Update");
+                            boolean result = databaseHelper.forceUpdate();
+                            if(!result){
+                                publishProgress(0);
+                                this.wait(3000);
+                            }
+                        }
+
+                        DataBaseHelper.upgrading=false;
+                        ed.putBoolean("newVersion", true);//Seta true para exibir novidades
+
+                        dataUpgrade.deleteTempDb();
                     }
 
                     ed.putInt("currentVersion", dbVersion);
