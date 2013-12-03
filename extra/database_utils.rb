@@ -86,6 +86,15 @@ def setar_defaults()
     end 
 end
 
+def setar_avaliacai()
+    ms = Mensagem.all()
+    ms.each do |m|
+        m.enviada = false
+        m.favoritada = false
+        m.save
+    end 
+end
+
 def set_slug()
     ms = Mensagem.all()
     ms.each do |m|
