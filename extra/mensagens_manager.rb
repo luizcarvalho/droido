@@ -68,12 +68,13 @@ def verify_similar(mensagem, mensagens, file)
     
 end
 
+
 def scan()
     mensagens = Mensagem.all()
     puts "Mensagens totais: #{mensagens.size}"
     total = 0
     file = File.open("similar.html", "w+")
-    file.puts "<table>"
+    file.puts "<table border='1' >"
     mensagens.each do |mensagem|
         print "#{total+=1} / "
         verify_similar(mensagem, mensagens, file)
