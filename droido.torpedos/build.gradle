@@ -20,6 +20,21 @@ android {
         minSdkVersion 7
         targetSdkVersion 19
     }
+
+    signingConfigs {
+        release {
+            storeFile file("../extra/rr-release-key.keystore")
+            storePassword "swordfish"
+            keyAlias "redrails"
+            keyPassword "swordfish"
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
 }
 
 dependencies {

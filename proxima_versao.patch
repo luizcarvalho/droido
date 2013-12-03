@@ -1,0 +1,24 @@
+diff --git droido.torpedos/src/main/AndroidManifest.xml droido.torpedos/src/main/AndroidManifest.xml
+index 53ff11c..48496c0 100644
+--- droido.torpedos/src/main/AndroidManifest.xml
++++ droido.torpedos/src/main/AndroidManifest.xml
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     package="br.com.redrails.torpedos"
+-    android:versionCode="21"
++    android:versionCode="22"
+     android:versionName="@string/version_name" >
+ 
+     <uses-permission android:name="om.android.launcher.permission.INSTALL_SHORTCUT" />
+diff --git droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
+index e9b5411..e4f0116 100644
+--- droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
++++ droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
+@@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
+ 
+     private static String DB_NAME = "database.sqlite";
+     public static String TEMP_DB_NAME = "database_temp.sqlite";
+-    private static int DB_VERSION=21;//change to version of code
++    private static int DB_VERSION=22;//change to version of code
+     public static boolean upgrading = false;
