@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import com.google.ads.*;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.google.analytics.tracking.android.MapBuilder;
 
 
 import java.util.ArrayList;
@@ -178,6 +178,16 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         case R.id.mensagem_copiar:
                             copiarMenssagem(mensagem.getTexto());
                             return true;
+                        case R.id.mensagem_gostar:
+                            sendReport(mensagem, "gostar");
+                            return true;
+                        case R.id.mensagem_nao_gostar:
+                            sendReport(mensagem, "nao_gostar");
+                            return true;
+                        case R.id.mensagem_reportar:
+                            sendReport(mensagem, "reportar");
+                            return true;
+
                         default:
                             return false;
                     }
@@ -187,6 +197,20 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         inflater.inflate(R.menu.mensagem_menu, opcoesMenu.getMenu());
 
         opcoesMenu.show();
+    }
+
+    public void sendReport(Mensagem mensagem, String evento){
+        EasyTracker easyTracker = EasyTracker.getInstance(this);
+
+        easyTracker.send(MapBuilder
+                .createEvent("individual_menu_press",     // Event category (required)
+                        evento,  // Event action (required)
+                        mensagem.getSlug(),   // Event label
+                        null)            // Event value
+                .build()
+        );
+        Toast.makeText(this, "Obrigado! informamos isto aos nossos desenvolvedores", Toast.LENGTH_LONG);
+
     }
 
     public void toggleFavorite(View v, int position){
