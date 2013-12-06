@@ -75,7 +75,7 @@ end
 
 
 def import_xml
-    f = File.open("boa_noite.xml")
+    f = File.open("engracadas.xml")
     doc = Nokogiri::XML(f)
     doc.encoding = 'utf-8'
     msgs = doc.xpath("//mensagem")    
@@ -139,7 +139,7 @@ def create_new
 
     end
 end
-
-create_new
+scan
+#create_new
 
 

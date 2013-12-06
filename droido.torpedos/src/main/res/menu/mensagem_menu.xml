@@ -15,16 +15,9 @@
         android:id="@+id/mensagem_copiar"
         android:title="@string/mensagem_copiar"
         />
-
     <item
         android:id="@+id/mensagem_gostar"
         android:title="@string/mensagem_gostar"
-        />
-
-
-    <item
-        android:id="@+id/mensagem_nao_gostar"
-        android:title="@string/mensagem_nao_gostar"
         />
     <item
         android:id="@+id/mensagem_reportar"

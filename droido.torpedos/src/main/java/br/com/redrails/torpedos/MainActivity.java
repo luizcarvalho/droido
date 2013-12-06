@@ -181,11 +181,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         case R.id.mensagem_gostar:
                             sendReport(mensagem, "gostar");
                             return true;
-                        case R.id.mensagem_nao_gostar:
-                            sendReport(mensagem, "nao_gostar");
-                            return true;
                         case R.id.mensagem_reportar:
-                            sendReport(mensagem, "reportar");
+                            reportDialog(v,mensagem);
                             return true;
 
                         default:
@@ -203,7 +200,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         EasyTracker easyTracker = EasyTracker.getInstance(this);
 
         easyTracker.send(MapBuilder
-                .createEvent("individual_menu_press",     // Event category (required)
+                .createEvent("mensagem_action",     // Event category (required)
                         evento,  // Event action (required)
                         mensagem.getSlug(),   // Event label
                         null)            // Event value
@@ -211,6 +208,20 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         );
         Toast.makeText(this, "Obrigado! informamos isto aos nossos desenvolvedores", Toast.LENGTH_LONG);
 
+    }
+
+    public void reportDialog(final View v, final Mensagem mensagem){
+        final Context viewContext = v.getContext();
+        AlertDialog.Builder builder = new AlertDialog.Builder(viewContext);
+        final String[] reports = getResources().getStringArray(R.array.report_types);
+        builder.setTitle(R.string.report_title)
+        .setItems(reports, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                sendReport(mensagem, reports[which]);
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     public void toggleFavorite(View v, int position){
@@ -221,9 +232,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mensagemDao.atualizar(mensagem);
 
         if(mensagem.getFavoritada()){
+            sendReport(mensagem, "marcada_favorito");
             favIcon.setImageResource(R.drawable.ic_fav);
             Toast.makeText(this, "Marcada como favorita", Toast.LENGTH_LONG).show();
         }else{
+            sendReport(mensagem, "desmarcada_favorito");
             favIcon.setImageResource(R.drawable.ic_unfav);
             Toast.makeText(this, "Desmarcada como favorita", Toast.LENGTH_LONG).show();
         }
@@ -237,6 +250,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mensagemDao.atualizar(mensagem);
 
         if(mensagem.getEnviada()){
+            sendReport(mensagem, "enviada");
             sendIcon.setImageResource(R.drawable.ic_sended);
             Toast.makeText(this, "Marcada como enviada", Toast.LENGTH_LONG).show();
         }else{
@@ -250,10 +264,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getTexto());
-        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "+( http://goo.gl/xninpd )");
+        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "- ( http://goo.gl/xninpd )");
 
 
-        copiarMenssagem(mensagem.getTexto() + "\n\n +( http://goo.gl/xninpd )");
+        copiarMenssagem(mensagem.getTexto() + "\n\n - ( http://goo.gl/xninpd )");
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
 
