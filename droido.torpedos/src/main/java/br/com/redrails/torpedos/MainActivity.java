@@ -441,6 +441,15 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     openMessageMenu(v, mensagem, position);
                 }
             });
+            autorText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intentRating = new Intent(Intent.ACTION_VIEW);
+                    intentRating.setData(Uri.parse("http://goo.gl/svnC1L"));
+                    startActivity(intentRating);
+                }
+            });
+
 
             menssagemView.setOnClickListener(new View.OnClickListener() {
                 @Override

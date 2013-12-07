@@ -27,8 +27,29 @@
         />
 
     <TextView
+        android:id="@+id/app_version"
         android:layout_below="@+id/app_name"
         android:text="@string/app_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
+        />
+    <TextView
+        android:id="@+id/red_rails"
+        android:text="@string/redrails_dev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_version"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        />
+    <TextView
+        android:id="@+id/app_author"
+        android:layout_below="@+id/red_rails"
+        android:text="@string/app_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

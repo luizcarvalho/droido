@@ -64,5 +64,7 @@
     <string name="mensagem_nao_gostar">Não gostei</string>
     <string name="mensagem_report">Reportar</string>
     <string name="report_title">O que você deseja reportar?</string>
+    <string name="redrails_dev">RedRails Mobile</string>
+    <string name="app_author">\@Luizcarvalho</string>
 
 </resources>

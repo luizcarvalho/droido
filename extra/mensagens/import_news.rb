@@ -125,7 +125,7 @@ def create_new
     puts "Total #{novas.size}"
     novas.each_with_index do |msg, i|
         texto  = msg.at("texto").text
-        autor  = new_autor(i)
+        autor  = msg.at("autor").text
         avaliacao = msg.at("avaliacao").text
         mensagem = Mensagem.create(:texto=>texto, :autor=>autor, :avaliacao=>avaliacao, :data=>to_ms, :enviada=>"false", :favoritada=>"false")
         mensagem.save
@@ -133,13 +133,18 @@ def create_new
         print "#{i} / "
         msg.children.children[3].text.split(",").each do |cat|            
             categoria = Categoria.where(:slug=>cat.delete(" "))
-            mensagem.categorias.push(categoria)
+            unless(categoria)
+                puts "Categoria não encontrada"
+            else
+                mensagem.categorias.push(categoria)
+            end
+            
         end
         mensagem.save
 
     end
 end
-scan
-#create_new
+#scan
+create_new
 
 
