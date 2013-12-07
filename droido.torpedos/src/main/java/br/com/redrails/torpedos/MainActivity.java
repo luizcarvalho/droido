@@ -1,7 +1,6 @@
 package br.com.redrails.torpedos;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;

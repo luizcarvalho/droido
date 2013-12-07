@@ -7,25 +7,25 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
    >
 
-     <ImageView
-         android:layout_height="wrap_content"
-         android:layout_width="wrap_content"
-         android:layout_centerVertical="true"
-         android:layout_centerHorizontal="true"
-         android:src="@drawable/biglogo"
-         android:id="@+id/bigLogo"
-         />
+
     <TextView
         android:id="@+id/app_name"
         android:text="@string/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/bigLogo"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:textSize="18sp"
         />
-
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/biglogo"
+        android:id="@+id/bigLogo"
+        android:layout_above="@id/app_name"
+        />
     <TextView
         android:id="@+id/app_version"
         android:layout_below="@+id/app_name"

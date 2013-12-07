@@ -74,9 +74,11 @@ public class LoadScreenActivity extends Activity
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
                     DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
 
+
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
                     int dbVersion = DataBaseHelper.getDbVersion();
+
                     Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
 
                     if(oldVersion<dbVersion){
@@ -101,7 +103,7 @@ public class LoadScreenActivity extends Activity
 
                         dataUpgrade.deleteTempDb();
                     }
-
+                    databaseHelper.close();
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
 

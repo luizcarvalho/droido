@@ -18,6 +18,7 @@ public class DataBaseUpgrade {
     private static DataBaseUpgrade instance;
     private SQLiteDatabase database;
     private  Context myContext;
+    private DataBaseHelper dataBaseHelperInstace;
 
     public static DataBaseUpgrade getInstance(Context context) {
 
@@ -27,8 +28,8 @@ public class DataBaseUpgrade {
     }
 
     private DataBaseUpgrade(Context context) {
-        DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
-        database = persistenceHelper.getWritableDatabase();
+        dataBaseHelperInstace = DataBaseHelper.getInstance(context);
+        database = dataBaseHelperInstace.getWritableDatabase();
         myContext = context;
     }
 
@@ -72,6 +73,7 @@ public class DataBaseUpgrade {
     }
 
     public boolean importData(){
+        boolean result = false;
 
 
         Log.w("Droido", "ATAACCHIINNGGG");
@@ -90,7 +92,12 @@ public class DataBaseUpgrade {
             return false;
         }
 
-        return importFavsESends();
+        result =  importFavsESends();
+        if(result){
+            result = dataBaseHelperInstace.checkIntegrity();
+        }
+
+        return result;
     }
 
     public void deleteTempDb(){
