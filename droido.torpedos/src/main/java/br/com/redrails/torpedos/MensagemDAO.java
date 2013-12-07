@@ -113,7 +113,7 @@ public class MensagemDAO {
         }
 
         String query = "SELECT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula()+paginacao;
-        Log.w("Droido","Executando SQL: "+query);
+        Log.w("RedRails","Executando SQL: "+query);
         return query;
     }
 
@@ -238,7 +238,7 @@ public class MensagemDAO {
                 mensagem.getAutor()+
                 "\"          ) ;";
 
-        Log.w("Droido",query);
+        Log.w("RedRails",query);
         dataBase.execSQL(query);
 
     }
@@ -383,7 +383,7 @@ public class MensagemDAO {
                 sql+=" WHERE ";
             }
             sql+=sqlDinamica+sqlEstatica;
-            Log.w("Droido","SQL GERADA: "+sql);
+            Log.w("RedRails","SQL GERADA: "+sql);
             return sql;
         }
 
@@ -414,7 +414,7 @@ public class MensagemDAO {
     public void testData(){
 
         String attach = "Attach 'database_temp.sqlite' as temp_db";
-        Log.w("Droido", "ATAACCHIINNGGG");
+        Log.w("RedRails", "ATAACCHIINNGGG");
         dataBase.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+"database_temp.sqlite"});
         //dataBase.beginTransaction();
         String str = "SELECT texto FROM temp_db.mensagens";

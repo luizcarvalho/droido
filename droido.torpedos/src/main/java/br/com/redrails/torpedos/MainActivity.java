@@ -486,7 +486,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
 
             TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
-            //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
+            //Log.w("RedRails", "Adicionando mensagens pagina: "+pagina_atual);
 
 
             quantidade_restante = TOTAL_ITEMS;
@@ -508,7 +508,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     String dados = "qtd_restante: "+quantidade_restante+" qtde_carregada:  "
                             +quantidade_carregada+" pg "+pagina_atual+" MAX_P_PAGE "+MAX_ITEMS_PER_PAGE
                             +"TOTAL "+TOTAL_ITEMS;
-                    Log.e("Droido","Out bound Error: "+e.getStackTrace()+"\n "+dados);
+                    Log.e("RedRails","Out bound Error: "+e.getStackTrace()+"\n "+dados);
                 }
             }
         }
@@ -517,7 +517,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     protected void finalizeLoad(){
         adapter.notifyDataSetChanged();
-        //Log.i("DROIDO", "Notificado!!!");
+        //Log.i("RedRails", "Notificado!!!");
 
         //Se carregou todos os itens
         if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){

@@ -105,7 +105,7 @@ public class CategoriaDAO {
         }
 
         String query = "SELECT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula();
-        Log.w("Droido","Executando SQL: "+query);
+        Log.w("RedRails","Executando SQL: "+query);
         return query;
     }
 

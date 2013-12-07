@@ -12,7 +12,7 @@ index 53ff11c..48496c0 100644
  
      <uses-permission android:name="om.android.launcher.permission.INSTALL_SHORTCUT" />
 diff --git droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
-index e9b5411..e4f0116 100644
+index 33cbae4..03c3eef 100644
 --- droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
 +++ droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
 @@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{

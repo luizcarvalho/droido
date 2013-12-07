@@ -79,7 +79,7 @@ public class LoadScreenActivity extends Activity
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
                     int dbVersion = DataBaseHelper.getDbVersion();
 
-                    Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
+                    Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
 
                     if(oldVersion<dbVersion){
                         if(oldVersion>=20){
@@ -90,7 +90,7 @@ public class LoadScreenActivity extends Activity
                         }
 
                         if(!DataBaseHelper.upgrading){
-                            Log.e("Droido","Forcing Database Update");
+                            Log.e("RedRails","Forcing Database Update");
                             boolean result = databaseHelper.forceUpdate();
                             if(!result){
                                 publishProgress(0);
