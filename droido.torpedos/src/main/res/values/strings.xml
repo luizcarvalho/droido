@@ -43,15 +43,15 @@
     <string name="success_clipboarded">Sua mensagem foi copiada para área de transferêcia caso queira cola-la em algum lugar :)</string>
     <string name="mensagem_btn_fav">Favoritar</string>
     <string name="novidades_titulo">O que há de novo?</string>
-    <string name="novidades"> * Aplicativo foi reescrito do inicio;\n
-* Correção ortográfica das mensagens;\n
-* Criação de nova interface baseada nos padrões Google de Qualidade;\n
-* Agora mensagens enviadas são marcadas, tipo Whatsapp.\n
-* Possibilidade de ordenar mensagens: por mais novas, favoritas, enviadas, não enviadas e mais votadas pela comunidade Droido;\n
-* Possibilidade de favoritar e marcar/desmarcar como lida com um toque;\n
-* Menu individual em cada mensagem para opções avançadas;\n
-* Toque na mensagem continua sendo atalho para compartilha-la;\n
-* Adicionado Autoria para as Mensagens</string>
+    <string name="novidades">
+    * 50 novas mensagens com autoria de usuários que deram 5 estrelas no Google Play!\n\n
+    * Corrigidos problemas com alguns aparelhos na atualização!\n\n
+    * As mensagens são exibidas do início quando muda-se a categoria. \n\n
+    * Agora você pode nos avisar quando uma mensagem está na categoria errada, com erros de português, achar ofensivo ou simplesmente não gostar! \n Use o menu individual para isso!\n\n
+    * Pode nos informar que gostou de uma mensagem também, assim ela será melhor avaliada.\n\n
+    * Pode adotar uma mensagem como autor.\n\n
+    * Corrigindo mensagens em categorias erradas.\n\n
+    </string>
     <string name="novidade_dismiss">Legal!</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="action_settings">Settings</string>
