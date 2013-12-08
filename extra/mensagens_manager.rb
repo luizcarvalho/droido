@@ -128,9 +128,22 @@ def import_xml
     f.close
 end
 
+def reset_autor
+    mensagens = Mensagem.all()
+    mensagens.each do |mensagem|
+        if(mensagem.autor=="Luiz Carvalho")
+            puts mensagem.autor="[Coloque seu nome aqui]"
+            mensagem.save
+        end
+    end
+
+end
+reset_autor
 
 
-import_xml
+#import_xml
+
+
 
 
 
