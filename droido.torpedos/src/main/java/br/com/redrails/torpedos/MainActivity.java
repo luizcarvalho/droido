@@ -108,10 +108,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         quantidade_carregada=0;
         quantidade_restante=0;
         mArrayList.clear();
-
-
         loadMensagens();
         adapter.notifyDataSetChanged();
+        lista.setSelectionAfterHeaderView();
     }
 
     //--------------------------------------------------------------------------------------------
@@ -205,8 +204,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         null)            // Event value
                 .build()
         );
-        Toast.makeText(this, "Obrigado! informamos isto aos nossos desenvolvedores", Toast.LENGTH_LONG);
-
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mainContext);
+        dialog.setTitle("Obrigado!");
+        dialog.setMessage("Informaremos isto aos nossos desenvolvedores, que terão o prazer de gastar sábados, domingos e feriados melhorando o Droido pra você!");
+        dialog.setNeutralButton(R.string.novidade_dismiss, null);
+        dialog.create().show();
     }
 
     public void reportDialog(final View v, final Mensagem mensagem){
