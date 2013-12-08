@@ -66,5 +66,6 @@
     <string name="report_title">O que você deseja reportar?</string>
     <string name="redrails_dev">RedRails Mobile</string>
     <string name="app_author">\@Luizcarvalho</string>
+    <string name="report_response">Informaremos isto aos nossos desenvolvedores, que terão o prazer de gastar sábados, domingos e feriados melhorando o Droido pra você!</string>
 
 </resources>

@@ -204,11 +204,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         null)            // Event value
                 .build()
         );
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mainContext);
-        dialog.setTitle("Obrigado!");
-        dialog.setMessage("Informaremos isto aos nossos desenvolvedores, que terão o prazer de gastar sábados, domingos e feriados melhorando o Droido pra você!");
-        dialog.setNeutralButton(R.string.novidade_dismiss, null);
-        dialog.create().show();
     }
 
     public void reportDialog(final View v, final Mensagem mensagem){
@@ -219,6 +214,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         .setItems(reports, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 sendReport(mensagem, reports[which]);
+                AlertDialog.Builder popup = new AlertDialog.Builder(mainContext);
+                popup.setTitle("Obrigado!");
+                popup.setMessage(R.string.report_response);
+                popup.setNeutralButton(R.string.novidade_dismiss, null);
+                popup.create().show();
             }
         });
         builder.create();
