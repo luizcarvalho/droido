@@ -62,7 +62,8 @@ public class LoadScreenActivity extends Activity
                 synchronized (this)
                 {
                     //Initialize an integer (that will act as a counter) to zero
-                    int counter = 0;
+                    int tentativas = 0;
+                    boolean sucesso = false;
                     //While the counter is smaller than four
 
 
@@ -82,6 +83,8 @@ public class LoadScreenActivity extends Activity
                     Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
 
                     if(oldVersion<dbVersion){
+
+
                         if(oldVersion>=20){
                             publishProgress(1);
                             if(DataBaseHelper.upgrading){
@@ -90,13 +93,17 @@ public class LoadScreenActivity extends Activity
                         }
 
                         if(!DataBaseHelper.upgrading){
-                            Log.e("RedRails","Forcing Database Update");
-                            boolean result = databaseHelper.forceUpdate();
-                            if(!result){
+                            Log.e("RedRails", "Forcing Database Update");
+                            databaseHelper.forceUpdate();
+                            sucesso = dataUpgrade.importData();
+                            if(!sucesso){
                                 publishProgress(0);
                                 this.wait(3000);
                             }
                         }
+;
+
+
 
                         DataBaseHelper.upgrading=false;
                         ed.putBoolean("newVersion", true);//Seta true para exibir novidades

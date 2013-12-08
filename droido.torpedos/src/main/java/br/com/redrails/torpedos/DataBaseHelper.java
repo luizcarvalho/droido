@@ -174,6 +174,16 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             myOutput.write(buffer, 0, length);
         }
 
+
+        try{
+            Log.i("RedRails", "deleting jounal file");
+            File jounalingFile = new File(DB_PATH+DB_NAME+"-journal");
+            jounalingFile.delete();
+        }catch(Exception e){
+            Log.e("RedRails", "Erro ao deletar Journal");
+        }
+
+
         //Close the streams
         myOutput.flush();
         myOutput.close();
@@ -240,6 +250,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             createTempFile();
             copyDataBase();
         } catch (IOException e) {
+            Log.e("RedRails","Error on forcing Update!");
             return false;
         }
 

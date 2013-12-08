@@ -35,6 +35,7 @@ begin
 	system "git checkout -- droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java"
 	system "adb shell am start -a android.intent.action.DELETE -d package:br.com.redrails.torpedos"
 	(22..100).each do |version|
+		puts "#################### UPGRATE #{version-1} para #{version} ####################"
 		patch(version)
 		system "patch -p0 < proxima_versao.patch"
 		#system "gradle clean"

@@ -121,7 +121,6 @@ public class DataBaseUpgrade {
             database.execSQL("DETACH DATABASE temp_db", new String[]{});
         }catch (Exception e){
             Log.e("RedRails","DeleteTempDB "+e.getMessage());
-            reportError(e);
         }
         Log.w("RedRails", "Deleting temp DB: "+myContext.deleteDatabase(DataBaseHelper.TEMP_DB_NAME));
     }
