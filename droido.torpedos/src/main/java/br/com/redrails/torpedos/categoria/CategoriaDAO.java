@@ -91,9 +91,19 @@ public class CategoriaDAO {
 
     public List<Categoria> recuperarTodas() {
         String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
-        Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
         List<Categoria> categorias = categoriasFixas();
-        categorias.addAll(converterCursorEmCategorias(cursor));
+        Cursor cursor=null;
+        try{
+            cursor = dataBase.rawQuery(queryReturnAll, null);
+            categorias.addAll(converterCursorEmCategorias(cursor));
+        }catch (Exception e){
+            Log.e("RedRails", "Erro: "+e.getMessage());
+
+        }finally {
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
 
         return categorias;
     }

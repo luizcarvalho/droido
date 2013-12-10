@@ -98,7 +98,7 @@ public class LoadScreenActivity extends Activity
                             sucesso = dataUpgrade.importData();
                             if(!sucesso){
                                 publishProgress(0);
-                                this.wait(3000);
+                                this.wait(4000);
                             }
                         }
 ;
@@ -110,7 +110,8 @@ public class LoadScreenActivity extends Activity
 
                         dataUpgrade.deleteTempDb();
                     }
-                    databaseHelper.close();
+                    this.wait(1500);
+                    //databaseHelper.close();
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
 

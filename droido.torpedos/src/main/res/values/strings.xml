@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">Droido - Mensagens SMS prontas</string>
-    <string name="version_name">4.1</string>
-    <string name="version_code">21</string>
-    <string name="app_version">Versão: 4.1.21</string>
+    <string name="version_name">4.2</string>
+    <string name="version_code">22</string>
+    <string name="app_version">Versão: 4.2.22</string>
     <string name="footer_loading">Carregando...</string>
     <string name="row_options">Opções</string>
     <!-- ACTION BAR -->
