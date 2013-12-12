@@ -17,6 +17,10 @@ class Categoria < ActiveRecord::Base
     self.table_name = 'categorias'
     has_many :mensagem_categorias
     has_many :mensagens, through: :mensagem_categorias
+
+    def to_s
+        slug
+    end
 end
 
 class MensagemCategoria < ActiveRecord::Base
@@ -75,7 +79,7 @@ end
 
 
 def import_xml
-    f = File.open("engracadas.xml")
+    f = File.open("novas.xml")
     doc = Nokogiri::XML(f)
     doc.encoding = 'utf-8'
     msgs = doc.xpath("//mensagem")    
@@ -131,11 +135,13 @@ def create_new
         mensagem.save
         mensagem.slug = "#{mensagem.id}.droid"
         print "#{i} / "
-        msg.children.children[3].text.split(",").each do |cat|            
+        puts msg.at("categorias").at("categoria").text
+        msg.at("categorias").at("categoria").text.split(",").each do |cat|            
             categoria = Categoria.where(:slug=>cat.delete(" "))
             unless(categoria)
                 puts "Categoria não encontrada"
             else
+                #puts  categoria
                 mensagem.categorias.push(categoria)
             end
             
@@ -145,7 +151,7 @@ def create_new
     end
 end
 
-scan
-#create_new
+#scan
+create_new
 
 

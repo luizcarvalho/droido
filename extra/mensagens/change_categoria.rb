@@ -44,11 +44,11 @@ def add_categorias()
     ids = [328,333, 336, 339, 450]
     cat = Categoria.where(:slug=>"bom-dia")
     
-    mensagens = Mensagem.where(ids)
+    mensagens = Mensagem.where(:_id=>ids)
     puts "Total #{mensagens.size}"
+
     mensagens.each do |mensagem|        
-            puts mensagem.categorias#.push(cat)
-        end
+        puts mensagem.categorias.push(cat)         
     end
 end
 
