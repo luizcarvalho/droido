@@ -18,6 +18,7 @@ public class DataBaseUpgrade {
     private static DataBaseUpgrade instance;
     private SQLiteDatabase database;
     private  Context myContext;
+    private DataBaseHelper dataBaseHelperInstace;
 
     public static DataBaseUpgrade getInstance(Context context) {
 
@@ -27,10 +28,26 @@ public class DataBaseUpgrade {
     }
 
     private DataBaseUpgrade(Context context) {
-        DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
-        database = persistenceHelper.getWritableDatabase();
+        dataBaseHelperInstace = DataBaseHelper.getInstance(context);
+        database = dataBaseHelperInstace.getWritableDatabase();
         myContext = context;
     }
+
+    private boolean checkIntegrity(){
+
+        try {
+            database.rawQuery("PRAGMA integrity_check", null);
+            //database.execSQL("SELECT _id FROM categorias LIMIT 1");
+            return true;
+            //*
+        }catch (Exception e){
+            Log.e("RedRails","Erro ao checar integridade: "+e.getMessage());
+
+            return false;
+        }
+        //*/
+    }
+
 
     private boolean importFavsESends(){
         String sql = "SELECT slug,favoritada,enviada FROM temp_db.mensagens WHERE favoritada='true' OR enviada='true'";
@@ -38,7 +55,7 @@ public class DataBaseUpgrade {
         try{
             cursor = database.rawQuery(sql, null);
         }catch(Exception e){
-            Log.e("Droido","Import Favoritos: "+e.getMessage());
+            Log.e("RedRails","Import Favoritos: "+e.getMessage());
             reportError(e);
             return false;
         }
@@ -60,7 +77,7 @@ public class DataBaseUpgrade {
                             MensagemDAO.COLUNA_FAVORITADA+"='"+favoritada+"', "+
                             MensagemDAO.COLUNA_ENVIADA+"='"+enviada+"' WHERE "+
                             MensagemDAO.COLUNA_SLUG+"='"+slug+"'";
-                    Log.w("Droido", "Executando SQL de atualização " + updateSql);
+                    Log.w("RedRails", "Executando SQL de atualização " + updateSql);
                     database.execSQL(updateSql);
                 } while (cursor.moveToNext());
                 database.setTransactionSuccessful();
@@ -72,35 +89,40 @@ public class DataBaseUpgrade {
     }
 
     public boolean importData(){
+        boolean result = false;
 
 
-        Log.w("Droido", "ATAACCHIINNGGG");
+        Log.w("RedRails", "ATAACCHIINNGGG");
         boolean dbExist = checkTempDataBase();
         if(dbExist){
             database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
             try{
                 database.rawQuery("SELECT _id FROM temp_db.mensagens LIMIT 1", new String[]{});
             }catch (Exception e){
-                Log.e("Droido","Import Data: "+e.getMessage());
+                Log.e("RedRails","Import Data: "+e.getMessage());
                 reportError(e);
                 return false;
             }
         }else{
-            Log.e("Droido","CheckDatabase: Não existe");
+            Log.e("RedRails","CheckDatabase: Não existe");
             return false;
         }
 
-        return importFavsESends();
+        result =  importFavsESends();
+        if(result){
+            result = checkIntegrity();
+        }
+
+        return result;
     }
 
     public void deleteTempDb(){
         try{
             database.execSQL("DETACH DATABASE temp_db", new String[]{});
         }catch (Exception e){
-            Log.e("Droido","DeleteTempDB "+e.getMessage());
-            reportError(e);
+            Log.e("RedRails","DeleteTempDB "+e.getMessage());
         }
-        Log.w("Droido", "Deleting temp DB: "+myContext.deleteDatabase(DataBaseHelper.TEMP_DB_NAME));
+        Log.w("RedRails", "Deleting temp DB: "+myContext.deleteDatabase(DataBaseHelper.TEMP_DB_NAME));
     }
 
 
@@ -111,7 +133,7 @@ public class DataBaseUpgrade {
             String myPath = DataBaseHelper.DB_PATH + DataBaseHelper.TEMP_DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
         }catch(SQLiteException e){
-            Log.e("Droido","CheckDatabase: Não existe");
+            Log.e("RedRails","CheckDatabase: Não existe");
             reportError(e);
         }
         if(checkDB != null){

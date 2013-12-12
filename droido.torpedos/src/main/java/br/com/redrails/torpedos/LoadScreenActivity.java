@@ -62,7 +62,8 @@ public class LoadScreenActivity extends Activity
                 synchronized (this)
                 {
                     //Initialize an integer (that will act as a counter) to zero
-                    int counter = 0;
+                    int tentativas = 0;
+                    boolean sucesso = false;
                     //While the counter is smaller than four
 
 
@@ -74,12 +75,16 @@ public class LoadScreenActivity extends Activity
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
                     DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
 
+
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
                     //caso contrário a base não suporta upgrade e é substituida sem perdas.
                     int dbVersion = DataBaseHelper.getDbVersion();
-                    Log.w("Droido", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
+
+                    Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
 
                     if(oldVersion<dbVersion){
+
+
                         if(oldVersion>=20){
                             publishProgress(1);
                             if(DataBaseHelper.upgrading){
@@ -88,20 +93,25 @@ public class LoadScreenActivity extends Activity
                         }
 
                         if(!DataBaseHelper.upgrading){
-                            Log.e("Droido","Forcing Database Update");
-                            boolean result = databaseHelper.forceUpdate();
-                            if(!result){
+                            Log.e("RedRails", "Forcing Database Update");
+                            databaseHelper.forceUpdate();
+                            sucesso = dataUpgrade.importData();
+                            if(!sucesso){
                                 publishProgress(0);
-                                this.wait(3000);
+                                this.wait(4000);
                             }
                         }
+;
+
+
 
                         DataBaseHelper.upgrading=false;
                         ed.putBoolean("newVersion", true);//Seta true para exibir novidades
 
                         dataUpgrade.deleteTempDb();
                     }
-
+                    this.wait(1500);
+                    //databaseHelper.close();
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
 

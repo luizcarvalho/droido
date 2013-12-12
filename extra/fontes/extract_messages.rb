@@ -4,26 +4,19 @@ require "nokogiri"
 
 ActiveRecord::Base.establish_connection(
     :adapter => "sqlite3",
-    :database  => "../droido.torpedos/src/main/assets/database.sqlite"    
+    :database  => "mensagenspracelular.db"    
 )
 
 class Mensagem < ActiveRecord::Base
-    self.table_name = 'mensagens'
-    has_many :mensagem_categorias
-    has_many :categorias, through: :mensagem_categorias
+    self.table_name = 'messages'    
+    belongs_to :categorias
 end
 
 class Categoria < ActiveRecord::Base
-    self.table_name = 'categorias'
-    has_many :mensagem_categorias
-    has_many :mensagens, through: :mensagem_categorias
+    self.table_name = 'categories'    
+    has_many :mensagens
 end
 
-class MensagemCategoria < ActiveRecord::Base
-    self.table_name = 'mensagem_categorias'
-    belongs_to :categoria
-    belongs_to :mensagem
-end
 
 
 #================================= VERIFICAR DUPLICIDADE ========================
@@ -92,41 +85,25 @@ end
 
 
 def export_xml()
-    mensagens = Mensagem.all()
+    mensagens = Mensagem.where(:category_id=>45)
     puts "Mensagens totais: #{mensagens.size}"    
     file = File.open("mensagens.xml", "w+")
     file.puts "<mensagens>"
     mensagens.each do |mensagem|        
-        file.puts "< mensagem>"
+        file.puts "<mensagem>"
         file.puts "<texto>"
-        file.puts mensagem.texto
+        file.puts mensagem.message
         file.puts "</texto>"
-        file.puts "<slug>"
-        file.puts mensagem.slug
-        file.puts "</slug>"
-        file.puts "</mensagem>"
+        file.puts "<autor>\n[Toque para colocar seu nome]\n</autor>\n"
+        file.puts "<avaliacao>\n30\n</avaliacao>\n"
+        file.puts "<categorias>\n\t<categoria>desenhos</categoria>\n</categorias>\n"
+        file.puts "</mensagem>\n\n\n\n"
     end
     file.puts "</mensagens>"
     file.close
     
 end
 
-def import_xml
-    f = File.open("mensagens_corrigidas.xml")
-    doc = Nokogiri::XML(f)
-    doc.encoding = 'utf-8'
-    msgs = doc.xpath("//mensagem")    
-    msgs.each do |msg|
-        texto =  msg.at("texto").text
-        slug =  msg.at("slug").text
-        #puts texto
-        puts slug.delete!("\n")
-        mensagem = Mensagem.where(:slug=>slug).first
-        mensagem.texto = texto
-        puts "Editando #{mensagem.slug} => #{mensagem.save}"        
-    end
-    f.close
-end
 
 def reset_autor
     mensagens = Mensagem.all()
@@ -138,7 +115,8 @@ def reset_autor
     end
 
 end
-reset_autor
+
+export_xml
 
 
 #import_xml

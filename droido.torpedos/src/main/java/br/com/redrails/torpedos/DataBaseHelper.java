@@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=21;//change to version of code
+    private static int DB_VERSION=22;//change to version of code
     public static boolean upgrading = false;
 
 
@@ -62,7 +62,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         try {
             instance.createDataBase();
         } catch (IOException e) {
-            Log.e("Droido", String.valueOf(e.getStackTrace()));
+            Log.e("RedRails", e.getMessage());
         }
 
         return instance;
@@ -80,7 +80,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         boolean dbExist = checkDataBase();
 
         if(dbExist){
-            Log.w("Droido","nothing here- database already exist");
+            Log.w("RedRails","nothing here- database already exist");
             //listDBfolder();
             this.getReadableDatabase();
         }else{
@@ -125,13 +125,14 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         return checkDB != null ? true : false;
     }
 
+
     /**
      * Copies your database from your local assets-folder to the just created empty database in the
      * system folder, from where it can be accessed and handled.
      * This is done by transfering bytestream.
      * */
     private void copyDataBase() throws IOException{
-        Log.w("Droido","OMG the database ("+DB_NAME+") is coping...");
+        Log.w("RedRails","OMG the database ("+DB_NAME+") is coping...");
         //Open your local db as the input stream
         InputStream myInput = myContext.getAssets().open(DB_NAME);
 
@@ -155,7 +156,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     }
 
     private void createTempFile() throws IOException{
-        Log.w("Droido","OMG the database ("+DB_NAME+") backuping... YEP!!");
+        Log.w("RedRails","OMG the database ("+DB_NAME+") backuping... YEP!!");
         //Open your local db as the input stream
         File inFileName = new File(DB_PATH+DB_NAME);
         InputStream myInput = new FileInputStream(inFileName);
@@ -172,6 +173,16 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         while ((length = myInput.read(buffer))>0){
             myOutput.write(buffer, 0, length);
         }
+
+
+        try{
+            Log.i("RedRails", "deleting jounal file");
+            File jounalingFile = new File(DB_PATH+DB_NAME+"-journal");
+            jounalingFile.delete();
+        }catch(Exception e){
+            Log.e("RedRails", "Erro ao deletar Journal");
+        }
+
 
         //Close the streams
         myOutput.flush();
@@ -211,13 +222,13 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-        Log.w("Droido","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
+        Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
         String tempDadtabaseName = "database_temp.sqlite";
         if(oldVersion<newVersion){
             try {
                 upgrading=true;
-                Log.w("Droido","OnUpgrading...");
-                Log.w("Droido","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
+                Log.w("RedRails","OnUpgrading...");
+                Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
                 //listDBfolder();
                 createTempFile();
                 //listDBfolder();
@@ -234,11 +245,12 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public boolean forceUpdate(){
         try {
             upgrading=true;
-            Log.w("Droido","OnUpgrading...");
-            Log.w("Droido","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
+            Log.w("RedRails","OnUpgrading...");
+            Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
             createTempFile();
             copyDataBase();
         } catch (IOException e) {
+            Log.e("RedRails","Error on forcing Update!");
             return false;
         }
 
@@ -251,7 +263,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         String files;
         File folder = new File(DB_PATH);
         File[] listOfFiles = folder.listFiles();
-        Log.w("Droido","------- Listing Database Path -------");
+        Log.w("RedRails","------- Listing Database Path -------");
 
 
         for (int i = 0; i < listOfFiles.length; i++)
@@ -260,10 +272,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             if (listOfFiles[i].isFile())
             {
                 files = listOfFiles[i].getName();
-                Log.w("Droido",files);
+                Log.w("RedRails",files);
             }
         }
-        Log.w("Droido","------------------------");
+        Log.w("RedRails","------------------------");
     }
 
     // Add your public helper methods to access and get content from the database.

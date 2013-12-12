@@ -1,7 +1,6 @@
 package br.com.redrails.torpedos;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -109,10 +108,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         quantidade_carregada=0;
         quantidade_restante=0;
         mArrayList.clear();
-
-
         loadMensagens();
         adapter.notifyDataSetChanged();
+        lista.setSelectionAfterHeaderView();
     }
 
     //--------------------------------------------------------------------------------------------
@@ -206,8 +204,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         null)            // Event value
                 .build()
         );
-        Toast.makeText(this, "Obrigado! informamos isto aos nossos desenvolvedores", Toast.LENGTH_LONG);
-
     }
 
     public void reportDialog(final View v, final Mensagem mensagem){
@@ -218,6 +214,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         .setItems(reports, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 sendReport(mensagem, reports[which]);
+                AlertDialog.Builder popup = new AlertDialog.Builder(mainContext);
+                popup.setTitle("Obrigado!");
+                popup.setMessage(R.string.report_response);
+                popup.setNeutralButton(R.string.novidade_dismiss, null);
+                popup.create().show();
             }
         });
         builder.create();
@@ -441,6 +442,15 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     openMessageMenu(v, mensagem, position);
                 }
             });
+            autorText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intentRating = new Intent(Intent.ACTION_VIEW);
+                    intentRating.setData(Uri.parse("http://goo.gl/svnC1L"));
+                    startActivity(intentRating);
+                }
+            });
+
 
             menssagemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -478,7 +488,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
 
             TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();
-            //Log.w("DROIDO", "Adicionando mensagens pagina: "+pagina_atual);
+            //Log.w("RedRails", "Adicionando mensagens pagina: "+pagina_atual);
 
 
             quantidade_restante = TOTAL_ITEMS;
@@ -500,7 +510,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                     String dados = "qtd_restante: "+quantidade_restante+" qtde_carregada:  "
                             +quantidade_carregada+" pg "+pagina_atual+" MAX_P_PAGE "+MAX_ITEMS_PER_PAGE
                             +"TOTAL "+TOTAL_ITEMS;
-                    Log.e("Droido","Out bound Error: "+e.getStackTrace()+"\n "+dados);
+                    Log.e("RedRails","Out bound Error: "+e.getStackTrace()+"\n "+dados);
                 }
             }
         }
@@ -509,7 +519,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     protected void finalizeLoad(){
         adapter.notifyDataSetChanged();
-        //Log.i("DROIDO", "Notificado!!!");
+        //Log.i("RedRails", "Notificado!!!");
 
         //Se carregou todos os itens
         if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){

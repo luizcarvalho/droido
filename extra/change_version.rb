@@ -15,7 +15,7 @@ index 53ff11c..48496c0 100644
  
      <uses-permission android:name="om.android.launcher.permission.INSTALL_SHORTCUT" />
 diff --git droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
-index e9b5411..e4f0116 100644
+index 33cbae4..03c3eef 100644
 --- droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
 +++ droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java
 @@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
@@ -29,8 +29,21 @@ eos
 patch_file.close
 end
 
-#patch(22)
-#system "patch -p0 < proxima_versao.patch"
-system "./gradlew build"
-system "adb install -r droido.torpedos/build/apk/droido.torpedos-release.apk"
-system "adb shell am start -n br.com.redrails.torpedos/br.com.redrails.torpedos.LoadScreenActivity -a android.intent.action.MAIN -c android.intent.category.LAUNCHER"
+
+begin
+	system "git checkout -- droido.torpedos/src/main/AndroidManifest.xml"
+	system "git checkout -- droido.torpedos/src/main/java/br/com/redrails/torpedos/DataBaseHelper.java"
+	system "adb shell am start -a android.intent.action.DELETE -d package:br.com.redrails.torpedos"
+	(22..100).each do |version|
+		puts "#################### UPGRATE #{version-1} para #{version} ####################"
+		patch(version)
+		system "patch -p0 < proxima_versao.patch"
+		#system "gradle clean"
+		system "./gradlew build"
+		system "adb install -r droido.torpedos/build/apk/droido.torpedos-release.apk"
+		system "adb shell am start -n br.com.redrails.torpedos/br.com.redrails.torpedos.LoadScreenActivity -a android.intent.action.MAIN -c android.intent.category.LAUNCHER"
+		system "git stash drop"
+	end
+rescue Exception => e
+	puts e	
+end

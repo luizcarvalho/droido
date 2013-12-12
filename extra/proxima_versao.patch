@@ -6,8 +6,8 @@ index 53ff11c..48496c0 100644
  <?xml version="1.0" encoding="utf-8"?>
  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
      package="br.com.redrails.torpedos"
--    android:versionCode="21"
-+    android:versionCode="22"
+-    android:versionCode="20"
++    android:versionCode="21"
      android:versionName="@string/version_name" >
  
      <uses-permission android:name="om.android.launcher.permission.INSTALL_SHORTCUT" />
@@ -19,6 +19,6 @@ index 33cbae4..03c3eef 100644
  
      private static String DB_NAME = "database.sqlite";
      public static String TEMP_DB_NAME = "database_temp.sqlite";
--    private static int DB_VERSION=21;//change to version of code
-+    private static int DB_VERSION=22;//change to version of code
+-    private static int DB_VERSION=20;//change to version of code
++    private static int DB_VERSION=21;//change to version of code
      public static boolean upgrading = false;
