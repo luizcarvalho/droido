@@ -40,4 +40,18 @@ def corrigir_categorias()
 	end
 end
 
-corrigir_categorias
+def add_categorias()
+    ids = [328,333, 336, 339, 450]
+    cat = Categoria.where(:slug=>"bom-dia")
+    
+    mensagens = Mensagem.where(ids)
+    puts "Total #{mensagens.size}"
+    mensagens.each do |mensagem|        
+            puts mensagem.categorias#.push(cat)
+        end
+    end
+end
+
+
+add_categorias
+#corrigir_categorias
