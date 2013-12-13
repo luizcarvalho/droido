@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.DatabaseUtils;
@@ -174,16 +175,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             myOutput.write(buffer, 0, length);
         }
 
-
-        try{
-            Log.i("RedRails", "deleting jounal file");
-            File jounalingFile = new File(DB_PATH+DB_NAME+"-journal");
-            jounalingFile.delete();
-        }catch(Exception e){
-            Log.e("RedRails", "Erro ao deletar Journal");
-        }
-
-
         //Close the streams
         myOutput.flush();
         myOutput.close();
@@ -223,7 +214,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
-        String tempDadtabaseName = "database_temp.sqlite";
         if(oldVersion<newVersion){
             try {
                 upgrading=true;
@@ -231,7 +221,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
                 //listDBfolder();
                 createTempFile();
-                //listDBfolder();
                 copyDataBase();
                 //listDBfolder();
                 //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
