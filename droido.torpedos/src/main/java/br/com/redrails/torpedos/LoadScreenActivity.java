@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import java.util.List;
+
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
 
 public class LoadScreenActivity extends Activity
@@ -73,7 +75,7 @@ public class LoadScreenActivity extends Activity
                     SharedPreferences.Editor ed = prefs.edit();
 
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
-                    DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
+
 
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
@@ -87,14 +89,17 @@ public class LoadScreenActivity extends Activity
 
                         if(oldVersion>=20){
                             publishProgress(1);
+                            List<Mensagem> mensagens =  dataUpgrade.getData();
+                            DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
                             if(DataBaseHelper.upgrading){
-                                DataBaseHelper.upgrading=dataUpgrade.importData();
+                                //DataBaseHelper.upgrading=dataUpgrade.importData();
+                                DataBaseHelper.upgrading=dataUpgrade.importFavsESends(mensagens);
                             }
                         }
 
                         if(!DataBaseHelper.upgrading){
                             Log.e("RedRails", "Forcing Database Update");
-                            databaseHelper.forceUpdate();
+                            //databaseHelper.forceUpdate();
                             sucesso = dataUpgrade.importData();
                             if(!sucesso){
                                 publishProgress(0);

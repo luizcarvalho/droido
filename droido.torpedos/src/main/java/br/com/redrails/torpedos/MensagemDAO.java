@@ -157,7 +157,7 @@ public class MensagemDAO {
     }
 
 
-    private List<Mensagem> converterCursorEmMensagens(Cursor cursor) {
+    public List<Mensagem> converterCursorEmMensagens(Cursor cursor) {
         List<Mensagem> mensagens = new ArrayList<Mensagem>();
         if(cursor == null)
             return mensagens;
