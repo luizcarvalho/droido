@@ -73,7 +73,7 @@ public class DataBaseUpgrade {
 
 
 
-    private boolean importFavsESends(List<Mensagem> mensagens){
+    public boolean importFavsESends(List<Mensagem> mensagens){
 
             String updateSql;
             database.beginTransaction();
