@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.DatabaseUtils;
@@ -17,9 +16,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 
-import br.com.redrails.torpedos.util.DataBaseUpgrade;
-
-
 public class DataBaseHelper extends SQLiteOpenHelper{
 
     //The Android's default system path of your application database.
@@ -27,7 +23,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=26;//change to version of code
+    private static int DB_VERSION=29;//change to version of code
     public static boolean upgrading = false;
 
 
@@ -39,7 +35,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
 
 
-    private SQLiteDatabase myDataBase;
+    private SQLiteDatabase database;
     private SQLiteDatabase tempDatabase;
 
     private static DataBaseHelper instance;
@@ -52,7 +48,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * @param context
      */
     public DataBaseHelper(Context context) {
-
         super(context, DB_NAME, null, DB_VERSION);
         this.myContext = context;
     }
@@ -194,13 +189,13 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     }
 
     public long countRows(String table) {
-        return DatabaseUtils.queryNumEntries(myDataBase,table);
+        return DatabaseUtils.queryNumEntries(database,table);
     }
 
     @Override
     public synchronized void close() {
-        if(myDataBase != null)
-            myDataBase.close();
+        if(database != null)
+            database.close();
         super.close();
 
     }
@@ -220,7 +215,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 Log.w("RedRails","OnUpgrading...");
                 Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
                 //listDBfolder();
-                createTempFile();
+                //createTempFile();
                 copyDataBase();
                 //listDBfolder();
                 //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
@@ -268,7 +263,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     }
 
     // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
+    // You could return cursors by doing "return database.query(....)" so it'd be easy
     // to you to create adapters for your views.
 
 }
