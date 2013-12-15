@@ -52,6 +52,7 @@ public class MensagemDAO {
 
     public static MensagemDAO getInstance(Context context) {
         if(instance == null)
+            Log.w("RedRails","NOVA INSTANCIA");
             instance = new MensagemDAO(context);
         return instance;
     }

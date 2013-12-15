@@ -92,14 +92,16 @@ public class LoadScreenActivity extends Activity
                         if(!DataBaseHelper.upgrading){
                             Log.e("RedRails", "Forcing Database Update");
                             databaseHelper.forceUpdate();
-                            dataUpgrade.importData();
+                            sucesso = dataUpgrade.importData();
                         }
-                        sucesso = databaseHelper.testDatabase();
+                        if(sucesso)
+                            sucesso = databaseHelper.testDatabase();
 
 
 
                         if(!sucesso){
-                            dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
+                            Log.w("Redrails", "All FAILEDS! Copy but note Update");
+                            dataUpgrade.deleteTempDb();
                             databaseHelper.copyAndNotUpdate();
                             publishProgress(0);
                             this.wait(4000);
@@ -110,7 +112,7 @@ public class LoadScreenActivity extends Activity
                         DataBaseHelper.upgrading=false;
                         ed.putBoolean("newVersion", true);//Seta true para exibir novidades
 
-                        dataUpgrade.deleteTempDb();
+
                     }
                     this.wait(1500);
                     //databaseHelper.close();

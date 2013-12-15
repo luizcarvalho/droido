@@ -36,7 +36,7 @@ public class DataBaseUpgrade {
 
     private boolean checkIntegrity(){
 
-        //try {
+        try {
             database = dataBaseHelperInstace.getWritableDatabase();
             database.rawQuery("PRAGMA integrity_check", null);
 
@@ -44,13 +44,15 @@ public class DataBaseUpgrade {
 
             database.rawQuery("SELECT _id FROM categorias LIMIT 1", new String[]{});
             return true;
-            /*
+
         }catch (Exception e){
-            Log.e("RedRails","Erro ao checar integridade: "+e.getMessage());
+            Log.e("RedRails"," ######### \n#################\nErro ao checar integridade:  ######### \n" +
+                    "#################\n ######### \n" +
+                    "#################\n\n"+e.getMessage());
 
             return false;
         }
-        */
+
     }
 
 
@@ -82,7 +84,7 @@ public class DataBaseUpgrade {
                             MensagemDAO.COLUNA_FAVORITADA+"='"+favoritada+"', "+
                             MensagemDAO.COLUNA_ENVIADA+"='"+enviada+"' WHERE "+
                             MensagemDAO.COLUNA_SLUG+"='"+slug+"'";
-                    Log.w("RedRails", "Executando SQL de atualização " + updateSql);
+                    //Log.w("RedRails", "Executando SQL de atualização " + updateSql);
                     database.execSQL(updateSql);
                 } while (cursor.moveToNext());
                 database.setTransactionSuccessful();
@@ -91,7 +93,7 @@ public class DataBaseUpgrade {
 
             }
         }
-        database.execSQL("DROP TABLE mensagens");
+        //database.execSQL("DROP TABLE mensagens");
         return true;
     }
 
@@ -117,8 +119,8 @@ public class DataBaseUpgrade {
 
 
         result = importFavsESends();
-        //if(result)
-        //    checkIntegrity();
+        if(result)
+            checkIntegrity();
 
         return result;
     }
