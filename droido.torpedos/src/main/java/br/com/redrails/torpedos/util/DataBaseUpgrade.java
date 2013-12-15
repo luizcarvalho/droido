@@ -2,6 +2,7 @@ package br.com.redrails.torpedos.util;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
@@ -35,18 +36,21 @@ public class DataBaseUpgrade {
 
     private boolean checkIntegrity(){
 
-        try {
+        //try {
+            database = dataBaseHelperInstace.getWritableDatabase();
             database.rawQuery("PRAGMA integrity_check", null);
-            database.rawQuery("SELECT _id FROM mensagens LIMIT 1", new String[]{});
-            database.rawQuery("SELECT _id FROM mensagens LIMIT 1", new String[]{});
+
+            DatabaseUtils.longForQuery(database,"SELECT _id FROM categorias LIMIT 1" ,null);
+
+            database.rawQuery("SELECT _id FROM categorias LIMIT 1", new String[]{});
             return true;
-            //*
+            /*
         }catch (Exception e){
             Log.e("RedRails","Erro ao checar integridade: "+e.getMessage());
-            reportError(e);
+
             return false;
         }
-        //*/
+        */
     }
 
 
@@ -56,7 +60,7 @@ public class DataBaseUpgrade {
         try{
             cursor = database.rawQuery(sql, null);
         }catch(Exception e){
-            Log.e("RedRails", "Import Favoritos: " + e.getMessage());
+            Log.e("RedRails","Import Favoritos: "+e.getMessage());
             reportError(e);
             return false;
         }
@@ -84,8 +88,10 @@ public class DataBaseUpgrade {
                 database.setTransactionSuccessful();
             }finally {
                 database.endTransaction();
+
             }
         }
+        database.execSQL("DROP TABLE mensagens");
         return true;
     }
 
@@ -96,8 +102,8 @@ public class DataBaseUpgrade {
         Log.w("RedRails", "ATAACCHIINNGGG");
         boolean dbExist = checkTempDataBase();
         if(dbExist){
-            database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
             try{
+                database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
                 database.rawQuery("SELECT _id FROM temp_db.mensagens LIMIT 1", new String[]{});
             }catch (Exception e){
                 Log.e("RedRails","Import Data: "+e.getMessage());
@@ -109,10 +115,10 @@ public class DataBaseUpgrade {
             return false;
         }
 
-        result =  importFavsESends();
-        if(result){
-            result = checkIntegrity();
-        }
+
+        result = importFavsESends();
+        //if(result)
+        //    checkIntegrity();
 
         return result;
     }

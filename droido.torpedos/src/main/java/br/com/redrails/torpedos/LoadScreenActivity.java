@@ -31,10 +31,6 @@ public class LoadScreenActivity extends Activity
 
     }
 
-
-
-
-
     //To use the AsyncTask, it must be subclassed
     private class LoadViewTask extends AsyncTask<Void, Integer, Void>
     {
@@ -84,35 +80,30 @@ public class LoadScreenActivity extends Activity
 
                     if(oldVersion<dbVersion){
 
-                    do{
+
                         if(oldVersion>=20){
                             publishProgress(1);
                             if(DataBaseHelper.upgrading){
                                 DataBaseHelper.upgrading=dataUpgrade.importData();
+                                sucesso=DataBaseHelper.upgrading;
                             }
                         }
 
                         if(!DataBaseHelper.upgrading){
                             Log.e("RedRails", "Forcing Database Update");
                             databaseHelper.forceUpdate();
-                            sucesso = dataUpgrade.importData();
+                            dataUpgrade.importData();
                         }
+                        sucesso = databaseHelper.testDatabase();
+
+
 
                         if(!sucesso){
-                            databaseHelper.rollback();
-                            DataBaseHelper.upgrading=false;
-                            tentativas+=1;
-                            Log.w("Redrails","Tentativa: "+tentativas);
-                        }
-
-                        if(tentativas==3){
-                            Log.e("Redrails","FALHOU =(");
-                            sucesso=true;
+                            dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
+                            databaseHelper.copyAndNotUpdate();
                             publishProgress(0);
                             this.wait(4000);
                         }
-                    }while (sucesso);
-
 
 
 
@@ -153,7 +144,7 @@ public class LoadScreenActivity extends Activity
                 loadText.setText("Ebaa Mensagens novas!!");
             }else{
                 TextView loadText = (TextView) findViewById(R.id.load_messages);
-                loadText.setText("=( Infelizmente não conseguimos copiar as novas mensagens para você!");
+                loadText.setText("Identificamos que sua base de dados está corrompida!\n Não se preocupe vamos te dar outra!");
 
             }
             //set the current progress of the progress dialog

@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -51,9 +52,9 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * @param context
      */
     public DataBaseHelper(Context context) {
-
         super(context, DB_NAME, null, DB_VERSION);
         this.myContext = context;
+        //myDataBase = this.getReadableDatabase();
     }
 
     public static DataBaseHelper getInstance(Context context) {
@@ -76,6 +77,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * Creates a empty database on the system and rewrites it with your own database.
      * */
     public void createDataBase() throws IOException{
+        Log.w("RedRails","## Creating Database");
 
         boolean dbExist = checkDataBase();
 
@@ -155,7 +157,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         myInput.close();
     }
 
-    private void createTempFile(boolean rollback) throws IOException{
+    private void createTempFile() throws IOException{
         Log.w("RedRails","OMG the database ("+DB_NAME+") backuping... YEP!!");
         //Open your local db as the input stream
         File inFileName = new File(DB_PATH+DB_NAME);
@@ -230,7 +232,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 Log.w("RedRails","OnUpgrading...");
                 Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
                 //listDBfolder();
-                createTempFile(false);
+                createTempFile();
                 //listDBfolder();
                 copyDataBase();
                 //listDBfolder();
@@ -246,9 +248,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         try {
             upgrading=true;
             Log.w("RedRails","OnUpgrading...");
-            //Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
-            createTempFile(false);
-            copyDataBase();
+            Log.w("RedRails","Deleting temp Database => "+myContext.deleteDatabase(TEMP_DB_NAME));
+            createTempFile();
+            Log.w("RedRails","Deleting Database already backuped => "+myContext.deleteDatabase(DB_NAME));
+            createDataBase();
         } catch (IOException e) {
             Log.e("RedRails","Error on forcing Update!");
             return false;
@@ -257,22 +260,46 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         return true;
     }
 
-
-    public boolean rollback(){
+    public boolean copyAndNotUpdate(){
         try {
-            upgrading=true;
-            Log.w("RedRails","Rollbacking...");
-            //Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
-            createTempFile(true);//return database to original
-            //copyDataBase();
+            Log.w("RedRails","Deleting Database not update this => "+myContext.deleteDatabase(DB_NAME));
+            createDataBase();
         } catch (IOException e) {
-            Log.e("RedRails","Error on Rollbaking!");
+            Log.e("RedRails","Error in Copy Database");
             return false;
         }
 
         return true;
     }
 
+    public boolean testDatabase(){
+        isTableExists("mensagens", true);
+        return true;
+    }
+
+
+    public boolean isTableExists(String tableName, boolean openDb) {
+        if(openDb) {
+            if(myDataBase == null || !myDataBase.isOpen()) {
+                myDataBase = this.getReadableDatabase();
+            }
+
+            if(!myDataBase.isReadOnly()) {
+                myDataBase.close();
+                myDataBase = this.getReadableDatabase();
+            }
+        }
+
+        Cursor cursor = myDataBase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
+    }
 
 
     static public void listDBfolder(){
