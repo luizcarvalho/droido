@@ -16,6 +16,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 
+import br.com.redrails.torpedos.util.DataBaseUpgrade;
+
+
 public class DataBaseHelper extends SQLiteOpenHelper{
 
     //The Android's default system path of your application database.
@@ -23,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=29;//change to version of code
+    private static int DB_VERSION=22;//change to version of code
     public static boolean upgrading = false;
 
 
@@ -35,7 +38,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
 
 
-    private SQLiteDatabase database;
+    private SQLiteDatabase myDataBase;
     private SQLiteDatabase tempDatabase;
 
     private static DataBaseHelper instance;
@@ -48,6 +51,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * @param context
      */
     public DataBaseHelper(Context context) {
+
         super(context, DB_NAME, null, DB_VERSION);
         this.myContext = context;
     }
@@ -151,7 +155,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         myInput.close();
     }
 
-    private void createTempFile() throws IOException{
+    private void createTempFile(boolean rollback) throws IOException{
         Log.w("RedRails","OMG the database ("+DB_NAME+") backuping... YEP!!");
         //Open your local db as the input stream
         File inFileName = new File(DB_PATH+DB_NAME);
@@ -169,6 +173,16 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         while ((length = myInput.read(buffer))>0){
             myOutput.write(buffer, 0, length);
         }
+
+
+        try{
+            Log.i("RedRails", "deleting jounal file");
+            File jounalingFile = new File(DB_PATH+DB_NAME+"-journal");
+            jounalingFile.delete();
+        }catch(Exception e){
+            Log.e("RedRails", "Erro ao deletar Journal");
+        }
+
 
         //Close the streams
         myOutput.flush();
@@ -189,13 +203,13 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     }
 
     public long countRows(String table) {
-        return DatabaseUtils.queryNumEntries(database,table);
+        return DatabaseUtils.queryNumEntries(myDataBase,table);
     }
 
     @Override
     public synchronized void close() {
-        if(database != null)
-            database.close();
+        if(myDataBase != null)
+            myDataBase.close();
         super.close();
 
     }
@@ -209,13 +223,15 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
+        String tempDadtabaseName = "database_temp.sqlite";
         if(oldVersion<newVersion){
             try {
                 upgrading=true;
                 Log.w("RedRails","OnUpgrading...");
                 Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
                 //listDBfolder();
-                //createTempFile();
+                createTempFile(false);
+                //listDBfolder();
                 copyDataBase();
                 //listDBfolder();
                 //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
@@ -230,8 +246,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         try {
             upgrading=true;
             Log.w("RedRails","OnUpgrading...");
-            Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
-            createTempFile();
+            //Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
+            createTempFile(false);
             copyDataBase();
         } catch (IOException e) {
             Log.e("RedRails","Error on forcing Update!");
@@ -240,6 +256,24 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
         return true;
     }
+
+
+    public boolean rollback(){
+        try {
+            upgrading=true;
+            Log.w("RedRails","Rollbacking...");
+            //Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
+            createTempFile(true);//return database to original
+            //copyDataBase();
+        } catch (IOException e) {
+            Log.e("RedRails","Error on Rollbaking!");
+            return false;
+        }
+
+        return true;
+    }
+
+
 
     static public void listDBfolder(){
         // Directory path here
@@ -263,7 +297,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     }
 
     // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return database.query(....)" so it'd be easy
+    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.
 
 }

@@ -10,11 +10,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.StandardExceptionParser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.redrails.torpedos.DataBaseHelper;
-import br.com.redrails.torpedos.Mensagem;
 import br.com.redrails.torpedos.MensagemDAO;
 
 
@@ -41,70 +37,83 @@ public class DataBaseUpgrade {
 
         try {
             database.rawQuery("PRAGMA integrity_check", null);
-            //database.execSQL("SELECT _id FROM categorias LIMIT 1");
+            database.rawQuery("SELECT _id FROM mensagens LIMIT 1", new String[]{});
+            database.rawQuery("SELECT _id FROM mensagens LIMIT 1", new String[]{});
             return true;
             //*
         }catch (Exception e){
             Log.e("RedRails","Erro ao checar integridade: "+e.getMessage());
-
+            reportError(e);
             return false;
         }
         //*/
     }
 
 
-    public List<Mensagem> getData() {
-        List<Mensagem> mensagens = new ArrayList();
-        String sql = "SELECT slug,favoritada,enviada FROM mensagens WHERE favoritada='true' OR enviada='true'";
+    private boolean importFavsESends(){
+        String sql = "SELECT slug,favoritada,enviada FROM temp_db.mensagens WHERE favoritada='true' OR enviada='true'";
         Cursor cursor;
-
-        MensagemDAO mensagemDAO = MensagemDAO.getInstance(myContext);
-
         try{
             cursor = database.rawQuery(sql, null);
         }catch(Exception e){
-            Log.e("RedRails","Import Favoritos: "+e.getMessage());
+            Log.e("RedRails", "Import Favoritos: " + e.getMessage());
             reportError(e);
-            return mensagens;
+            return false;
         }
 
-        return mensagemDAO.converterCursorEmMensagens(cursor);
-    }
-
-
-
-    public boolean importFavsESends(List<Mensagem> mensagens){
+        if (cursor!= null && cursor.moveToFirst()) {
+            int indexFavoritada = cursor.getColumnIndex(MensagemDAO.COLUNA_FAVORITADA);
+            int indexEnviada = cursor.getColumnIndex(MensagemDAO.COLUNA_ENVIADA);
+            int indexSlug = cursor.getColumnIndex(MensagemDAO.COLUNA_SLUG);
 
             String updateSql;
             database.beginTransaction();
             try{
-                for(int i=0;i<mensagens.size();i+=1){
-                    Mensagem mensagem = mensagens.get(i);
-                    String favoritada = mensagem.getFavoritada().toString();
-                    String enviada = mensagem.getEnviada().toString();
-                    String slug = mensagem.getSlug();
+                do {
 
+                    String favoritada = cursor.getString(indexFavoritada);
+                    String enviada = cursor.getString(indexEnviada);
+                    String slug = cursor.getString(indexSlug);
                     updateSql = "UPDATE main."+MensagemDAO.NOME_TABELA+" SET "+
                             MensagemDAO.COLUNA_FAVORITADA+"='"+favoritada+"', "+
                             MensagemDAO.COLUNA_ENVIADA+"='"+enviada+"' WHERE "+
                             MensagemDAO.COLUNA_SLUG+"='"+slug+"'";
                     Log.w("RedRails", "Executando SQL de atualização " + updateSql);
                     database.execSQL(updateSql);
-                }
+                } while (cursor.moveToNext());
                 database.setTransactionSuccessful();
-            }catch (Exception e){
-                reportError(e);
-            }
-            finally {
+            }finally {
                 database.endTransaction();
             }
+        }
         return true;
     }
 
     public boolean importData(){
         boolean result = false;
-        List<Mensagem> mensagens = getData();
-        result =  importFavsESends(mensagens);
+
+
+        Log.w("RedRails", "ATAACCHIINNGGG");
+        boolean dbExist = checkTempDataBase();
+        if(dbExist){
+            database.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+DataBaseHelper.TEMP_DB_NAME});
+            try{
+                database.rawQuery("SELECT _id FROM temp_db.mensagens LIMIT 1", new String[]{});
+            }catch (Exception e){
+                Log.e("RedRails","Import Data: "+e.getMessage());
+                reportError(e);
+                return false;
+            }
+        }else{
+            Log.e("RedRails","CheckDatabase: Não existe");
+            return false;
+        }
+
+        result =  importFavsESends();
+        if(result){
+            result = checkIntegrity();
+        }
+
         return result;
     }
 

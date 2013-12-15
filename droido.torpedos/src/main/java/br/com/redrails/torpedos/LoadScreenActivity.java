@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-import java.util.List;
-
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
 
 public class LoadScreenActivity extends Activity
@@ -75,7 +73,7 @@ public class LoadScreenActivity extends Activity
                     SharedPreferences.Editor ed = prefs.edit();
 
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
-
+                    DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
 
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
@@ -86,27 +84,35 @@ public class LoadScreenActivity extends Activity
 
                     if(oldVersion<dbVersion){
 
-
+                    do{
                         if(oldVersion>=20){
                             publishProgress(1);
-                            List<Mensagem> mensagens =  dataUpgrade.getData();
-                            DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
                             if(DataBaseHelper.upgrading){
-                                //DataBaseHelper.upgrading=dataUpgrade.importData();
-                                DataBaseHelper.upgrading=dataUpgrade.importFavsESends(mensagens);
+                                DataBaseHelper.upgrading=dataUpgrade.importData();
                             }
                         }
 
                         if(!DataBaseHelper.upgrading){
                             Log.e("RedRails", "Forcing Database Update");
-                            //databaseHelper.forceUpdate();
+                            databaseHelper.forceUpdate();
                             sucesso = dataUpgrade.importData();
-                            if(!sucesso){
-                                publishProgress(0);
-                                this.wait(4000);
-                            }
                         }
-;
+
+                        if(!sucesso){
+                            databaseHelper.rollback();
+                            DataBaseHelper.upgrading=false;
+                            tentativas+=1;
+                            Log.w("Redrails","Tentativa: "+tentativas);
+                        }
+
+                        if(tentativas==3){
+                            Log.e("Redrails","FALHOU =(");
+                            sucesso=true;
+                            publishProgress(0);
+                            this.wait(4000);
+                        }
+                    }while (sucesso);
+
 
 
 
