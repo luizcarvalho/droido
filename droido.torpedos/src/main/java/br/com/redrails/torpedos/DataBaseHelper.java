@@ -6,9 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,7 +27,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=26;//change to version of code
+    private static int DB_VERSION=36;//change to version of code
     public static boolean upgrading = false;
 
 
@@ -52,9 +52,9 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * @param context
      */
     public DataBaseHelper(Context context) {
-
         super(context, DB_NAME, null, DB_VERSION);
         this.myContext = context;
+        //myDataBase = this.getReadableDatabase();
     }
 
     public static DataBaseHelper getInstance(Context context) {
@@ -77,6 +77,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * Creates a empty database on the system and rewrites it with your own database.
      * */
     public void createDataBase() throws IOException{
+        Log.w("RedRails","## Creating Database");
 
         boolean dbExist = checkDataBase();
 
@@ -175,6 +176,16 @@ public class DataBaseHelper extends SQLiteOpenHelper{
             myOutput.write(buffer, 0, length);
         }
 
+
+        try{
+            Log.i("RedRails", "deleting jounal file");
+            File jounalingFile = new File(DB_PATH+DB_NAME+"-journal");
+            jounalingFile.delete();
+        }catch(Exception e){
+            Log.e("RedRails", "Erro ao deletar Journal");
+        }
+
+
         //Close the streams
         myOutput.flush();
         myOutput.close();
@@ -214,6 +225,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
+        String tempDadtabaseName = "database_temp.sqlite";
         if(oldVersion<newVersion){
             try {
                 upgrading=true;
@@ -221,6 +233,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
                 //listDBfolder();
                 createTempFile();
+                //listDBfolder();
                 copyDataBase();
                 //listDBfolder();
                 //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
@@ -235,9 +248,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         try {
             upgrading=true;
             Log.w("RedRails","OnUpgrading...");
-            Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
+            Log.w("RedRails","Deleting temp Database => "+myContext.deleteDatabase(TEMP_DB_NAME));
             createTempFile();
-            copyDataBase();
+            Log.w("RedRails","Deleting Database already backuped => "+myContext.deleteDatabase(DB_NAME));
+            createDataBase();
         } catch (IOException e) {
             Log.e("RedRails","Error on forcing Update!");
             return false;
@@ -245,6 +259,48 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
         return true;
     }
+
+    public boolean copyAndNotUpdate(){
+        try {
+            Log.w("RedRails","Deleting Database not update this => "+myContext.deleteDatabase(DB_NAME));
+            createDataBase();
+        } catch (IOException e) {
+            Log.e("RedRails","Error in Copy Database");
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean testDatabase(){
+        isTableExists("mensagens", true);
+        return true;
+    }
+
+
+    public boolean isTableExists(String tableName, boolean openDb) {
+        if(openDb) {
+            if(myDataBase == null || !myDataBase.isOpen()) {
+                myDataBase = this.getReadableDatabase();
+            }
+
+            if(!myDataBase.isReadOnly()) {
+                myDataBase.close();
+                myDataBase = this.getReadableDatabase();
+            }
+        }
+
+        Cursor cursor = myDataBase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
+    }
+
 
     static public void listDBfolder(){
         // Directory path here

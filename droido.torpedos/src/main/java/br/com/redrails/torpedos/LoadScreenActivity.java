@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-import java.util.List;
-
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
 
 public class LoadScreenActivity extends Activity
@@ -32,10 +30,6 @@ public class LoadScreenActivity extends Activity
         new LoadViewTask().execute();
 
     }
-
-
-
-
 
     //To use the AsyncTask, it must be subclassed
     private class LoadViewTask extends AsyncTask<Void, Integer, Void>
@@ -75,7 +69,7 @@ public class LoadScreenActivity extends Activity
                     SharedPreferences.Editor ed = prefs.edit();
 
                     DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
-
+                    DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
 
 
                     //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
@@ -89,31 +83,36 @@ public class LoadScreenActivity extends Activity
 
                         if(oldVersion>=20){
                             publishProgress(1);
-                            List<Mensagem> mensagens =  dataUpgrade.getData();
-                            DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
                             if(DataBaseHelper.upgrading){
-                                //DataBaseHelper.upgrading=dataUpgrade.importData();
-                                DataBaseHelper.upgrading=dataUpgrade.importFavsESends(mensagens);
+                                DataBaseHelper.upgrading=dataUpgrade.importData();
+                                sucesso=DataBaseHelper.upgrading;
                             }
                         }
 
                         if(!DataBaseHelper.upgrading){
                             Log.e("RedRails", "Forcing Database Update");
-                            //databaseHelper.forceUpdate();
+                            databaseHelper.forceUpdate();
                             sucesso = dataUpgrade.importData();
-                            if(!sucesso){
-                                publishProgress(0);
-                                this.wait(4000);
-                            }
                         }
-;
+                        if(sucesso)
+                            sucesso = databaseHelper.testDatabase();
+
+
+
+                        if(!sucesso){
+                            Log.w("Redrails", "All FAILEDS! Copy but note Update");
+                            dataUpgrade.deleteTempDb();
+                            databaseHelper.copyAndNotUpdate();
+                            publishProgress(0);
+                            this.wait(4000);
+                        }
 
 
 
                         DataBaseHelper.upgrading=false;
                         ed.putBoolean("newVersion", true);//Seta true para exibir novidades
 
-                        dataUpgrade.deleteTempDb();
+
                     }
                     this.wait(1500);
                     //databaseHelper.close();
@@ -147,7 +146,7 @@ public class LoadScreenActivity extends Activity
                 loadText.setText("Ebaa Mensagens novas!!");
             }else{
                 TextView loadText = (TextView) findViewById(R.id.load_messages);
-                loadText.setText("=( Infelizmente não conseguimos copiar as novas mensagens para você!");
+                loadText.setText("Identificamos que sua base de dados está corrompida!\n Não se preocupe vamos te dar outra!");
 
             }
             //set the current progress of the progress dialog

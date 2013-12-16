@@ -138,7 +138,7 @@ def reset_autor
     end
 
 end
-reset_autor
+#reset_autor
 
 
 #import_xml
