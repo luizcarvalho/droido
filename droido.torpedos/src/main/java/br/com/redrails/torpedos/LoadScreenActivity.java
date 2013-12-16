@@ -68,7 +68,6 @@ public class LoadScreenActivity extends Activity
                     int oldVersion = prefs.getInt("currentVersion", 0);
                     SharedPreferences.Editor ed = prefs.edit();
 
-                    DataBaseUpgrade dataUpgrade = DataBaseUpgrade.getInstance(LoadScreenActivity.this);
                     DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
 
 
@@ -78,42 +77,6 @@ public class LoadScreenActivity extends Activity
 
                     Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
 
-                    if(oldVersion<dbVersion){
-
-
-                        if(oldVersion>=20){
-                            publishProgress(1);
-                            if(DataBaseHelper.upgrading){
-                                DataBaseHelper.upgrading=dataUpgrade.importData();
-                                sucesso=DataBaseHelper.upgrading;
-                            }
-                        }
-
-                        if(!DataBaseHelper.upgrading){
-                            Log.e("RedRails", "Forcing Database Update");
-                            databaseHelper.forceUpdate();
-                            sucesso = dataUpgrade.importData();
-                        }
-                        if(sucesso)
-                            sucesso = databaseHelper.testDatabase();
-
-
-
-                        if(!sucesso){
-                            Log.w("Redrails", "All FAILEDS! Copy but note Update");
-                            dataUpgrade.deleteTempDb();
-                            databaseHelper.copyAndNotUpdate();
-                            publishProgress(0);
-                            this.wait(4000);
-                        }
-
-
-
-                        DataBaseHelper.upgrading=false;
-                        ed.putBoolean("newVersion", true);//Seta true para exibir novidades
-
-
-                    }
                     this.wait(1500);
                     //databaseHelper.close();
                     ed.putInt("currentVersion", dbVersion);

@@ -11,7 +11,11 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.StandardExceptionParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.com.redrails.torpedos.DataBaseHelper;
+import br.com.redrails.torpedos.Mensagem;
 import br.com.redrails.torpedos.MensagemDAO;
 
 
@@ -40,7 +44,7 @@ public class DataBaseUpgrade {
             database = dataBaseHelperInstace.getWritableDatabase();
             database.rawQuery("PRAGMA integrity_check", null);
 
-            DatabaseUtils.longForQuery(database,"SELECT _id FROM categorias LIMIT 1" ,null);
+            DatabaseUtils.longForQuery(database, "SELECT _id FROM categorias LIMIT 1", null);
 
             database.rawQuery("SELECT _id FROM categorias LIMIT 1", new String[]{});
             return true;
@@ -150,6 +154,13 @@ public class DataBaseUpgrade {
         }
         return checkDB != null ? true : false;
     }
+
+
+
+
+
+
+
 
 
 

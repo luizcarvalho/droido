@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ import android.util.Log;
 
 
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
+import br.com.redrails.torpedos.util.MemoryUpgrade;
 
 
 public class DataBaseHelper extends SQLiteOpenHelper{
@@ -27,7 +29,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=36;//change to version of code
+    private static int DB_VERSION=31;//change to version of code
     public static boolean upgrading = false;
 
 
@@ -157,41 +159,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         myInput.close();
     }
 
-    private void createTempFile() throws IOException{
-        Log.w("RedRails","OMG the database ("+DB_NAME+") backuping... YEP!!");
-        //Open your local db as the input stream
-        File inFileName = new File(DB_PATH+DB_NAME);
-        InputStream myInput = new FileInputStream(inFileName);
-
-        // Path to the just created empty db
-        String outFileName = DB_PATH + TEMP_DB_NAME;
-
-        //Open the empty db as the output stream
-        OutputStream myOutput = new FileOutputStream(outFileName);
-
-        //transfer bytes from the inputfile to the outputfile
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = myInput.read(buffer))>0){
-            myOutput.write(buffer, 0, length);
-        }
-
-
-        try{
-            Log.i("RedRails", "deleting jounal file");
-            File jounalingFile = new File(DB_PATH+DB_NAME+"-journal");
-            jounalingFile.delete();
-        }catch(Exception e){
-            Log.e("RedRails", "Erro ao deletar Journal");
-        }
-
-
-        //Close the streams
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
-    }
-
 
     public SQLiteDatabase getNewDataBase() throws SQLException{
         String myPath = DB_PATH + DB_NAME;
@@ -222,42 +189,23 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     }
 
+
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
-        String tempDadtabaseName = "database_temp.sqlite";
         if(oldVersion<newVersion){
+            MemoryUpgrade memoryUpgrade = new MemoryUpgrade();
             try {
                 upgrading=true;
                 Log.w("RedRails","OnUpgrading...");
-                Log.w("RedRails","Deleting Database result => "+myContext.deleteDatabase(TEMP_DB_NAME));
-                //listDBfolder();
-                createTempFile();
-                //listDBfolder();
+                List<Mensagem> mensagens =  memoryUpgrade.importFavsESends(database);
                 copyDataBase();
-                //listDBfolder();
-                //DataBaseUpgrade.importUserData(DB_PATH, TEMP_DB_NAME, DB_NAME);
+                memoryUpgrade.insertFavsESends(database, mensagens);
 
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }
         }
-    }
-
-    public boolean forceUpdate(){
-        try {
-            upgrading=true;
-            Log.w("RedRails","OnUpgrading...");
-            Log.w("RedRails","Deleting temp Database => "+myContext.deleteDatabase(TEMP_DB_NAME));
-            createTempFile();
-            Log.w("RedRails","Deleting Database already backuped => "+myContext.deleteDatabase(DB_NAME));
-            createDataBase();
-        } catch (IOException e) {
-            Log.e("RedRails","Error on forcing Update!");
-            return false;
-        }
-
-        return true;
     }
 
     public boolean copyAndNotUpdate(){
