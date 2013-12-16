@@ -34,8 +34,6 @@ public class MemoryUpgrade {
             int indexFavoritada = cursor.getColumnIndex(MensagemDAO.COLUNA_FAVORITADA);
             int indexEnviada = cursor.getColumnIndex(MensagemDAO.COLUNA_ENVIADA);
             int indexSlug = cursor.getColumnIndex(MensagemDAO.COLUNA_SLUG);
-
-
             do {
                 boolean favoritada = cursor.getString(indexFavoritada).equalsIgnoreCase("true");
                 boolean enviada = cursor.getString(indexEnviada).equalsIgnoreCase("true");
@@ -43,10 +41,7 @@ public class MemoryUpgrade {
                 Mensagem mensagem = new Mensagem(0,"", favoritada, enviada, null, slug);
                 Log.w("Redrails", "MENSAGEM: "+mensagem);
                 mensagens.add(mensagem);
-
-
             } while (cursor.moveToNext());
-
         }
         //database.execSQL("DROP TABLE mensagens");
         return mensagens;
@@ -72,12 +67,7 @@ public class MemoryUpgrade {
             database.endTransaction();
 
         }
-
-
-
-
         return true;
-
     }
 
 }

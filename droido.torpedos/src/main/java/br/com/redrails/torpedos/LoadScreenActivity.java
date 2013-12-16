@@ -47,43 +47,23 @@ public class LoadScreenActivity extends Activity
         @Override
         protected Void doInBackground(Void... params)
         {
-            /* This is just a code that delays the thread execution 4 times,
-             * during 850 milliseconds and updates the current progress. This
-             * is where the code that is going to be executed on a background
-             * thread must be placed.
-             */
             try
             {
-                //Get the current thread's token
                 synchronized (this)
                 {
-                    //Initialize an integer (that will act as a counter) to zero
-                    int tentativas = 0;
-                    boolean sucesso = false;
-                    //While the counter is smaller than four
-
-
-
                     SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
                     int oldVersion = prefs.getInt("currentVersion", 0);
                     SharedPreferences.Editor ed = prefs.edit();
-
-                    DataBaseHelper databaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
-
-
-                    //Caso dbVersion>20 efetua upgrade e não efetua troca toda base de dados
-                    //caso contrário a base não suporta upgrade e é substituida sem perdas.
+                    //------
+                    DataBaseHelper.getInstance(LoadScreenActivity.this);
                     int dbVersion = DataBaseHelper.getDbVersion();
-
                     Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
+                    if(oldVersion<dbVersion)
+                        publishProgress(0);
 
                     this.wait(1500);
-                    //databaseHelper.close();
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
-
-
-
                 }
             }
             catch (InterruptedException e)
