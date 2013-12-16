@@ -188,16 +188,16 @@ def create_from_legacy(mlegs)
 end
 
 
-def test_db
+def setall
     mensagens = Mensagem.all()
 
     mensagens.each do |msg|
         print "."
-        msg.texto = "#{msg.texto}"
-        msg.favoritada="true"
-        msg.enviada="true"
+        #msg.texto = "#{msg.texto}"
+        msg.favoritada="false"
+        msg.enviada="false"
         msg.save
     end
 end
 
-test_db
+setall

@@ -29,7 +29,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=31;//change to version of code
+    private static int DB_VERSION=28;//change to version of code
     public static boolean upgrading = false;
 
 
@@ -194,7 +194,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
         if(oldVersion<newVersion){
-            MemoryUpgrade memoryUpgrade = new MemoryUpgrade();
+            MemoryUpgrade memoryUpgrade = new MemoryUpgrade(myContext);
             try {
                 upgrading=true;
                 Log.w("RedRails","OnUpgrading...");

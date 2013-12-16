@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
 
@@ -55,11 +56,21 @@ public class LoadScreenActivity extends Activity
                     int oldVersion = prefs.getInt("currentVersion", 0);
                     SharedPreferences.Editor ed = prefs.edit();
                     //------
-                    DataBaseHelper.getInstance(LoadScreenActivity.this);
+                    try {
+                        DataBaseHelper.getInstance(LoadScreenActivity.this);
+                    }catch (Exception e){
+                        this.wait(2500);
+                        Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getStackTrace().toString());
+                        reportError(e);
+                        publishProgress(0);
+                    }
+
                     int dbVersion = DataBaseHelper.getDbVersion();
                     Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
-                    if(oldVersion<dbVersion)
-                        publishProgress(0);
+                    if(oldVersion<dbVersion){
+                        publishProgress(1);
+                        ed.putBoolean("newVersion", true);
+                    }
 
                     this.wait(1500);
                     ed.putInt("currentVersion", dbVersion);
@@ -89,7 +100,7 @@ public class LoadScreenActivity extends Activity
                 loadText.setText("Ebaa Mensagens novas!!");
             }else{
                 TextView loadText = (TextView) findViewById(R.id.load_messages);
-                loadText.setText("Identificamos que sua base de dados está corrompida!\n Não se preocupe vamos te dar outra!");
+                loadText.setText("Infelizmente um erro gravíssimo aconteceu! por favor desinstale e instale o Droido novamente!");
 
             }
             //set the current progress of the progress dialog
@@ -107,5 +118,23 @@ public class LoadScreenActivity extends Activity
             Intent intent = new Intent(LoadScreenActivity.this, MainActivity.class);
             startActivity(intent);
         }
+
+        private void reportError(Exception e){
+            EasyTracker easyTracker = EasyTracker.getInstance(LoadScreenActivity.this);
+            easyTracker.send(MapBuilder.createException(e.getMessage(), false).build()
+            );
+        }
+
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 }

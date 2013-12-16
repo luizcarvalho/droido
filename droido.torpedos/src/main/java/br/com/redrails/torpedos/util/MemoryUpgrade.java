@@ -1,8 +1,12 @@
 package br.com.redrails.torpedos.util;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +18,9 @@ import br.com.redrails.torpedos.MensagemDAO;
  * Created by desenvolvimento on 12/16/13.
  */
 public class MemoryUpgrade {
-    public MemoryUpgrade(){
-
+    Context myContext;
+    public MemoryUpgrade(Context context){
+        myContext = context;
     }
 
     public List<Mensagem> importFavsESends(SQLiteDatabase database){
@@ -27,6 +32,7 @@ public class MemoryUpgrade {
             cursor = database.rawQuery(sql, null);
         }catch(Exception e){
             Log.e("RedRails", "Import Favoritos: " + e.getMessage());
+            reportError(e);
             return mensagens;
         }
 
@@ -39,7 +45,6 @@ public class MemoryUpgrade {
                 boolean enviada = cursor.getString(indexEnviada).equalsIgnoreCase("true");
                 String slug = cursor.getString(indexSlug);
                 Mensagem mensagem = new Mensagem(0,"", favoritada, enviada, null, slug);
-                Log.w("Redrails", "MENSAGEM: "+mensagem);
                 mensagens.add(mensagem);
             } while (cursor.moveToNext());
         }
@@ -59,15 +64,24 @@ public class MemoryUpgrade {
                         MensagemDAO.COLUNA_FAVORITADA+"='"+mensagem.getFavoritada()+"', "+
                         MensagemDAO.COLUNA_ENVIADA+"='"+mensagem.getEnviada()+"' WHERE "+
                         MensagemDAO.COLUNA_SLUG+"='"+mensagem.getSlug()+"'";
-                Log.w("RedRails", "Executando SQL de atualização " + updateSql);
+                //Log.w("RedRails", "Executando SQL de atualização " + updateSql);
                 database.execSQL(updateSql);
             }
             database.setTransactionSuccessful();
+        }catch (Exception e){
+            reportError(e);
         }finally {
             database.endTransaction();
 
         }
         return true;
     }
+    private void reportError(Exception e){
+        EasyTracker easyTracker = EasyTracker.getInstance(myContext);
+        easyTracker.send(MapBuilder.createException(e.getStackTrace().toString(), false).build()
+        );
+    }
+
+
 
 }
