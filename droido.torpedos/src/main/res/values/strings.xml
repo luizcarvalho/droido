@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">Droido - Mensagens SMS prontas</string>
-    <string name="version_name">4.2</string>
-    <string name="version_code">22</string>
-    <string name="app_version">Versão: 4.2.22</string>
+    <string name="version_name">4.3</string>
+    <string name="version_code">23</string>
+    <string name="app_version">Versão: 4.3.23</string>
     <string name="footer_loading">Carregando...</string>
     <string name="row_options">Opções</string>
     <!-- ACTION BAR -->
@@ -44,10 +44,9 @@
     <string name="mensagem_btn_fav">Favoritar</string>
     <string name="novidades_titulo">O que há de novo?</string>
     <string name="novidades">
-    * 40 novas mensagens (Desenhos, engraçadas, bom dia, boa noite)\n\n
-    * Corrigido problema em re-abrir rapidamente o aplicativo em alguns dispositivos\n\n
-    * Melhora de performance na atualização de mensagens\n\n
-    * Splash Screen com mascote na inicialização\n\n
+     * Mensagens de Natal e Ano novo\n\n
+     * Correção de problemas na inicialização\n\n
+     * Outras mensagens\n\n
     </string>
     <string name="novidade_dismiss">Legal!</string>
     <string name="title_activity_about">AboutActivity</string>

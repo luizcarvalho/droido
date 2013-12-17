@@ -58,29 +58,29 @@ public class LoadScreenActivity extends Activity
                     SharedPreferences prefs = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
                     int oldVersion = prefs.getInt("currentVersion", 0);
                     SharedPreferences.Editor ed = prefs.edit();
-                    //------
-                    try {
-                        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
-                        dataBaseHelper.countRows("mensagens");
-                    }catch (SQLiteDatabaseCorruptException e){
-                        Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getStackTrace().toString());
-                        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
-                        dataBaseHelper.copyAndNotUpdate();
-                    }catch (Exception e){                        
-                        Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getMessage());
-                        reportError(e);
-                        publishProgress(0);
-                        this.wait(2500);
-                    }
-
+                    DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
                     int dbVersion = DataBaseHelper.getDbVersion();
-                    Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
+                    //------
                     if(oldVersion<dbVersion){
+                        try {
+                            dataBaseHelper.countRows("mensagens");
+                        }catch (SQLiteDatabaseCorruptException e){
+                            Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getStackTrace().toString());
+                            dataBaseHelper.copyAndNotUpdate();
+                        }catch (Exception e){
+                            Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getMessage());
+                            reportError(e);
+                            publishProgress(0);
+                            this.wait(2500);
+                        }
+                        Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
+
                         publishProgress(1);
                         ed.putBoolean("newVersion", true);
-                    }
 
-                    this.wait(1500);
+                        dataBaseHelper.close();
+                    }
+                    //this.wait(1000);
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
                 }

@@ -29,16 +29,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static String DB_NAME = "database.sqlite";
     public static String TEMP_DB_NAME = "database_temp.sqlite";
-    private static int DB_VERSION=23;//change to version of code
+    private static int DB_VERSION=25;//change to version of code
     public static boolean upgrading = false;
-
-
-
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-    }
-
 
 
     private SQLiteDatabase myDataBase;
@@ -47,6 +39,16 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     private static DataBaseHelper instance;
 
     private final Context myContext;
+
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+    }
+    public void openDb() {
+        myDataBase = this.getWritableDatabase();
+        super.onOpen(myDataBase);
+    }
 
     /**
      * Constructor
@@ -194,16 +196,20 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
 
     @Override
-    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase oldDatabase, int oldVersion, int newVersion) {
         Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
         if(oldVersion<newVersion){
             MemoryUpgrade memoryUpgrade = new MemoryUpgrade(myContext);
             try {
                 upgrading=true;
                 Log.w("RedRails","OnUpgrading...");
-                List<Mensagem> mensagens =  memoryUpgrade.importFavsESends(database);
+                List<Mensagem> mensagens =  memoryUpgrade.importFavsESends(oldDatabase);
+                oldDatabase.close();
+
                 copyDataBase();
-                memoryUpgrade.insertFavsESends(database, mensagens);
+
+                SQLiteDatabase newDatabase = this.getWritableDatabase();
+                memoryUpgrade.insertFavsESends(newDatabase, mensagens);
 
             } catch (IOException e) {
                 throw new Error("Error copying database");

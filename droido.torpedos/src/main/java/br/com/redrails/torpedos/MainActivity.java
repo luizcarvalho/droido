@@ -70,6 +70,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mActionBar.setDisplayShowTitleEnabled(false);//Desativa o Título
         mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this);
+        dataBaseHelper.openDb();
 
         CategoriaDAO categoriaDao = CategoriaDAO.getInstance(this);
         List<Categoria> categorias = categoriaDao.recuperarTodas();

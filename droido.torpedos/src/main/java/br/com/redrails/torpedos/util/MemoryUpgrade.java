@@ -48,6 +48,9 @@ public class MemoryUpgrade {
                 mensagens.add(mensagem);
             } while (cursor.moveToNext());
         }
+        if(cursor!=null) {
+            cursor.close();
+        }
         //database.execSQL("DROP TABLE mensagens");
         return mensagens;
     }
