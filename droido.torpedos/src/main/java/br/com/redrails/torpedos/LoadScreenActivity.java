@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+
+import java.io.IOException;
 
 import br.com.redrails.torpedos.util.DataBaseUpgrade;
 
@@ -57,12 +60,17 @@ public class LoadScreenActivity extends Activity
                     SharedPreferences.Editor ed = prefs.edit();
                     //------
                     try {
-                        DataBaseHelper.getInstance(LoadScreenActivity.this);
-                    }catch (Exception e){
-                        this.wait(2500);
+                        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
+                        dataBaseHelper.countRows("mensagens");
+                    }catch (SQLiteDatabaseCorruptException e){
                         Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getStackTrace().toString());
+                        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(LoadScreenActivity.this);
+                        dataBaseHelper.copyAndNotUpdate();
+                    }catch (Exception e){                        
+                        Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getMessage());
                         reportError(e);
                         publishProgress(0);
+                        this.wait(2500);
                     }
 
                     int dbVersion = DataBaseHelper.getDbVersion();
@@ -100,7 +108,7 @@ public class LoadScreenActivity extends Activity
                 loadText.setText("Ebaa Mensagens novas!!");
             }else{
                 TextView loadText = (TextView) findViewById(R.id.load_messages);
-                loadText.setText("Infelizmente um erro gravíssimo aconteceu! por favor desinstale e instale o Droido novamente!");
+                loadText.setText("Infelizmente um erro gravíssimo aconteceu! \n Caso o erro persista, por favor desinstale e instale o Droido novamente!");
 
             }
             //set the current progress of the progress dialog
@@ -121,7 +129,7 @@ public class LoadScreenActivity extends Activity
 
         private void reportError(Exception e){
             EasyTracker easyTracker = EasyTracker.getInstance(LoadScreenActivity.this);
-            easyTracker.send(MapBuilder.createException(e.getMessage(), false).build()
+            easyTracker.send(MapBuilder.createException(e.getStackTrace().toString(), false).build()
             );
         }
 
