@@ -80,7 +80,7 @@ public class LoadScreenActivity extends Activity
 
                         dataBaseHelper.close();
                     }
-                    //this.wait(1000);
+                    this.wait(2000);
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
                 }

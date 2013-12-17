@@ -204,8 +204,12 @@ public class DataBaseHelper extends SQLiteOpenHelper{
                 upgrading=true;
                 Log.w("RedRails","OnUpgrading...");
                 List<Mensagem> mensagens =  memoryUpgrade.importFavsESends(oldDatabase);
+                oldDatabase.close();
+
                 copyDataBase();
-                memoryUpgrade.insertFavsESends(oldDatabase, mensagens);
+
+                SQLiteDatabase newDatabase = this.getWritableDatabase();
+                memoryUpgrade.insertFavsESends(newDatabase, mensagens);
 
             } catch (IOException e) {
                 throw new Error("Error copying database");
