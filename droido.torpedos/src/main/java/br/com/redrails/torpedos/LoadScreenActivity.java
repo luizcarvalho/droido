@@ -65,10 +65,9 @@ public class LoadScreenActivity extends Activity
                         try {
                             dataBaseHelper.countRows("mensagens");
                         }catch (SQLiteDatabaseCorruptException e){
-                            Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getStackTrace().toString());
+                            e.printStackTrace();
                             dataBaseHelper.copyAndNotUpdate();
                         }catch (Exception e){
-                            Log.e("RedRails","#####\n#####\n#####\n ERRROO"+e.getMessage());
                             reportError(e);
                             publishProgress(0);
                             this.wait(2500);
@@ -129,7 +128,7 @@ public class LoadScreenActivity extends Activity
 
         private void reportError(Exception e){
             EasyTracker easyTracker = EasyTracker.getInstance(LoadScreenActivity.this);
-            easyTracker.send(MapBuilder.createException(e.getStackTrace().toString(), false).build()
+            easyTracker.send(MapBuilder.createException("ERRO: "+e, false).build()
             );
         }
 

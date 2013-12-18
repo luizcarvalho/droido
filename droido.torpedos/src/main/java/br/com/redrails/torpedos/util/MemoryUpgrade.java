@@ -81,7 +81,7 @@ public class MemoryUpgrade {
     }
     private void reportError(Exception e){
         EasyTracker easyTracker = EasyTracker.getInstance(myContext);
-        easyTracker.send(MapBuilder.createException(e.getStackTrace().toString(), false).build()
+        easyTracker.send(MapBuilder.createException("ERRO :"+e, false).build()
         );
     }
 
