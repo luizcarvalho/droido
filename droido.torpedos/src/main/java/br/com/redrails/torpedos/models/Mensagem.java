@@ -1,4 +1,4 @@
-package br.com.redrails.torpedos;
+package br.com.redrails.torpedos.models;
 
 public class Mensagem {
 

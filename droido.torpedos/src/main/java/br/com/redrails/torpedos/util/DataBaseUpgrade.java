@@ -9,14 +9,9 @@ import android.util.Log;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.StandardExceptionParser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import br.com.redrails.torpedos.DataBaseHelper;
-import br.com.redrails.torpedos.Mensagem;
-import br.com.redrails.torpedos.MensagemDAO;
+import br.com.redrails.torpedos.daos.MensagemDAO;
 
 
 public class DataBaseUpgrade {

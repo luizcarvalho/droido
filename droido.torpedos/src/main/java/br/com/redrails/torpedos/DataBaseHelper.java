@@ -1,7 +1,6 @@
 package br.com.redrails.torpedos;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +17,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 
-import br.com.redrails.torpedos.util.DataBaseUpgrade;
+import br.com.redrails.torpedos.models.Mensagem;
 import br.com.redrails.torpedos.util.MemoryUpgrade;
 
 

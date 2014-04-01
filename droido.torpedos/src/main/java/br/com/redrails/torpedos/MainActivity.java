@@ -36,8 +36,10 @@ import com.google.analytics.tracking.android.MapBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.redrails.torpedos.categoria.Categoria;
-import br.com.redrails.torpedos.categoria.CategoriaDAO;
+import br.com.redrails.torpedos.models.Categoria;
+import br.com.redrails.torpedos.daos.CategoriaDAO;
+import br.com.redrails.torpedos.daos.MensagemDAO;
+import br.com.redrails.torpedos.models.Mensagem;
 
 
 public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener, ActionBar.OnNavigationListener {

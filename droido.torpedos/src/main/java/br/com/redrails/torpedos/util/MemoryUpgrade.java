@@ -11,8 +11,8 @@ import com.google.analytics.tracking.android.MapBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.redrails.torpedos.Mensagem;
-import br.com.redrails.torpedos.MensagemDAO;
+import br.com.redrails.torpedos.models.Mensagem;
+import br.com.redrails.torpedos.daos.MensagemDAO;
 
 /**
  * Created by desenvolvimento on 12/16/13.

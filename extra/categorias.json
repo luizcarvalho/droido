@@ -1,0 +1,61 @@
+---
+- !ruby/object:Categoria
+  attributes:
+    _id: 1
+    nome: Diversas
+    slug: diversas
+- !ruby/object:Categoria
+  attributes:
+    _id: 2
+    nome: Engraçadas
+    slug: engracadas
+- !ruby/object:Categoria
+  attributes:
+    _id: 3
+    nome: Piadas
+    slug: piadas
+- !ruby/object:Categoria
+  attributes:
+    _id: 4
+    nome: Amizade
+    slug: amizade
+- !ruby/object:Categoria
+  attributes:
+    _id: 5
+    nome: Amor
+    slug: amor
+- !ruby/object:Categoria
+  attributes:
+    _id: 6
+    nome: Religiosas
+    slug: religiosas
+- !ruby/object:Categoria
+  attributes:
+    _id: 7
+    nome: Frases
+    slug: frases
+- !ruby/object:Categoria
+  attributes:
+    _id: 8
+    nome: Carinho
+    slug: carinho
+- !ruby/object:Categoria
+  attributes:
+    _id: 9
+    nome: Desenhos
+    slug: desenhos
+- !ruby/object:Categoria
+  attributes:
+    _id: 10
+    nome: Boa Noite
+    slug: boa-noite
+- !ruby/object:Categoria
+  attributes:
+    _id: 11
+    nome: Bom dia
+    slug: bom-dia
+- !ruby/object:Categoria
+  attributes:
+    _id: 12
+    nome: Natal e Ano Novo
+    slug: natal-ano-novo

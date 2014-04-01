@@ -5,18 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.MapBuilder;
-
-import java.io.IOException;
-
-import br.com.redrails.torpedos.util.DataBaseUpgrade;
+import br.com.redrails.torpedos.daos.MensagemDAO;
 
 public class LoadScreenActivity extends Activity
 {
@@ -32,7 +25,6 @@ public class LoadScreenActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_screen);
         new LoadViewTask().execute();
-
     }
 
     //To use the AsyncTask, it must be subclassed
@@ -62,39 +54,20 @@ public class LoadScreenActivity extends Activity
                     int dbVersion = DataBaseHelper.getDbVersion();
                     //------
                     if(oldVersion<dbVersion){
-                        try {
-                            dataBaseHelper.countRows("mensagens");
-                        }catch (SQLiteDatabaseCorruptException e){
-                            e.printStackTrace();
-                            dataBaseHelper.copyAndNotUpdate();
-                        }catch (Exception e){
-                            reportError(e);
-                            publishProgress(0);
-                            this.wait(2500);
-                        }
-                        Log.w("RedRails", "Old Version ("+oldVersion+") < ("+dbVersion+") Database Version");
-
                         publishProgress(1);
                         ed.putBoolean("newVersion", true);
-
-                        dataBaseHelper.close();
                     }
-                    this.wait(2000);
+                    this.wait(1000);
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
                 }
             }
             catch (InterruptedException e)
             {
-                e.printStackTrace();
+                publishProgress(0);
             }
 
             return null;
-        }
-
-
-        private void tryAgain(){
-
         }
 
         //Update the progress
@@ -110,38 +83,16 @@ public class LoadScreenActivity extends Activity
                 loadText.setText("Infelizmente um erro gravíssimo aconteceu! \n Caso o erro persista, por favor desinstale e instale o Droido novamente!");
 
             }
-            //set the current progress of the progress dialog
-             //workingSprite.setImageResource(R.drawable.working2);
-
         }
 
         //after executing the code in the thread
         @Override
         protected void onPostExecute(Void result)
         {
-            //close the progress dialog
-            //progressDialog.dismiss();
-            //initialize the View
             Intent intent = new Intent(LoadScreenActivity.this, MainActivity.class);
             startActivity(intent);
         }
 
-        private void reportError(Exception e){
-            EasyTracker easyTracker = EasyTracker.getInstance(LoadScreenActivity.this);
-            easyTracker.send(MapBuilder.createException("ERRO: "+e, false).build()
-            );
-        }
-
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
-    }
 }

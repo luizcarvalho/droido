@@ -1,4 +1,4 @@
-package br.com.redrails.torpedos;
+package br.com.redrails.torpedos.daos;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.redrails.torpedos.categoria.Categoria;
+import br.com.redrails.torpedos.DataBaseHelper;
+import br.com.redrails.torpedos.models.Categoria;
+import br.com.redrails.torpedos.models.Mensagem;
 
 /**
  * Criado por luiz em 10/26/13.

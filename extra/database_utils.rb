@@ -39,6 +39,11 @@ class Mensagem < ActiveRecord::Base
     self.table_name = 'mensagens'
     has_many :mensagem_categorias
     has_many :categorias, through: :mensagem_categorias
+
+    def categoria_slugs
+        Categoria.find(self.categoria_ids).map{|c| c.slug }
+    end
+
 end
 
 class Categoria < ActiveRecord::Base
@@ -200,4 +205,12 @@ def setall
     end
 end
 
-setall
+def export_to_json
+    puts Mensagem.all().to_json(:methods=>:categoria_slugs,:except=>[:favoritada,:enviada])    
+end
+
+def export_categorias_to_json
+    puts Categoria.all().to_yaml
+end
+
+export_categorias_to_json

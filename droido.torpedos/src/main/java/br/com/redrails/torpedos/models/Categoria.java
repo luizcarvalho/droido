@@ -1,4 +1,4 @@
-package br.com.redrails.torpedos.categoria;
+package br.com.redrails.torpedos.models;
 
 
 public class Categoria {
