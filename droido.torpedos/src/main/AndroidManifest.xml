@@ -13,16 +13,15 @@
     <application
         android:allowBackup="true"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
+        android:debuggable="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBarTheme"
-        android:debuggable="false">
+        android:theme="@style/CustomActionBarTheme" >
         <activity
             android:name="br.com.redrails.torpedos.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
             </intent-filter>
 
             <meta-data
@@ -39,8 +38,13 @@
         <activity
             android:name="br.com.redrails.torpedos.LoadScreenActivity"
             android:label="@string/app_name"
-            android:theme="@style/fullscreen"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/fullscreen" >
+
+        </activity>
+        <activity
+            android:name="br.com.redrails.torpedos.parse.SyncActivity"
+            android:label="@string/title_activity_sync" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,6 +55,5 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
 </manifest>

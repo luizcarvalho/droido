@@ -1,11 +1,11 @@
 package br.com.redrails.torpedos;
 
-import java.io.File;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
+
 
 import android.content.Context;
 import android.database.Cursor;
@@ -16,9 +16,6 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-
-import br.com.redrails.torpedos.models.Mensagem;
-import br.com.redrails.torpedos.util.MemoryUpgrade;
 
 
 public class DataBaseHelper extends SQLiteOpenHelper{
@@ -198,18 +195,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase oldDatabase, int oldVersion, int newVersion) {
         Log.w("RedRails","OLDVERSION "+oldVersion+" - NEW VERSION "+newVersion);
         if(oldVersion<newVersion){
-            MemoryUpgrade memoryUpgrade = new MemoryUpgrade(myContext);
-            try {
-                upgrading=true;
-                Log.w("RedRails","OnUpgrading...");
-                List<Mensagem> mensagens =  memoryUpgrade.importFavsESends(oldDatabase);
-                copyDataBase();
-                memoryUpgrade.insertFavsESends(oldDatabase, mensagens);
-
-            } catch (IOException e) {
-                throw new Error("Error copying database");
-            }
-        }
+            upgrading=true;
+         }
     }
 
     public boolean copyAndNotUpdate(){
@@ -252,31 +239,5 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         }
         return false;
     }
-
-
-    static public void listDBfolder(){
-        // Directory path here
-
-        String files;
-        File folder = new File(DB_PATH);
-        File[] listOfFiles = folder.listFiles();
-        Log.w("RedRails","------- Listing Database Path -------");
-
-
-        for (int i = 0; i < listOfFiles.length; i++)
-        {
-
-            if (listOfFiles[i].isFile())
-            {
-                files = listOfFiles[i].getName();
-                Log.w("RedRails",files);
-            }
-        }
-        Log.w("RedRails","------------------------");
-    }
-
-    // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-    // to you to create adapters for your views.
 
 }

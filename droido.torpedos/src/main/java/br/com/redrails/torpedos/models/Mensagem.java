@@ -6,6 +6,8 @@ public class Mensagem {
     private String texto;
     private String slug;
     private String autor;
+    private Integer data;
+    private Integer avaliacao;
     private Boolean favoritada;
     private Boolean enviada;
 
@@ -13,7 +15,7 @@ public class Mensagem {
 
     }
 
-    public Mensagem(int id, String texto, boolean favoritada, boolean enviada, String autor, String slug) {
+    public Mensagem(int id, String texto, boolean favoritada, boolean enviada, String autor, String slug, Integer data, Integer avaliacao) {
         super();
         this.id = id;
         this.texto = texto;
@@ -21,6 +23,8 @@ public class Mensagem {
         this.enviada = enviada;
         this.slug = slug;
         this.autor = autor;
+        this.data = data;
+        this.avaliacao = avaliacao;
     }
 
 
@@ -47,6 +51,22 @@ public class Mensagem {
 
     public void setFavoritada(Boolean favoritada) {
         this.favoritada = favoritada;
+    }
+
+    public Integer getData() {
+        return data;
+    }
+
+    public void setData(Integer data) {
+        this.data = data;
+    }
+
+    public Integer getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(Integer avaliacao) {
+        this.avaliacao = avaliacao;
     }
 
     public Boolean toggleFavorite(){
@@ -93,7 +113,8 @@ public class Mensagem {
 
     @Override
     public String toString() {
-        return "#< id: "+id+"texto: "+texto+" favoritada: "+favoritada+" enviada: "+enviada+" autor: "+autor+" >";
+        return "#< id: "+id+"texto: "+texto+" favoritada: "+favoritada+" enviada: "+enviada+
+                " autor: "+autor+" data: "+data+" avaliacao: "+avaliacao+" >";
     }
 
 

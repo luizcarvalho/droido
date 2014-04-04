@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Parse-1.4.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/droido.torpedos/src/main/libs/Parse-1.4.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

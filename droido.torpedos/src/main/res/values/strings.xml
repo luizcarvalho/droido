@@ -43,17 +43,15 @@
     <string name="success_clipboarded">Sua mensagem foi copiada para área de transferêcia caso queira cola-la em algum lugar :)</string>
     <string name="mensagem_btn_fav">Favoritar</string>
     <string name="novidades_titulo">O que há de novo?</string>
-    <string name="novidades">
-     * Mensagens de Natal e Ano novo\n\n
+    <string name="novidades">     * Mensagens de Natal e Ano novo\n\n
      * Correção de problemas na inicialização\n\n
-     * Outras mensagens\n\n
-    </string>
+     * Outras mensagens\n\n</string>
     <string name="novidade_dismiss">Legal!</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="action_settings">Settings</string>
     <string name="message_author">Luiz Carvalho</string>
     <string name="title_activity_load_screen">LoadScreen</string>
-    <string name="hello_world">Hello world!</string>
+
     <string name="update_mensagens">Carregando Mensagens...</string>
     <string name="action_ordenar">Ordenar</string>
     <string name="mensagem_gostar">Gostei</string>
@@ -63,5 +61,8 @@
     <string name="redrails_dev">RedRails Mobile</string>
     <string name="app_author">\@Luizcarvalho</string>
     <string name="report_response">Informaremos isto aos nossos desenvolvedores, que terão o prazer de gastar sábados, domingos e feriados melhorando o Droido pra você!</string>
+    <string name="title_activity_sync">SyncActivity</string>
+    <string name="sync_db_button_text">Sincronizar base de dados</string>
+    <string name="sync_default_result">Nenhuma mensagen recebida!</string>
 
 </resources>

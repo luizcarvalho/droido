@@ -88,6 +88,28 @@ public class MensagemDAO {
 
     }
 
+    public void atualizarOuSalvar(Mensagem mensagem){
+        if(getMensagemBySlug(mensagem.getSlug())==null){
+            salvar(mensagem);
+            Log.d("Droido","Salvando: "+mensagem.getSlug());
+        }else{
+            Log.d("Droido","Atualizando: "+mensagem.getSlug());
+            atualizar(mensagem);
+        }
+    }
+
+    public Mensagem getMensagemBySlug(String slug){
+        Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
+                        COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA, COLUNA_AUTOR }, COLUNA_SLUG + "=?",
+                new String[] { String.valueOf(slug) }, null, null, null, null);
+        List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
+        // return contact
+        if(!mensagem.isEmpty()){
+            return mensagem.get(0);
+        }
+        return null;
+    }
+
     public Mensagem getMensagem(int id){
 
         Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
@@ -176,15 +198,20 @@ public class MensagemDAO {
                     int indexEnviada = cursor.getColumnIndex(COLUNA_ENVIADA);
                     int indexAutor = cursor.getColumnIndex(COLUNA_AUTOR);
                     int indexSlug = cursor.getColumnIndex(COLUNA_SLUG);
-
+                    int indexAvaliacao = cursor.getColumnIndex(COLUNA_AVALIACAO);
+                    int indexData = cursor.getColumnIndex(COLUNA_DATA);
                     int id = cursor.getInt(indexID);
+
                     String texto = cursor.getString(indexTexto);
                     boolean favoritada = cursor.getString(indexFavoritada).equalsIgnoreCase("true");
 
                     boolean enviada = cursor.getString(indexEnviada).equalsIgnoreCase("true");
                     String autor = cursor.getString(indexAutor);
                     String slug = cursor.getString(indexSlug);
-                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor, slug);
+                    Integer avalicao = cursor.getInt(indexAvaliacao);
+                    Integer data = cursor.getInt(indexData);
+
+                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor, slug, avalicao, data);
 
                     mensagens.add(mensagem);
 
