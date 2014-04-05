@@ -43,8 +43,4 @@ dependencies {
     compile files('src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar')
     compile files('src/main/libs/libGoogleAnalyticsServices.jar')
     compile files('src/main/libs/Parse-1.4.2.jar')
-
-    androidTestCompile 'org.mockito:mockito-core:1.9.5'
-    androidTestCompile 'com.google.dexmaker:dexmaker:1.0'
-    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
 }
