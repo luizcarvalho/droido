@@ -9,7 +9,7 @@
     tools:context="br.com.redrails.torpedos.parse.SyncActivity">
 
 <Button
-    android:id="@+id/sync_db_button"
+    android:id="@+id/sync_action_button"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:text="@string/sync_db_button_text"
@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/sync_result"
-        android:layout_below="@+id/sync_db_button"
+        android:layout_below="@+id/sync_action_button"
         android:text="@string/sync_default_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

@@ -26,7 +26,7 @@ public class SyncActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
         Parse.initialize(this, "IjHMioV35jvHn4LUpn4Xm6aTh51qNmUKPieVqdT3", "S5LWQJYulqwvanhDlhq1gXRAhUhhhKezmDQ5fZp9");
-        Button syncButton = (Button) findViewById(R.id.sync_db_button);
+        Button syncButton = (Button) findViewById(R.id.sync_action_button);
         result = (TextView) findViewById(R.id.sync_result);
 
         syncButton.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +54,7 @@ public class SyncActivity extends ActionBarActivity {
                     mensagem_result = "Obtivemos " + mensagemList.size() + " mensagens";
                     update_database(mensagemList);
                 } else {
-                    mensagem_result = "Error: " + e.getMessage();
+                    mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
                 }
                 result.setText(mensagem_result);
                 Log.d("Droido", "MENSAGEM RESULT: "+mensagem_result);
