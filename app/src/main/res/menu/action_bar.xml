@@ -22,6 +22,12 @@
         android:icon="@drawable/ic_more_app"
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/menu_atualizar"
+        android:title="Baixar mensagens"
+        android:icon="@drawable/ic_more_app"
+        app:showAsAction="never"
+        />
     <!--
     <item
         android:id="@+id/menu_configuracoes"

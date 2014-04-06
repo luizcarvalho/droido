@@ -40,6 +40,7 @@ import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.daos.CategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemDAO;
 import br.com.redrails.torpedos.models.Mensagem;
+import br.com.redrails.torpedos.parse.SyncActivity;
 
 
 public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, AbsListView.OnScrollListener, ActionBar.OnNavigationListener {
@@ -331,6 +332,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             case R.id.menu_sobre:
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menu_atualizar:
+                Intent syncIntent = new Intent(this, SyncActivity.class);
+                startActivity(syncIntent);
                 return true;
             case R.id.menu_avaliar:
                 Intent intentRating = new Intent(Intent.ACTION_VIEW);

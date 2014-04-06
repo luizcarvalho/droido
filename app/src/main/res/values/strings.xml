@@ -65,5 +65,6 @@
     <string name="sync_db_button_text">Sincronizar base de dados</string>
     <string name="sync_default_result">Nenhuma mensagen recebida!</string>
     <string name="sync_connect_error">Infelizmente Não conseguimos conectar com nossos servidores. Tente novamente mais tarde.</string>
+    <string name="sync_received_message">mensagens recebidas</string>
 
 </resources>

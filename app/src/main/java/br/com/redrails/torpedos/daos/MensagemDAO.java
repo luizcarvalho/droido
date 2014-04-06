@@ -176,6 +176,10 @@ public class MensagemDAO {
             return QUANTIDADE_TOTAL;
     }
 
+    public void deletarTudo(){
+        dataBase.execSQL("DELETE FROM " + NOME_TABELA);
+    }
+
     public void fecharConexao() {
         if(dataBase != null && dataBase.isOpen())
             dataBase.close();

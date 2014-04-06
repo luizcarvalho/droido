@@ -77,6 +77,20 @@ public class CategoriaDAO {
         return null;
     }
 
+    public Categoria getCategoria(String slug){
+
+        Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
+                        COLUNA_NOME, COLUNA_SLUG }, COLUNA_SLUG + "=?",
+                new String[] { String.valueOf(slug) }, null, null, null);
+        List<Categoria> categoria = converterCursorEmCategorias(cursor);
+        // return contact
+        if(!categoria.isEmpty()){
+            return categoria.get(0);
+        }
+        return null;
+    }
+
+
     private List<Categoria> categoriasFixas(){
 
         List<Categoria> categoriasFixas = new ArrayList<Categoria>();

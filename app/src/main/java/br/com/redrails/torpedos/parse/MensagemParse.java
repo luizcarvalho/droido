@@ -14,6 +14,7 @@ public class MensagemParse {
     public static final String KEY_AVALIACAO = "avaliacao";
     public static final String KEY_DATA = "data";
     public static final String KEY_TEXTO = "texto";
+    public static final String KEY_CATEGORIAS = "categorias";
 
 
     public static Mensagem toMensagem(com.parse.ParseObject mensagemParse){

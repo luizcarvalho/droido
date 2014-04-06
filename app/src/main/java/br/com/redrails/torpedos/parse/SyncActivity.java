@@ -1,9 +1,10 @@
 package br.com.redrails.torpedos.parse;
 
-import android.app.Activity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,6 +27,10 @@ public class SyncActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+
+
         Parse.initialize(this, "IjHMioV35jvHn4LUpn4Xm6aTh51qNmUKPieVqdT3", "S5LWQJYulqwvanhDlhq1gXRAhUhhhKezmDQ5fZp9");
         Button syncButton = (Button) findViewById(R.id.sync_action_button);
         result = (TextView) findViewById(R.id.sync_result);
@@ -44,15 +49,17 @@ public class SyncActivity extends ActionBarActivity {
 
     void retrive_server_messages(){
 
+
         ParseQuery<ParseObject> query = ParseQuery.getQuery("MensagemParse");
         query.setLimit(10);
+
         query.findInBackground(new FindCallback<ParseObject>() {
 
             @Override
             public void done(List<ParseObject> mensagemList, com.parse.ParseException e) {
                 String mensagem_result = "";
                 if (e == null) {
-                    mensagem_result = "Obtivemos " + mensagemList.size() + " mensagens";
+                    mensagem_result = mensagemList.size() +" "+getResources().getString(R.string.sync_received_message);
                     update_database(mensagemList);
                 } else {
                     mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
@@ -65,6 +72,8 @@ public class SyncActivity extends ActionBarActivity {
 
     void update_database(List<ParseObject> mensagemList){
         MensagemDAO mensagemDao = MensagemDAO.getInstance(this.getApplicationContext());
+        mensagemDao.deletarTudo();
+
         for(ParseObject mensagemParse: mensagemList){
             Mensagem mensagem = MensagemParse.toMensagem(mensagemParse);
             mensagemDao.atualizarOuSalvar(mensagem);
@@ -72,5 +81,16 @@ public class SyncActivity extends ActionBarActivity {
     }
 
 
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

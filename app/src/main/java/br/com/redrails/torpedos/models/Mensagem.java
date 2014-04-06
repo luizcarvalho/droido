@@ -1,5 +1,7 @@
 package br.com.redrails.torpedos.models;
 
+import java.util.ArrayList;
+
 public class Mensagem {
 
     private int id;
@@ -10,6 +12,7 @@ public class Mensagem {
     private Integer avaliacao;
     private Boolean favoritada;
     private Boolean enviada;
+    private ArrayList<String> categorias;
 
     public Mensagem() {
 
