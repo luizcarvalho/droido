@@ -1,5 +1,6 @@
 package br.com.redrails.torpedos.parse;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;

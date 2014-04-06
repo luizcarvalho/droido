@@ -1,25 +1,16 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
-        classpath 'com.novoda.gradle:robolectric-plugin:0.0.1-SNAPSHOT'
     }
 }
 apply plugin: 'android'
-apply plugin: 'robolectric'
 
 allprojects {
     repositories {
         mavenCentral()
-        // And finally this repository again.
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
-        }
     }
 }
 
@@ -35,6 +26,7 @@ android {
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 19
+        testPackageName 'br.com.redrails.torpedos.test'
     }
 
     signingConfigs {
@@ -61,11 +53,12 @@ dependencies {
     compile files('src/main/libs/libGoogleAnalyticsServices.jar')
     compile files('src/main/libs/Parse-1.4.2.jar')
 
-    androidTestCompile 'org.robolectric:robolectric:2.+'
-    androidTestCompile 'junit:junit:4.+'
+    //androidTestCompile 'org.robolectric:robolectric:2.+'
+    //androidTestCompile 'junit:junit:3.8'
 
 }
 
+/*
 task addTest {
     def src = ['src/test/java']
     def file = file("app.iml")
@@ -94,3 +87,5 @@ task addTest {
 gradle.projectsEvaluated {
     preBuild.dependsOn(addTest)
 }
+
+*/
