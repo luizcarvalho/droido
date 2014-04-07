@@ -75,6 +75,10 @@ public class MensagemCategoriaDAO {
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
     }
 
+    public void deletarTudo(){
+        dataBase.execSQL("DELETE FROM " + NOME_TABELA);
+    }
+
     public void atualizar(MensagemCategoria mensagemCategoria) {
         ContentValues valores = gerarContentValeuesMensagemCategoria(mensagemCategoria);
 

@@ -34,7 +34,7 @@ public class SyncActivityTest extends ActivityInstrumentationTestCase2<SyncActiv
 
 
     @LargeTest
-    public void testReceiveDataFromParse() throws Exception {
+    public void notestReceiveDataFromParse() throws Exception {
         String result;
 
         TextView syncResult = (TextView) activity.findViewById(R.id.sync_result);
@@ -56,15 +56,6 @@ public class SyncActivityTest extends ActivityInstrumentationTestCase2<SyncActiv
         }
 
 
-
-        @MediumTest
-        public  void testSaveMensagensInDatabase() throws Exception{
-
-
-
-
-
-        }
 
 
     }

@@ -44,7 +44,6 @@ public class CategoriaDAO {
 
 
     private static CategoriaDAO instance;
-    public Filtro filtro;
 
 
 
@@ -75,6 +74,10 @@ public class CategoriaDAO {
             return categoria.get(0);
         }
         return null;
+    }
+
+    public void deletarTudo(){
+        dataBase.execSQL("DELETE FROM " + NOME_TABELA);
     }
 
     public Categoria getCategoria(String slug){
@@ -129,7 +132,7 @@ public class CategoriaDAO {
             retorno = " COUNT(*) ";
         }
 
-        String query = "SELECT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula();
+        String query = "SELECT "+retorno+" FROM " + NOME_TABELA;
         Log.w("RedRails","Executando SQL: "+query);
         return query;
     }
@@ -214,73 +217,6 @@ public class CategoriaDAO {
     }
 
 
-    public Filtro getFiltro(){
-        return instance.filtro;
-    }
-
-    public class Filtro{
-        private String busca;
-        private int ordem = 1;
-        private ArrayList<Integer> categorias;
-
-        public Filtro(){
-        }
-
-        public void setBusca(String termo){
-            this.busca = termo;
-        }
-        public void setOrdem(int ordem){
-            this.ordem = ordem;
-        }
-
-        private String sqlForOrdem(){
-            return " ORDER BY  id ASC ";
-        }
-
-
-        private String sqlForCategorias(){
-            String sql = "";
-            if(categorias!=null){
-                int categorias_size = categorias.size();
-                if(!categorias.isEmpty()){
-                    sql+="LEFT JOIN mensagem_categorias mc ON mc.mensagem_id = mensagem._id  ";
-                }
-                sql+=" WHERE ";
-                for(int i=0;i<categorias_size;i++){
-                    sql+=" mensagem_categorias.categoria_id= '"+categorias.get(i)+"' ";
-                    if(i<categorias_size){
-                        sql+=" and ";
-                    }
-                }
-                return sql;
-            }else{
-                return "";
-            }
-        }
-
-        private String sqlForBusca(){
-            String sql = "";
-            if(busca!=null){
-                if(categorias==null){
-                    sql+=" WHERE "+sql;
-                }
-                sql+=" "+NOME_TABELA+"."+ COLUNA_NOME +" like '%"+busca+"%' ";
-
-            }
-
-            return sql;
-        }
-
-        public String getClausula(){
-
-            String categoriaSql = sqlForCategorias();
-            String buscaSql = sqlForBusca();
-            String ordemSql = sqlForOrdem();
-
-            return categoriaSql+buscaSql+ordemSql;
-        }
-
-    }
 
 }
 

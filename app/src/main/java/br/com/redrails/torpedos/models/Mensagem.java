@@ -1,6 +1,8 @@
 package br.com.redrails.torpedos.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Mensagem {
 
@@ -12,7 +14,7 @@ public class Mensagem {
     private Integer avaliacao;
     private Boolean favoritada;
     private Boolean enviada;
-    private ArrayList<String> categorias;
+    private List<String> categorias;
 
     public Mensagem() {
 
@@ -112,6 +114,14 @@ public class Mensagem {
 
     public void setAutor(String autor) {
         this.autor = autor;
+    }
+
+    public void setCategoriasString(String categorias){
+        this.categorias = Arrays.asList(categorias.split(","));
+    }
+
+    public List<String> getCategorias(){
+        return categorias;
     }
 
     @Override

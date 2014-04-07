@@ -156,6 +156,10 @@ public class MensagemDAO {
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
     }
 
+    public void deletarTudo(){
+        dataBase.execSQL("DELETE FROM " + NOME_TABELA);
+    }
+
     public void atualizar(Mensagem mensagem) {
         ContentValues valores = gerarContentValeuesMenssagem(mensagem);
 
@@ -176,9 +180,7 @@ public class MensagemDAO {
             return QUANTIDADE_TOTAL;
     }
 
-    public void deletarTudo(){
-        dataBase.execSQL("DELETE FROM " + NOME_TABELA);
-    }
+
 
     public void fecharConexao() {
         if(dataBase != null && dataBase.isOpen())
@@ -445,20 +447,6 @@ public class MensagemDAO {
 
     }
 
-    public void testData(){
-
-        String attach = "Attach 'database_temp.sqlite' as temp_db";
-        Log.w("RedRails", "ATAACCHIINNGGG");
-        dataBase.execSQL("attach database ? as temp_db", new String[]{DataBaseHelper.DB_PATH+"database_temp.sqlite"});
-        //dataBase.beginTransaction();
-        String str = "SELECT texto FROM temp_db.mensagens";
-        Cursor c = dataBase.rawQuery(str, null);
-        c.moveToFirst();
-        //dataBase.setTransactionSuccessful();
-        //dataBase.endTransaction();
-        //dataBase.close();
-
-    }
 
 }
 
