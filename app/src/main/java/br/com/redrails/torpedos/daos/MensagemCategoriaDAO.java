@@ -17,7 +17,7 @@ import br.com.redrails.torpedos.models.Mensagem;
 public class MensagemCategoriaDAO {
 
 
-    public static final String NOME_TABELA = "mensagem_mensagemCategorias";
+    public static final String NOME_TABELA = "mensagem_categorias";
     public static final String COLUNA_ID = "_id";
     public static final String COLUNA_MENSAGEM_ID = "mensagem_id";
     public static final String COLUNA_CATEGORIA_ID = "mensagemCategoria_id";
@@ -26,7 +26,7 @@ public class MensagemCategoriaDAO {
     public static String SQL_CREATION = "CREATE TABLE "+NOME_TABELA+" (\n" +
             "  "+COLUNA_ID+" INTEGER PRIMARY KEY,\n" +
             "  "+ COLUNA_MENSAGEM_ID +" INTEGER ,\n" +
-            "  "+ COLUNA_CATEGORIA_ID +" INTEGER)\n" +
+            "  "+ COLUNA_CATEGORIA_ID +" INTEGER\n" +
             ");";
 
     private int QUANTIDADE_TOTAL=0;
@@ -131,10 +131,6 @@ public class MensagemCategoriaDAO {
     private ContentValues gerarContentValeuesMensagemCategoria(MensagemCategoria mensagemCategoria) {
         ContentValues values = new ContentValues();
         CategoriaDAO categoriaDao = CategoriaDAO.getInstance(myContext);
-        categoriaDao.getCategoria("diversas");
-
-
-
 
         values.put(COLUNA_MENSAGEM_ID, mensagemCategoria.getCategoriaId());
         values.put(COLUNA_CATEGORIA_ID, String.valueOf(mensagemCategoria.getMensagemId()));

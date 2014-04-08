@@ -46,11 +46,20 @@ public class MensagemDAO {
     private int TIPO_BUSCA_SELECT = 1;
     private int TIPO_BUSCA_COUNT = 2;
 
+    public static String SQL_CREATION = "CREATE TABLE mensagens \n("+
+            " "+COLUNA_ID+" INTEGER PRIMARY KEY ,\n"+
+            " "+COLUNA_TEXTO+" TEXT,\n"+
+            " "+COLUNA_SLUG+" TEXT(16),\n"+
+            " "+COLUNA_AVALIACAO+" REAL DEFAULT (2.5) ,\n"+
+            " "+COLUNA_ENVIADA+" TEXT(8) DEFAULT 'false' ,\n"+
+            " "+COLUNA_FAVORITADA+" TEXT(8) DEFAULT 'false' ,\n"+
+            " "+COLUNA_DATA+" INTEGER DEFAULT (0) ,\n"+
+            " "+COLUNA_AUTOR+" TEXT(64) DEFAULT ('Luiz Carvalho')\n"+
+            ");";
+
     private SQLiteDatabase dataBase = null;
 
     private static MensagemDAO instance;
-
-
 
     public static MensagemDAO getInstance(Context context) {
         if(instance == null)
@@ -85,7 +94,7 @@ public class MensagemDAO {
     public void salvar(Mensagem mensagem) {
         ContentValues values = gerarContentValeuesMenssagem(mensagem);
         dataBase.insert(NOME_TABELA, null, values);
-
+        reloadQuantidadeTotal();
     }
 
     public void atualizarOuSalvar(Mensagem mensagem){
@@ -101,7 +110,7 @@ public class MensagemDAO {
     public Mensagem getMensagemBySlug(String slug){
         Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
                         COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA, COLUNA_AUTOR }, COLUNA_SLUG + "=?",
-                new String[] { String.valueOf(slug) }, null, null, null, null);
+                new String[] { String.valueOf(slug) }, null, null, null, "1");
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
         if(!mensagem.isEmpty()){
@@ -111,10 +120,12 @@ public class MensagemDAO {
     }
 
     public Mensagem getMensagem(int id){
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens WHERE _id=? LIMIT 1",new String[]{String.valueOf(id)});
 
-        Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
+        /*Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
                 COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA, COLUNA_AUTOR }, COLUNA_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
+                */
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
         if(!mensagem.isEmpty()){
@@ -122,6 +133,25 @@ public class MensagemDAO {
         }
         return null;
     }
+
+    public Mensagem getMennsagemByOrder(String order){
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens ORDER BY _id "+order+" LIMIT 1", null);
+        List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
+        // return contact
+        if(!mensagem.isEmpty()){
+            return mensagem.get(0);
+        }
+        return null;
+    }
+
+    public Mensagem first(){
+            return getMennsagemByOrder("ASC");
+    }
+
+    public Mensagem last(){
+        return getMennsagemByOrder("DESC");
+    }
+
 
     public List<Mensagem> recuperarTodas() {
         String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
@@ -154,10 +184,12 @@ public class MensagemDAO {
                 String.valueOf(mensagem.getId())
         };
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
+        reloadQuantidadeTotal();
     }
 
     public void deletarTudo(){
         dataBase.execSQL("DELETE FROM " + NOME_TABELA);
+        QUANTIDADE_TOTAL=0;
     }
 
     public void atualizar(Mensagem mensagem) {
@@ -233,6 +265,7 @@ public class MensagemDAO {
     private ContentValues gerarContentValeuesMenssagem(Mensagem mensagem) {
         ContentValues values = new ContentValues();
         values.put(COLUNA_TEXTO, mensagem.getTexto());
+        values.put(COLUNA_SLUG, mensagem.getSlug());
         values.put(COLUNA_FAVORITADA, String.valueOf(mensagem.getFavoritada()));
         values.put(COLUNA_ENVIADA, String.valueOf(mensagem.getEnviada()));
         values.put(COLUNA_AUTOR, String.valueOf(mensagem.getAutor()));

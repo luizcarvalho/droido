@@ -65,6 +65,7 @@ public class CategoriaDAO {
 
     public Categoria getCategoria(int id){
 
+
         Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
                 COLUNA_NOME, COLUNA_SLUG }, COLUNA_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null);

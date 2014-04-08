@@ -46,7 +46,7 @@ public class Mensagem {
         return slug;
     }
 
-    public void setSlug(String texto) {
+    public void setSlug(String slug) {
         this.slug = slug;
     }
 
@@ -126,7 +126,7 @@ public class Mensagem {
 
     @Override
     public String toString() {
-        return "#< id: "+id+"texto: "+texto+" favoritada: "+favoritada+" enviada: "+enviada+
+        return "#< id: "+id+" texto: "+texto+" slug: "+slug+" favoritada: "+favoritada+" enviada: "+enviada+
                 " autor: "+autor+" data: "+data+" avaliacao: "+avaliacao+" >";
     }
 

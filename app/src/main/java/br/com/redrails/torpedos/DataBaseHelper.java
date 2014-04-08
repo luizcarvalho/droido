@@ -16,6 +16,10 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import br.com.redrails.torpedos.daos.CategoriaDAO;
+import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
+import br.com.redrails.torpedos.daos.MensagemDAO;
+
 
 
 public class DataBaseHelper extends SQLiteOpenHelper{
@@ -30,7 +34,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
 
     private SQLiteDatabase myDataBase;
-    private SQLiteDatabase tempDatabase;
 
     private static DataBaseHelper instance;
 
@@ -185,9 +188,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     }
 
     @Override
-    public void onCreate(SQLiteDatabase arg0) {
-        // TODO Auto-generated method stub
-
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CategoriaDAO.SQL_CREATION);
+        db.execSQL(MensagemDAO.SQL_CREATION);
+        db.execSQL(MensagemCategoriaDAO.SQL_CREATION);
     }
 
 
