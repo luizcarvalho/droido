@@ -10,16 +10,10 @@ public class BaseDAO {
     protected int BUSCA_COUNT = 1;
     protected int BUSCA_SELECT = 2;
 
-    protected int QUANTIDADE_TOTAL=0;
-
     protected static SQLiteDatabase dataBase = null;
-
 
     public void fecharConexao() {
         if(dataBase != null && dataBase.isOpen())
             dataBase.close();
     }
-
-
-
 }

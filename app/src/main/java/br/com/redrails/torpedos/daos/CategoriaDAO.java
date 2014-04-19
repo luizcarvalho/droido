@@ -34,6 +34,7 @@ public class CategoriaDAO extends BaseDAO{
             ");";
 
     private static CategoriaDAO instance;
+    protected int QUANTIDADE_TOTAL=0;
 
 
 
@@ -49,8 +50,10 @@ public class CategoriaDAO extends BaseDAO{
     }
 
     public void salvar(Categoria categoria) {
+        Log.d("Droido","Salvando Categoria "+categoria.getSlug());
         ContentValues values = gerarContentValeuesCategoria(categoria);
         dataBase.insert(NOME_TABELA, null, values);
+        reloadQuantidadeTotal();
     }
 
     public Categoria getCategoria(int id){
@@ -69,6 +72,7 @@ public class CategoriaDAO extends BaseDAO{
 
     public void deletarTudo(){
         dataBase.execSQL("DELETE FROM " + NOME_TABELA);
+        reloadQuantidadeTotal();
     }
 
     public Categoria getCategoria(String slug){
@@ -85,7 +89,7 @@ public class CategoriaDAO extends BaseDAO{
     }
 
 
-    private List<Categoria> categoriasFixas(){
+    public List<Categoria> categoriasFixas(){
 
         List<Categoria> categoriasFixas = new ArrayList<Categoria>();
         Categoria categoriaTodas = new Categoria(Categoria.TODAS,"Todas", null);
@@ -138,6 +142,7 @@ public class CategoriaDAO extends BaseDAO{
                 String.valueOf(categoria.getId())
         };
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
+        recuperarTodas();
     }
 
     public void atualizar(Categoria categoria) {
@@ -157,6 +162,28 @@ public class CategoriaDAO extends BaseDAO{
             reloadQuantidadeTotal();
         }
         return QUANTIDADE_TOTAL;
+    }
+
+    public  List<Categoria> findBySlugs(List<String> categoriasSlugs) {
+        StringBuilder slugs = new StringBuilder();
+
+        slugs.append("(");
+        for(int i = 0; i < categoriasSlugs.size(); i++) {
+            slugs.append("'");
+            slugs.append(categoriasSlugs.get(i));
+            slugs.append("'");
+
+            if (i < categoriasSlugs.size()- 1) {
+                slugs.append(",");
+            }
+        }
+        slugs.append(")");
+
+        String sql = "SELECT * FROM categorias WHERE slug IN "+slugs;
+        Log.d("Droido",sql);
+        Cursor cursor = dataBase.rawQuery(sql,null);
+        Cursor cursor2 = dataBase.rawQuery("SELECT * FROM categorias",null);
+        return converterCursorEmCategorias(cursor);
     }
 
 
@@ -200,7 +227,4 @@ public class CategoriaDAO extends BaseDAO{
         return values;
     }
 
-
-
 }
-

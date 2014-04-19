@@ -14,7 +14,7 @@ import br.com.redrails.torpedos.models.MensagemCategoria;
 import br.com.redrails.torpedos.models.Mensagem;
 
 
-public class MensagemCategoriaDAO {
+public class MensagemCategoriaDAO extends BaseDAO{
 
 
     public static final String NOME_TABELA = "mensagem_categorias";
@@ -30,8 +30,6 @@ public class MensagemCategoriaDAO {
             ");";
 
     private int QUANTIDADE_TOTAL=0;
-
-    private SQLiteDatabase dataBase = null;
 
 
     private static MensagemCategoriaDAO instance;
@@ -68,9 +66,9 @@ public class MensagemCategoriaDAO {
         return null;
     }
 
-    public void deletar(Mensagem mensagem) {
+    public void deletar(MensagemCategoria mensagemCategoria) {
         String[] valoresParaSubstituir = {
-                String.valueOf(mensagem.getId())
+                String.valueOf(mensagemCategoria.getId())
         };
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
     }
@@ -90,9 +88,11 @@ public class MensagemCategoriaDAO {
     }
 
 
-    public void fecharConexao() {
-        if(dataBase != null && dataBase.isOpen())
-            dataBase.close();
+    public List<MensagemCategoria> recuperarTodas() {
+        String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
+        Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
+
+        return converterCursorEmMensagemCategorias(cursor);
     }
 
 

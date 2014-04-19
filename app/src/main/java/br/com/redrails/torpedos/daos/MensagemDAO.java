@@ -12,6 +12,7 @@ import java.util.List;
 import br.com.redrails.torpedos.DataBaseHelper;
 import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.models.Mensagem;
+import br.com.redrails.torpedos.models.MensagemCategoria;
 
 /**
  * Criado por luiz em 10/26/13.
@@ -56,6 +57,7 @@ public class MensagemDAO extends BaseDAO{
 
 
     private static MensagemDAO instance;
+    private CategoriaDAO categoriaDao;
 
     public static MensagemDAO getInstance(Context context) {
         if(instance == null)
@@ -104,7 +106,7 @@ public class MensagemDAO extends BaseDAO{
     }
 
     public Mensagem getMensagemBySlug(String slug){
-        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens WHERE slug=? LIMIT 1",new String[]{String.valueOf(slug)});
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens WHERE slug=? LIMIT 1", new String[]{String.valueOf(slug)});
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
         if(!mensagem.isEmpty()){
@@ -193,8 +195,16 @@ public class MensagemDAO extends BaseDAO{
                 String.valueOf(mensagem.getId())
         };
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
-
     }
+
+    public void atualizarMensagensCategoria(List<String> categoriasSlugs, Mensagem mensagem){
+        if(!categoriasSlugs.isEmpty()){
+            List<Categoria> categorias = categoriaDao.findBySlugs(categoriasSlugs);
+
+            //MensagemCategoria.updateRelation()
+        }
+    }
+
     public void reloadQuantidadeTotal(){
         QUANTIDADE_TOTAL =DatabaseUtils.longForQuery(dataBase,parametrize(BUSCA_COUNT,null) , null);
     }

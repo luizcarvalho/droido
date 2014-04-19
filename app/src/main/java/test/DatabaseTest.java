@@ -1,6 +1,7 @@
 package test;
 
 import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import br.com.redrails.torpedos.daos.CategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
@@ -16,6 +17,7 @@ public class DatabaseTest extends AndroidTestCase{
         super.setUp();
     }
 
+    @SmallTest
     public void testSQLCreationsIsNotNull(){
         assertNotNull(MensagemCategoriaDAO.SQL_CREATION);
         assertNotNull(MensagemDAO.SQL_CREATION);

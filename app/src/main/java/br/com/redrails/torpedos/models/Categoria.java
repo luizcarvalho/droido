@@ -1,6 +1,8 @@
 package br.com.redrails.torpedos.models;
 
 
+import java.util.List;
+
 public class Categoria {
     static public int TIPO_FIXA = 1;
     static public int TIPO_DINAMICA = 2;
@@ -23,7 +25,7 @@ public class Categoria {
         super();
         this.id = id;
         this.nome = nome;
-        this.slug = "slug"+id;
+        this.slug = slug;
         this.tipo = TIPO_DINAMICA;
     }
 
@@ -68,5 +70,4 @@ public class Categoria {
         return nome;
     }
 
-
-} 
+}

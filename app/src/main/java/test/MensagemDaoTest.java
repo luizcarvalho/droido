@@ -2,7 +2,10 @@ package test;
 
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
+import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
+
+import java.util.List;
 
 import br.com.redrails.torpedos.daos.CategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
@@ -14,7 +17,7 @@ import br.com.redrails.torpedos.models.Mensagem;
  * Criado por luiz em 06/04/14.
  * Todos os direitos reservados para RedRails
  */
-public class DaosTest extends AndroidTestCase {
+public class MensagemDaoTest extends AndroidTestCase {
     CategoriaDAO categoriaDao;
     MensagemDAO mensagemDao;
     MensagemCategoriaDAO mensagemCategoriaDao;
@@ -27,29 +30,45 @@ public class DaosTest extends AndroidTestCase {
         RenamingDelegatingContext context
                 = new RenamingDelegatingContext(getContext(), TEST_FILE_PREFIX);
         categoriaDao = CategoriaDAO.getInstance(context);
-        //categoriaDao.deletarTudo();
         mensagemDao = MensagemDAO.getInstance(context);
         mensagemCategoriaDao = MensagemCategoriaDAO.getInstance(context);
     }
 
-    @SmallTest
-    public void testGetCategoriaWithSlug(){
-        Categoria categoria = new Categoria();
-        categoria.setNome("Nova Categoria");
-        categoria.setSlug("nova-categoria");
-        categoriaDao.salvar(categoria);
-        assertEquals(categoriaDao.getQuantidadeTotal(),1);
-        Categoria categoria1 = categoriaDao.getCategoria("nova-categoria");
-        assertEquals(categoria1.getNome(),categoria.getNome());
+    @MediumTest
+    public void testMensagemCRUD() {
+
+
+        Mensagem mensagem = new Mensagem(1,"texto test",false,false,"Autor","1.slug",1,1);
+        MensagemDAO mensagemDAO =  MensagemDAO.getInstance(getContext());
+        mensagemDAO.deletarTudo();
+
+        mensagemDAO.salvar(mensagem);
+
+        List<Mensagem> mensagemsNaBase = mensagemDAO.recuperarTodas();
+        assertFalse(mensagemsNaBase.isEmpty());
+
+        Mensagem mensagemRecuperada = mensagemsNaBase.get(0);
+
+        mensagemRecuperada.setSlug("2.slug");
+
+        mensagemDAO.atualizar(mensagemRecuperada);
+
+        Mensagem mensagemEditado = mensagemDAO.recuperarTodas().get(0);
+
+        assertSame(mensagemRecuperada.getId(), mensagemEditado.getId());
+        assertNotSame(mensagem.getSlug(), mensagemEditado.getSlug());
+
+        mensagemDAO.deletar(mensagemEditado);
+
+        assertTrue(mensagemDAO.recuperarTodas().isEmpty());
+
+        mensagemDAO.fecharConexao();
 
     }
-    @SmallTest
-    public void testSetCategoriasStringInMensagem(){
-        Mensagem mensagem = new Mensagem();
-        mensagem.setCategoriasString("categoria1,categoria2,categoria3");
-        assertEquals(mensagem.getCategorias().size(),3);
-        assertEquals(mensagem.getCategorias().get(2),"categoria3");
-    }
+
+
+
+
 
     @SmallTest
     public void testSetSlugInMensagem(){
@@ -91,6 +110,30 @@ public class DaosTest extends AndroidTestCase {
         Mensagem mensagem = mensagemDao.first();
         assertEquals("first",mensagem.getSlug());
     }
+
+
+    @MediumTest
+    public void notestSaveMensagemWithCategorias(){
+        categoriaDao.deletarTudo();
+        mensagemDao.deletarTudo();
+        Mensagem mensagem = new Mensagem(0,"ok",false,false,"me","1.slug",123,10);
+
+        Categoria categoria1 = new Categoria(1,"categoria 1","categoria1");
+        Categoria categoria2 = new Categoria(2,"categoria 2","categoria2");
+        Categoria categoria3 = new Categoria(3,"categoria 3","categoria3");
+        categoriaDao.salvar(categoria1);
+        categoriaDao.salvar(categoria2);
+        categoriaDao.salvar(categoria3);
+        assertEquals(categoriaDao.getQuantidadeTotal(),3);
+
+        mensagem.setCategoriasString(categoria1.getSlug()+","+categoria2.getSlug()+","+categoria3.getSlug());
+        mensagemDao.salvar(mensagem);
+
+    }
+
+
+
+    
 
     protected void tearDown() throws Exception {
         super.tearDown();

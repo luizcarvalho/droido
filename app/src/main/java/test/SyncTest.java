@@ -3,6 +3,7 @@ package test;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.test.suitebuilder.annotation.LargeTest;
 
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -43,7 +44,7 @@ public class SyncTest extends AndroidTestCase {
         parseHelper = new ParseHelper(context);
 
     }
-
+    @LargeTest
     public void testSaveParseData() throws ParseException {
         mensagemDao.deletarTudo();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("MensagemParse");
@@ -58,6 +59,7 @@ public class SyncTest extends AndroidTestCase {
 
     }
 
+    @LargeTest
     public void testUpdateParseData() throws ParseException {
         long total = mensagemDao.getQuantidadeTotal();
         assertTrue(total>0);
