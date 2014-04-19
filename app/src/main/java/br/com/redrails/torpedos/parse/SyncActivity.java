@@ -48,6 +48,7 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     void retrive_server_messages(){
+        final ParseHelper parseHelper = new ParseHelper(this);
 
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("MensagemParse");
@@ -60,7 +61,7 @@ public class SyncActivity extends ActionBarActivity {
                 String mensagem_result = "";
                 if (e == null) {
                     mensagem_result = mensagemList.size() +" "+getResources().getString(R.string.sync_received_message);
-                    update_database(mensagemList);
+                    parseHelper.updateDatabase(mensagemList);
                 } else {
                     mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
                 }
@@ -70,15 +71,7 @@ public class SyncActivity extends ActionBarActivity {
         });
     }
 
-    void update_database(List<ParseObject> mensagemList){
-        MensagemDAO mensagemDao = MensagemDAO.getInstance(this.getApplicationContext());
-        mensagemDao.deletarTudo();
 
-        for(ParseObject mensagemParse: mensagemList){
-            Mensagem mensagem = MensagemParse.toMensagem(mensagemParse);
-            mensagemDao.atualizarOuSalvar(mensagem);
-        }
-    }
 
 
 

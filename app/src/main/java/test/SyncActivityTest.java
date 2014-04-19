@@ -1,9 +1,14 @@
 package test;
 
 import br.com.redrails.torpedos.BuildConfig;
+import br.com.redrails.torpedos.DataBaseHelper;
 import br.com.redrails.torpedos.R;
+import br.com.redrails.torpedos.daos.MensagemDAO;
+import br.com.redrails.torpedos.models.Mensagem;
+import br.com.redrails.torpedos.parse.ParseHelper;
 import br.com.redrails.torpedos.parse.SyncActivity;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
@@ -13,7 +18,13 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import org.w3c.dom.Text;
+
+import java.util.List;
 
 
 public class SyncActivityTest extends ActivityInstrumentationTestCase2<SyncActivity> {
@@ -30,6 +41,8 @@ public class SyncActivityTest extends ActivityInstrumentationTestCase2<SyncActiv
         activity = getActivity();
         mInstrumentation = getInstrumentation();
     }
+
+
 
 
 

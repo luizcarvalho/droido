@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import br.com.redrails.torpedos.models.Mensagem;
  * Criado por luiz em 10/26/13.
  * Todos os direitos reservados para RedRails
  */
-public class MensagemDAO {
+public class MensagemDAO extends BaseDAO{
 
 
     public static final String NOME_TABELA = "mensagens";
@@ -43,8 +42,6 @@ public class MensagemDAO {
 
     public Filtro filtro;
 
-    private int TIPO_BUSCA_SELECT = 1;
-    private int TIPO_BUSCA_COUNT = 2;
 
     public static String SQL_CREATION = "CREATE TABLE mensagens \n("+
             " "+COLUNA_ID+" INTEGER PRIMARY KEY ,\n"+
@@ -57,7 +54,6 @@ public class MensagemDAO {
             " "+COLUNA_AUTOR+" TEXT(64) DEFAULT ('Luiz Carvalho')\n"+
             ");";
 
-    private SQLiteDatabase dataBase = null;
 
     private static MensagemDAO instance;
 
@@ -108,9 +104,7 @@ public class MensagemDAO {
     }
 
     public Mensagem getMensagemBySlug(String slug){
-        Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
-                        COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA, COLUNA_AUTOR }, COLUNA_SLUG + "=?",
-                new String[] { String.valueOf(slug) }, null, null, null, "1");
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens WHERE slug=? LIMIT 1",new String[]{String.valueOf(slug)});
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
         if(!mensagem.isEmpty()){
@@ -134,7 +128,7 @@ public class MensagemDAO {
         return null;
     }
 
-    public Mensagem getMennsagemByOrder(String order){
+    public Mensagem getMensagemByOrder(String order){
         Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens ORDER BY _id "+order+" LIMIT 1", null);
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
@@ -145,11 +139,11 @@ public class MensagemDAO {
     }
 
     public Mensagem first(){
-            return getMennsagemByOrder("ASC");
+            return getMensagemByOrder("ASC");
     }
 
     public Mensagem last(){
-        return getMennsagemByOrder("DESC");
+        return getMensagemByOrder("DESC");
     }
 
 
@@ -163,7 +157,7 @@ public class MensagemDAO {
     private String parametrize(int tipo, Integer pagina){
         String retorno = " * ";
         String paginacao = paginate(pagina);
-        if(tipo==TIPO_BUSCA_COUNT){
+        if(tipo==BUSCA_COUNT){
             retorno = " COUNT(*) ";
         }
 
@@ -174,7 +168,7 @@ public class MensagemDAO {
 
 
     public List<Mensagem> getMensagens(int pagina) {
-        Cursor cursor = dataBase.rawQuery(parametrize(TIPO_BUSCA_SELECT,pagina), null);
+        Cursor cursor = dataBase.rawQuery(parametrize(BUSCA_SELECT,pagina), null);
         return converterCursorEmMensagens(cursor);
     }
 
@@ -202,7 +196,7 @@ public class MensagemDAO {
 
     }
     public void reloadQuantidadeTotal(){
-        QUANTIDADE_TOTAL =DatabaseUtils.longForQuery(dataBase,parametrize(TIPO_BUSCA_COUNT,null) , null);
+        QUANTIDADE_TOTAL =DatabaseUtils.longForQuery(dataBase,parametrize(BUSCA_COUNT,null) , null);
     }
 
     public long getQuantidadeTotal() {
@@ -211,14 +205,6 @@ public class MensagemDAO {
         }
             return QUANTIDADE_TOTAL;
     }
-
-
-
-    public void fecharConexao() {
-        if(dataBase != null && dataBase.isOpen())
-            dataBase.close();
-    }
-
 
     public List<Mensagem> converterCursorEmMensagens(Cursor cursor) {
         List<Mensagem> mensagens = new ArrayList<Mensagem>();

@@ -27,7 +27,7 @@ public class DaosTest extends AndroidTestCase {
         RenamingDelegatingContext context
                 = new RenamingDelegatingContext(getContext(), TEST_FILE_PREFIX);
         categoriaDao = CategoriaDAO.getInstance(context);
-        categoriaDao.deletarTudo();
+        //categoriaDao.deletarTudo();
         mensagemDao = MensagemDAO.getInstance(context);
         mensagemCategoriaDao = MensagemCategoriaDAO.getInstance(context);
     }
@@ -90,10 +90,7 @@ public class DaosTest extends AndroidTestCase {
 
         Mensagem mensagem = mensagemDao.first();
         assertEquals("first",mensagem.getSlug());
-
-
     }
-
 
     protected void tearDown() throws Exception {
         super.tearDown();

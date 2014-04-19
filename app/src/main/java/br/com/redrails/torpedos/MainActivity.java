@@ -50,7 +50,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     //Dynamic Load
     private ArrayList<Mensagem> mArrayList = new ArrayList<Mensagem>();//Array de Objetos Mensagem para o adapter
     private ListView lista; //Lista de Mensagens
-    private boolean notificado = false;//Verifica se a lista está no modo LOAD
     private MessageAdapter adapter;//Adapter que carrega as mensagens para a ListView
     //private MessageLoadTask task; //Controle de exibição das mensagens em thread
     private TextView footer; //Adicionar o "carregando" no final da ListView
@@ -73,11 +72,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mActionBar.setDisplayShowTitleEnabled(false);//Desativa o Título
         mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
-        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this);
-        dataBaseHelper.openDb();
 
         CategoriaDAO categoriaDao = CategoriaDAO.getInstance(this);
         List<Categoria> categorias = categoriaDao.recuperarTodas();
+
         dropdownAdapter = new ArrayAdapter<Categoria>(this,
                 android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
                 categorias);
@@ -99,7 +97,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         adapter = new MessageAdapter(this, R.layout.row);
         adapter.messageArrayList = mArrayList;
         lista.setAdapter(adapter);
-
 
         reload();
         firstRunActions(this);
@@ -493,6 +490,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         int MAX_ITEMS_PER_PAGE = 20;
         if(mensagemDao.getQuantidadeTotal() > quantidade_carregada){
             //SystemClock.sleep(1000);
+
 
             List<Mensagem> mensagens = mensagemDao.getMensagens(pagina_atual);
 

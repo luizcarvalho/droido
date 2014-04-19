@@ -18,7 +18,7 @@ import br.com.redrails.torpedos.models.Mensagem;
  * Criado por luiz em 10/26/13.
  * Todos os direitos reservados para RedRails
  */
-public class CategoriaDAO {
+public class CategoriaDAO extends BaseDAO{
 
 
     public static final String NOME_TABELA = "categorias";
@@ -32,16 +32,6 @@ public class CategoriaDAO {
             "  "+COLUNA_NOME+" TEXT(32),\n" +
             "  "+COLUNA_SLUG+" TEXT(16)\n" +
             ");";
-
-
-
-    private int BUSCA_COUNT = 1;
-    private int BUSCA_SELECT = 2;
-
-    private int QUANTIDADE_TOTAL=0;
-
-    private SQLiteDatabase dataBase = null;
-
 
     private static CategoriaDAO instance;
 
@@ -123,7 +113,6 @@ public class CategoriaDAO {
                 cursor.close();
             }
         }
-
         return categorias;
     }
 
@@ -144,9 +133,9 @@ public class CategoriaDAO {
         return converterCursorEmCategorias(cursor);
     }
 
-    public void deletar(Mensagem mensagem) {
+    public void deletar(Categoria categoria) {
         String[] valoresParaSubstituir = {
-                String.valueOf(mensagem.getId())
+                String.valueOf(categoria.getId())
         };
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
     }
@@ -158,7 +147,6 @@ public class CategoriaDAO {
                 String.valueOf(categoria.getId())
         };
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
-
     }
     public void reloadQuantidadeTotal(){
         QUANTIDADE_TOTAL = (int) DatabaseUtils.longForQuery(dataBase,parametrize(BUSCA_COUNT,null) , null);
@@ -169,11 +157,6 @@ public class CategoriaDAO {
             reloadQuantidadeTotal();
         }
         return QUANTIDADE_TOTAL;
-    }
-
-    public void fecharConexao() {
-        if(dataBase != null && dataBase.isOpen())
-            dataBase.close();
     }
 
 
