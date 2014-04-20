@@ -10,6 +10,7 @@ import java.util.List;
 import br.com.redrails.torpedos.daos.CategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemDAO;
+import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.models.Mensagem;
 import br.com.redrails.torpedos.models.MensagemCategoria;
 
@@ -32,6 +33,31 @@ public class MensagemCategoriaDaoTest extends AndroidTestCase {
         categoriaDao = CategoriaDAO.getInstance(context);
         mensagemDao = MensagemDAO.getInstance(context);
         mensagemCategoriaDAO = MensagemCategoriaDAO.getInstance(context);
+    }
+
+
+    public void testUpdateRelationship(){
+        mensagemCategoriaDAO.deletarTudo();
+        Categoria categoria1 = new Categoria(1,"categoria 1","categoria1");
+        categoriaDao.salvar(categoria1);
+        Categoria categoria = categoriaDao.getCategoria(categoria1.getSlug());
+        assertEquals(categoria1.getSlug(),categoria.getSlug());
+
+        Mensagem mensagem1 = new Mensagem(1,"texto",false, false, "autor","1.droid",1,1);
+        mensagemDao.salvar(mensagem1);
+        Mensagem mensagem = mensagemDao.getMensagemBySlug(mensagem1.getSlug());
+        assertEquals(mensagem1.getSlug(), mensagem.getSlug());
+
+        mensagem.setCategoria(categoria);
+        assertEquals(1, mensagem.getCategorias().size());
+
+
+        mensagemCategoriaDAO.atualizarRelacionamento(mensagem);
+        assertEquals(1,mensagemCategoriaDAO.getQuantidadeTotal());
+        List<MensagemCategoria> mensagemCategorias = mensagemCategoriaDAO.recuperarTodas();
+        int id = mensagemCategorias.get(0).getCategoriaId();
+        assertEquals(categoria.getId(), id);
+
     }
 
 

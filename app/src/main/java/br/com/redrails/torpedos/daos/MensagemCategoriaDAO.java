@@ -3,6 +3,7 @@ package br.com.redrails.torpedos.daos;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
 
     private static MensagemCategoriaDAO instance;
     private static Context myContext;
+    private CategoriaDAO categoriaDAO;
 
 
     public static MensagemCategoriaDAO getInstance(Context context) {
@@ -46,11 +48,13 @@ public class MensagemCategoriaDAO extends BaseDAO{
         myContext=context;
         DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
         dataBase = persistenceHelper.getWritableDatabase();
+        categoriaDAO = CategoriaDAO.getInstance(context);
     }
 
     public void salvar(MensagemCategoria mensagemCategoria) {
         ContentValues values = gerarContentValeuesMensagemCategoria(mensagemCategoria);
         dataBase.insert(NOME_TABELA, null, values);
+        reloadQuantidadeTotal();
     }
 
     public MensagemCategoria getMensagemCategoria(int id){
@@ -71,10 +75,12 @@ public class MensagemCategoriaDAO extends BaseDAO{
                 String.valueOf(mensagemCategoria.getId())
         };
         dataBase.delete(NOME_TABELA, COLUNA_ID + " =  ?", valoresParaSubstituir);
+        reloadQuantidadeTotal();
     }
 
     public void deletarTudo(){
         dataBase.execSQL("DELETE FROM " + NOME_TABELA);
+        reloadQuantidadeTotal();
     }
 
     public void atualizar(MensagemCategoria mensagemCategoria) {
@@ -84,7 +90,24 @@ public class MensagemCategoriaDAO extends BaseDAO{
                 String.valueOf(mensagemCategoria.getId())
         };
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
+        recuperarTodas();
 
+    }
+
+    public int atualizarRelacionamento(Mensagem mensagem){
+        int count = 0;
+        if(!mensagem.getCategorias().isEmpty()){
+
+            List<Categoria> categorias = categoriaDAO.findBySlugs(mensagem.getCategorias());
+            MensagemCategoria mensagemCategoria;
+
+            for(Categoria categoria : categorias){
+                mensagemCategoria = new MensagemCategoria(0,categoria.getId(), mensagem.getId());
+                salvar(mensagemCategoria);
+            }
+
+        }
+        return  count;
     }
 
 
@@ -93,6 +116,18 @@ public class MensagemCategoriaDAO extends BaseDAO{
         Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
 
         return converterCursorEmMensagemCategorias(cursor);
+    }
+
+
+    public void reloadQuantidadeTotal(){
+        QUANTIDADE_TOTAL = (int) DatabaseUtils.longForQuery(dataBase,"SELECT count(*) "+NOME_TABELA, null);
+    }
+
+    public long getQuantidadeTotal() {
+        if(QUANTIDADE_TOTAL == 0){
+            reloadQuantidadeTotal();
+        }
+        return QUANTIDADE_TOTAL;
     }
 
 

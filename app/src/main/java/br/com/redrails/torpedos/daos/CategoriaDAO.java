@@ -164,26 +164,29 @@ public class CategoriaDAO extends BaseDAO{
         return QUANTIDADE_TOTAL;
     }
 
-    public  List<Categoria> findBySlugs(List<String> categoriasSlugs) {
+    public  List<Categoria> findBySlugs(List<Categoria> categorias) {
+        String slugs = slugfyList(categorias);
+        String sql = "SELECT * FROM categorias WHERE slug IN "+slugs;
+        Log.d("Droido",sql);
+        Cursor cursor = dataBase.rawQuery(sql,null);
+        return converterCursorEmCategorias(cursor);
+    }
+
+    private String slugfyList(List<Categoria> categorias){
+
         StringBuilder slugs = new StringBuilder();
-
         slugs.append("(");
-        for(int i = 0; i < categoriasSlugs.size(); i++) {
+        for(int i = 0; i < categorias.size(); i++) {
             slugs.append("'");
-            slugs.append(categoriasSlugs.get(i));
+            slugs.append(categorias.get(i).getSlug());
             slugs.append("'");
 
-            if (i < categoriasSlugs.size()- 1) {
+            if (i < categorias.size()- 1) {
                 slugs.append(",");
             }
         }
         slugs.append(")");
-
-        String sql = "SELECT * FROM categorias WHERE slug IN "+slugs;
-        Log.d("Droido",sql);
-        Cursor cursor = dataBase.rawQuery(sql,null);
-        Cursor cursor2 = dataBase.rawQuery("SELECT * FROM categorias",null);
-        return converterCursorEmCategorias(cursor);
+        return slugs.toString();
     }
 
 

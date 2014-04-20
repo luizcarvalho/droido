@@ -199,7 +199,7 @@ public class MensagemDAO extends BaseDAO{
 
     public void atualizarMensagensCategoria(List<String> categoriasSlugs, Mensagem mensagem){
         if(!categoriasSlugs.isEmpty()){
-            List<Categoria> categorias = categoriaDao.findBySlugs(categoriasSlugs);
+
 
             //MensagemCategoria.updateRelation()
         }

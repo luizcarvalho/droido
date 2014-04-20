@@ -83,7 +83,7 @@ public class CategoriaDaoTest extends AndroidTestCase {
         Mensagem mensagem = new Mensagem();
         mensagem.setCategoriasString("categoria1,categoria2,categoria3");
         assertEquals(mensagem.getCategorias().size(),3);
-        assertEquals(mensagem.getCategorias().get(2),"categoria3");
+        assertEquals(mensagem.getCategorias().get(2).getSlug(),"categoria3");
     }
 
     @MediumTest
@@ -101,16 +101,16 @@ public class CategoriaDaoTest extends AndroidTestCase {
         categoriaDao.salvar(categoria3);
         assertEquals(3,categoriaDao.getQuantidadeTotal());
 
-        List<String> categoriaSlugs = new ArrayList<String>();
-        categoriaSlugs.add("categoria1");
-        categoriaSlugs.add("categoria2");
-        categoriaSlugs.add("categoria3");
-        List<Categoria> categorias = categoriaDao.findBySlugs(categoriaSlugs);
-        assertEquals(3,categorias.size());
+        List<Categoria> categorias = new ArrayList<Categoria>();
+        categorias.add(categoria1);
+        categorias.add(categoria2);
+        categorias.add(categoria3);
+        List<Categoria> categoriasRecuperadas = categoriaDao.findBySlugs(categorias);
+        assertEquals(3,categoriasRecuperadas.size());
 
-        assertEquals(categorias.get(0).getSlug(),"categoria1");
-        assertEquals(categorias.get(1).getSlug(),"categoria2");
-        assertEquals(categorias.get(2).getSlug(),"categoria3");
+        assertEquals(categoriasRecuperadas.get(0).getSlug(),"categoria1");
+        assertEquals(categoriasRecuperadas.get(1).getSlug(),"categoria2");
+        assertEquals(categoriasRecuperadas.get(2).getSlug(),"categoria3");
 
     }
 

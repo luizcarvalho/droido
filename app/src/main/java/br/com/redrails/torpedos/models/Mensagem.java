@@ -14,7 +14,7 @@ public class Mensagem {
     private Integer avaliacao;
     private Boolean favoritada;
     private Boolean enviada;
-    private List<String> categorias;
+    private List<Categoria> categorias = new ArrayList<Categoria>();
 
     public Mensagem() {
 
@@ -117,10 +117,17 @@ public class Mensagem {
     }
 
     public void setCategoriasString(String categorias){
-        this.categorias = Arrays.asList(categorias.split(","));
+        for(String categoriaSlug : categorias.split(",")){
+            Categoria categoria = new Categoria(0,categoriaSlug,categoriaSlug);
+            this.categorias.add(categoria);
+        }
     }
 
-    public List<String> getCategorias(){
+    public void setCategoria(Categoria categoria) {
+        this.categorias.add(categoria);
+    }
+
+    public List<Categoria> getCategorias(){
         return categorias;
     }
 
@@ -131,4 +138,4 @@ public class Mensagem {
     }
 
 
-} 
+}

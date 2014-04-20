@@ -1,5 +1,6 @@
 package br.com.redrails.torpedos.daos;
 
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -16,4 +17,5 @@ public class BaseDAO {
         if(dataBase != null && dataBase.isOpen())
             dataBase.close();
     }
+
 }
