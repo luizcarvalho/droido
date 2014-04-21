@@ -38,25 +38,39 @@ public class MensagemCategoriaDaoTest extends AndroidTestCase {
 
     public void testUpdateRelationship(){
         mensagemCategoriaDAO.deletarTudo();
+        categoriaDao.deletarTudo();
         Categoria categoria1 = new Categoria(1,"categoria 1","categoria1");
+        Categoria categoria2 = new Categoria(2,"categoria 2","categoria2");
+        Categoria categoria3 = new Categoria(3,"categoria 3","categoria3");
+
         categoriaDao.salvar(categoria1);
-        Categoria categoria = categoriaDao.getCategoria(categoria1.getSlug());
-        assertEquals(categoria1.getSlug(),categoria.getSlug());
+        categoriaDao.salvar(categoria2);
+        categoriaDao.salvar(categoria3);
+
+        Categoria categoriaDb1 = categoriaDao.getCategoria(categoria1.getSlug());
+        Categoria categoriaDb2 = categoriaDao.getCategoria(categoria2.getSlug());
+        Categoria categoriaDb3 = categoriaDao.getCategoria(categoria3.getSlug());
+
+        assertEquals(categoria1.getSlug(), categoriaDb1.getSlug());
 
         Mensagem mensagem1 = new Mensagem(1,"texto",false, false, "autor","1.droid",1,1);
         mensagemDao.salvar(mensagem1);
         Mensagem mensagem = mensagemDao.getMensagemBySlug(mensagem1.getSlug());
         assertEquals(mensagem1.getSlug(), mensagem.getSlug());
 
-        mensagem.setCategoria(categoria);
-        assertEquals(1, mensagem.getCategorias().size());
+        mensagem.setCategoria(categoriaDb1);
+        mensagem.setCategoria(categoriaDb2);
+        mensagem.setCategoria(categoriaDb3);
+        assertEquals(3, mensagem.getCategorias().size());
 
 
         mensagemCategoriaDAO.atualizarRelacionamento(mensagem);
-        assertEquals(1,mensagemCategoriaDAO.getQuantidadeTotal());
-        List<MensagemCategoria> mensagemCategorias = mensagemCategoriaDAO.recuperarTodas();
-        int id = mensagemCategorias.get(0).getCategoriaId();
-        assertEquals(categoria.getId(), id);
+        assertEquals(3,mensagemCategoriaDAO.getQuantidadeTotal());
+
+        List<Categoria> mensagemCategorias = categoriaDao.getCategoriasFromMensagem(mensagem.getId());
+        assertEquals(3, mensagemCategorias.size());
+        assertEquals(categoriaDb1.getSlug(),mensagemCategorias.get(0).getSlug());
+        assertEquals(categoriaDb2.getSlug(),mensagemCategorias.get(1).getSlug());
 
     }
 

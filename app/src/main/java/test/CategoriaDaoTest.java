@@ -40,29 +40,26 @@ public class CategoriaDaoTest extends AndroidTestCase {
     public void testCategoriaCRUD() {
 
         Categoria categoria = new Categoria(1,"Engracada","engracada");
-        CategoriaDAO categoriaDAO =  CategoriaDAO.getInstance(getContext());
-        categoriaDAO.deletarTudo();
+        categoriaDao.deletarTudo();
 
-        categoriaDAO.salvar(categoria);
+        categoriaDao.salvar(categoria);
 
-        List<Categoria> categoriasNaBase = categoriaDAO.recuperarTodas();
+        List<Categoria> categoriasNaBase = categoriaDao.recuperarTodas();
         assertFalse(categoriasNaBase.isEmpty());
 
         Categoria categoriaRecuperado = categoriasNaBase.get(0);
         categoriaRecuperado.setSlug("funny");
 
-        categoriaDAO.atualizar(categoriaRecuperado);
+        categoriaDao.atualizar(categoriaRecuperado);
 
-        Categoria categoriaEditado = categoriaDAO.recuperarTodas().get(0);
+        Categoria categoriaEditado = categoriaDao.recuperarTodas().get(0);
 
         assertSame(categoriaRecuperado.getId(), categoriaEditado.getId());
         assertNotSame(categoria.getSlug(), categoriaEditado.getSlug());
 
-        categoriaDAO.deletar(categoriaEditado);
+        categoriaDao.deletar(categoriaEditado);
 
-        assertEquals(categoriaDAO.recuperarTodas().size(),categoriaDAO.categoriasFixas().size());
-
-        categoriaDAO.fecharConexao();
+        assertEquals(categoriaDao.recuperarTodas().size(), categoriaDao.categoriasFixas().size());
 
     }
 
@@ -89,22 +86,9 @@ public class CategoriaDaoTest extends AndroidTestCase {
     @MediumTest
     public void testGetCategoriasBySlug(){
 
-        categoriaDao.deletarTudo();
-        //assertEquals(0,categoriaDao.getQuantidadeTotal());
-
-        Categoria categoria1 = new Categoria(1,"categoria 1","categoria1");
-        Categoria categoria2 = new Categoria(2,"categoria 2","categoria2");
-        Categoria categoria3 = new Categoria(3,"categoria 3","categoria3");
-
-        categoriaDao.salvar(categoria1);
-        categoriaDao.salvar(categoria2);
-        categoriaDao.salvar(categoria3);
+        List<Categoria> categorias = createListOfCategories();
         assertEquals(3,categoriaDao.getQuantidadeTotal());
 
-        List<Categoria> categorias = new ArrayList<Categoria>();
-        categorias.add(categoria1);
-        categorias.add(categoria2);
-        categorias.add(categoria3);
         List<Categoria> categoriasRecuperadas = categoriaDao.findBySlugs(categorias);
         assertEquals(3,categoriasRecuperadas.size());
 
@@ -113,6 +97,9 @@ public class CategoriaDaoTest extends AndroidTestCase {
         assertEquals(categoriasRecuperadas.get(2).getSlug(),"categoria3");
 
     }
+
+
+
 
     private List<Categoria> createListOfCategories(){
         List<Categoria> result = new ArrayList<Categoria> ();
@@ -134,6 +121,9 @@ public class CategoriaDaoTest extends AndroidTestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        categoriaDao.fecharConexao();
+        mensagemDao.fecharConexao();
+        mensagemCategoriaDao.fecharConexao();
     }
 
 }

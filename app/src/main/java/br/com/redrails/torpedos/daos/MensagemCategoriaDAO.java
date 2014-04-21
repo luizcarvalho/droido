@@ -21,7 +21,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
     public static final String NOME_TABELA = "mensagem_categorias";
     public static final String COLUNA_ID = "_id";
     public static final String COLUNA_MENSAGEM_ID = "mensagem_id";
-    public static final String COLUNA_CATEGORIA_ID = "mensagemCategoria_id";
+    public static final String COLUNA_CATEGORIA_ID = "categoria_id";
 
 
     public static String SQL_CREATION = "CREATE TABLE "+NOME_TABELA+" (\n" +
@@ -102,6 +102,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
             MensagemCategoria mensagemCategoria;
 
             for(Categoria categoria : categorias){
+                count+=1;
                 mensagemCategoria = new MensagemCategoria(0,categoria.getId(), mensagem.getId());
                 salvar(mensagemCategoria);
             }
@@ -120,7 +121,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
 
 
     public void reloadQuantidadeTotal(){
-        QUANTIDADE_TOTAL = (int) DatabaseUtils.longForQuery(dataBase,"SELECT count(*) "+NOME_TABELA, null);
+        QUANTIDADE_TOTAL = dataBase.rawQuery("SELECT * FROM "+NOME_TABELA, null).getCount();
     }
 
     public long getQuantidadeTotal() {
@@ -142,8 +143,8 @@ public class MensagemCategoriaDAO extends BaseDAO{
                 do {
 
                     int indexID = cursor.getColumnIndex(COLUNA_ID);
-                    int indexCategoriaId = cursor.getColumnIndex(COLUNA_MENSAGEM_ID);
-                    int indexMensagemId = cursor.getColumnIndex(COLUNA_CATEGORIA_ID);
+                    int indexCategoriaId = cursor.getColumnIndex(COLUNA_CATEGORIA_ID);
+                    int indexMensagemId = cursor.getColumnIndex(COLUNA_MENSAGEM_ID);
 
 
                     int id = cursor.getInt(indexID);
@@ -167,8 +168,8 @@ public class MensagemCategoriaDAO extends BaseDAO{
         ContentValues values = new ContentValues();
         CategoriaDAO categoriaDao = CategoriaDAO.getInstance(myContext);
 
-        values.put(COLUNA_MENSAGEM_ID, mensagemCategoria.getCategoriaId());
-        values.put(COLUNA_CATEGORIA_ID, String.valueOf(mensagemCategoria.getMensagemId()));
+        values.put(COLUNA_CATEGORIA_ID, mensagemCategoria.getCategoriaId());
+        values.put(COLUNA_MENSAGEM_ID, String.valueOf(mensagemCategoria.getMensagemId()));
 
         return values;
     }

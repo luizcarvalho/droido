@@ -58,6 +58,10 @@ dependencies {
 
 }
 
+task getHomeDir << {
+    println gradle.gradleHomeDir
+}
+
 /*
 task addTest {
     def src = ['src/test/java']

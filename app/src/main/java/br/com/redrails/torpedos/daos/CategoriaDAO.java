@@ -88,6 +88,27 @@ public class CategoriaDAO extends BaseDAO{
         return null;
     }
 
+    public List<Categoria> getCategoriasFromMensagem(int mensagemId){
+        String query = "SELECT * FROM " + NOME_TABELA+
+                " LEFT JOIN mensagem_categorias ON mensagem_categorias.categoria_id = categorias._id  " +
+                " WHERE mensagem_categorias.mensagem_id="+mensagemId;
+
+        List<Categoria> categorias = new ArrayList<Categoria>();
+        Cursor cursor=null;
+        try{
+            cursor = dataBase.rawQuery(query, null);
+            categorias = converterCursorEmCategorias(cursor);
+        }catch (Exception e){
+            Log.e("RedRails", "Erro: "+e.getMessage());
+
+        }finally {
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+        return categorias;
+    }
+
 
     public List<Categoria> categoriasFixas(){
 
