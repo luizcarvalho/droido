@@ -17,8 +17,6 @@ import com.parse.ParseQuery;
 import java.util.List;
 
 import br.com.redrails.torpedos.R;
-import br.com.redrails.torpedos.daos.MensagemDAO;
-import br.com.redrails.torpedos.models.Mensagem;
 
 public class SyncActivity extends ActionBarActivity {
     TextView result;
@@ -38,7 +36,7 @@ public class SyncActivity extends ActionBarActivity {
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                retrive_server_messages();
+                retrieveServerData();
             }
         });
     }
@@ -47,12 +45,15 @@ public class SyncActivity extends ActionBarActivity {
 
     }
 
-    void retrive_server_messages(){
-        final ParseHelper parseHelper = new ParseHelper(this);
+    void retrieveServerData(){
+        ParseHelper parseHelper = new ParseHelper(this);
+        retrieveCategorias(parseHelper);
+        retrieveMensagens(parseHelper);
+    }
 
 
+    void retrieveMensagens(final ParseHelper parseHelper){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("MensagemParse");
-        query.setLimit(10);
 
         query.findInBackground(new FindCallback<ParseObject>() {
 
@@ -61,17 +62,33 @@ public class SyncActivity extends ActionBarActivity {
                 String mensagem_result = "";
                 if (e == null) {
                     mensagem_result = mensagemList.size() +" "+getResources().getString(R.string.sync_received_message);
-                    parseHelper.updateDatabase(mensagemList);
+                    parseHelper.updateMensagens(mensagemList);
                 } else {
                     mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
                 }
-                result.setText(mensagem_result);
-                Log.d("Droido", "MENSAGEM RESULT: "+mensagem_result);
+                result.setText(result.getText()+"\n"+mensagem_result);
             }
         });
     }
 
+    void retrieveCategorias(final ParseHelper parseHelper){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("CategoriaParse");
 
+        query.findInBackground(new FindCallback<ParseObject>() {
+
+            @Override
+            public void done(List<ParseObject> categoriaList, com.parse.ParseException e) {
+                String categoriaResult = "";
+                if (e == null) {
+                    categoriaResult = categoriaList.size() +" "+getResources().getString(R.string.sync_received_categories);
+                    parseHelper.updateCategorias(categoriaList);
+                } else {
+                    categoriaResult = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
+                }
+                result.setText(result.getText()+"\n"+categoriaResult);
+            }
+        });
+    }
 
 
 

@@ -6,7 +6,9 @@ import com.parse.ParseObject;
 
 import java.util.List;
 
+import br.com.redrails.torpedos.daos.CategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemDAO;
+import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.models.Mensagem;
 
 /**
@@ -19,7 +21,7 @@ public class ParseHelper {
         context = contexto;
     }
 
-    public void updateDatabase(List<ParseObject> mensagemList){
+    public void updateMensagens(List<ParseObject> mensagemList){
         MensagemDAO mensagemDao = MensagemDAO.getInstance(context);
 
         for(ParseObject mensagemParse: mensagemList){
@@ -27,4 +29,18 @@ public class ParseHelper {
             mensagemDao.atualizarOuSalvar(mensagem);
         }
     }
+
+
+    public void updateCategorias(List<ParseObject> categoriaList){
+        CategoriaDAO categoriaDao = CategoriaDAO.getInstance(context);
+
+        for(ParseObject categoriaParse: categoriaList){
+            Categoria categoria = CategoriaParse.toCategoria(categoriaParse);
+            categoriaDao.atualizarOuSalvar(categoria);
+        }
+    }
+
+
+
+
 }

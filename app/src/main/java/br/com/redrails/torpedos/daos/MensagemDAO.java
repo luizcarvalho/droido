@@ -101,7 +101,7 @@ public class MensagemDAO extends BaseDAO{
             Log.d("Droido","Salvando: "+mensagem.getSlug());
         }else{
             Log.d("Droido","Atualizando: "+mensagem.getSlug());
-            atualizar(mensagem);
+            atualizarPorSlug(mensagem);
         }
     }
 
@@ -188,13 +188,22 @@ public class MensagemDAO extends BaseDAO{
         QUANTIDADE_TOTAL=0;
     }
 
+    public void atualizarPorSlug(Mensagem mensagem) {
+        ContentValues valores = gerarContentValeuesMenssagem(mensagem);
+
+        String[] slug = {
+                mensagem.getSlug()
+        };
+        dataBase.update(NOME_TABELA, valores, COLUNA_SLUG + " = ?", slug);
+    }
+
     public void atualizar(Mensagem mensagem) {
         ContentValues valores = gerarContentValeuesMenssagem(mensagem);
 
-        String[] valoresParaSubstituir = {
+        String[] id = {
                 String.valueOf(mensagem.getId())
         };
-        dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
+        dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", id);
     }
 
     public void atualizarMensagensCategoria(List<String> categoriasSlugs, Mensagem mensagem){
@@ -258,13 +267,20 @@ public class MensagemDAO extends BaseDAO{
         return mensagens;
     }
 
+    private ContentValues setValues(ContentValues values, String coluna, String valor){
+        if(valor!="null")
+            values.put(coluna, valor);
+
+        return values;
+    }
+
     private ContentValues gerarContentValeuesMenssagem(Mensagem mensagem) {
         ContentValues values = new ContentValues();
-        values.put(COLUNA_TEXTO, mensagem.getTexto());
-        values.put(COLUNA_SLUG, mensagem.getSlug());
-        values.put(COLUNA_FAVORITADA, String.valueOf(mensagem.getFavoritada()));
-        values.put(COLUNA_ENVIADA, String.valueOf(mensagem.getEnviada()));
-        values.put(COLUNA_AUTOR, String.valueOf(mensagem.getAutor()));
+        values = setValues(values, COLUNA_TEXTO, mensagem.getTexto());
+        values = setValues(values, COLUNA_SLUG, mensagem.getSlug());
+        values = setValues(values, COLUNA_FAVORITADA, String.valueOf(mensagem.getFavoritada()));
+        values = setValues(values, COLUNA_ENVIADA, String.valueOf(mensagem.getEnviada()));
+        values = setValues(values, COLUNA_AUTOR, String.valueOf(mensagem.getAutor()));
 
         return values;
     }

@@ -53,16 +53,11 @@ dependencies {
     compile files('src/main/libs/libGoogleAnalyticsServices.jar')
     compile files('src/main/libs/Parse-1.4.2.jar')
 
-    //androidTestCompile 'org.robolectric:robolectric:2.+'
-    //androidTestCompile 'junit:junit:3.8'
-
 }
 
 task getHomeDir << {
     println gradle.gradleHomeDir
-}
-
-/*
+}/*
 task addTest {
     def src = ['src/test/java']
     def file = file("app.iml")
@@ -93,3 +88,4 @@ gradle.projectsEvaluated {
 }
 
 */
+

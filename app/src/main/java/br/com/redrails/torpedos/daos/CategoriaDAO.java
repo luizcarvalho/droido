@@ -251,4 +251,35 @@ public class CategoriaDAO extends BaseDAO{
         return values;
     }
 
+    public void atualizarOuSalvar(Categoria categoria) {
+
+            if(getCategoriaBySlug(categoria.getSlug())==null){
+                salvar(categoria);
+                Log.d("Droido","Salvando: "+categoria.getSlug());
+            }else{
+                Log.d("Droido","Atualizando: "+categoria.getSlug());
+                atualizarPorSlug(categoria);
+            }
+    }
+
+    public Categoria getCategoriaBySlug(String slug){
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM "+NOME_TABELA+" WHERE slug=? LIMIT 1", new String[]{String.valueOf(slug)});
+        List<Categoria> categorias = converterCursorEmCategorias(cursor);
+        // return contact
+        if(!categorias.isEmpty()){
+            return categorias.get(0);
+        }
+        return null;
+    }
+
+    public void atualizarPorSlug(Categoria categoria) {
+        ContentValues valores = gerarContentValeuesCategoria(categoria);
+
+        String[] slug = {
+                categoria.getSlug()
+        };
+        dataBase.update(NOME_TABELA, valores, COLUNA_SLUG + " = ?", slug);
+    }
+
+
 }

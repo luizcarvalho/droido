@@ -2,8 +2,9 @@ package test;
 
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
-import android.test.suitebuilder.annotation.SmallTest;
+
 import android.test.suitebuilder.annotation.LargeTest;
+
 
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -15,7 +16,6 @@ import java.util.List;
 import br.com.redrails.torpedos.daos.CategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemDAO;
-import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.models.Mensagem;
 import br.com.redrails.torpedos.parse.ParseHelper;
 
@@ -51,7 +51,7 @@ public class SyncTest extends AndroidTestCase {
         query.setLimit(3);
         List<ParseObject> result = query.find();
         int totalRecebido = result.size();
-        parseHelper.updateDatabase(result);
+        parseHelper.updateMensagens(result);
         assertTrue(mensagemDao.getQuantidadeTotal()>0);
         assertEquals(totalRecebido, mensagemDao.getQuantidadeTotal());
         Mensagem mensagem = mensagemDao.first();
@@ -67,9 +67,14 @@ public class SyncTest extends AndroidTestCase {
         int id = mensagem.getId();
         mensagem.setEnviada(true);
         mensagem.setFavoritada(true);
+        String textoAntigo = "texto_nao_padrao";
+        mensagem.setTexto(textoAntigo);
+
         mensagemDao.atualizar(mensagem);
         assertEquals(total, mensagemDao.getQuantidadeTotal());
         mensagem = mensagemDao.getMensagem(id);
+
+
         assertTrue(mensagem.getFavoritada());
         assertTrue(mensagem.getEnviada());
 
@@ -77,13 +82,17 @@ public class SyncTest extends AndroidTestCase {
         query.setLimit(3);
         List<ParseObject> result = query.find();
 
-        int totalRecebido = result.size();
-        parseHelper.updateDatabase(result);
+
+        parseHelper.updateMensagens(result);
 
         assertEquals(total, mensagemDao.getQuantidadeTotal());
         mensagem = mensagemDao.getMensagem(id);
+
+        
+        assertTrue(!textoAntigo.equalsIgnoreCase(mensagem.getTexto()));
         assertTrue(mensagem.getFavoritada());
         assertTrue(mensagem.getEnviada());
+
 
     }
 
