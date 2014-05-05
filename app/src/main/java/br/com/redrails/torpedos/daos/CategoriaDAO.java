@@ -175,7 +175,9 @@ public class CategoriaDAO extends BaseDAO{
         dataBase.update(NOME_TABELA, valores, COLUNA_ID + " = ?", valoresParaSubstituir);
     }
     public void reloadQuantidadeTotal(){
-        QUANTIDADE_TOTAL = (int) DatabaseUtils.longForQuery(dataBase,parametrize(BUSCA_COUNT,null) , null);
+        int dinamicQuant = (int) DatabaseUtils.longForQuery(dataBase,parametrize(BUSCA_COUNT,null) , null);
+        int staticQuantidade = categoriasFixas().size();
+        QUANTIDADE_TOTAL = dinamicQuant+staticQuantidade;
     }
 
     public long getQuantidadeTotal() {
@@ -279,6 +281,20 @@ public class CategoriaDAO extends BaseDAO{
                 categoria.getSlug()
         };
         dataBase.update(NOME_TABELA, valores, COLUNA_SLUG + " = ?", slug);
+    }
+
+    public Categoria getCategoriaByOrder(String order){
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM categorias ORDER BY _id "+order+" LIMIT 1", null);
+        List<Categoria> categorias = converterCursorEmCategorias(cursor);
+        // return contact
+        if(!categorias.isEmpty()){
+            return categorias.get(0);
+        }
+        return null;
+    }
+
+    public Categoria first(){
+        return getCategoriaByOrder("ASC");
     }
 
 

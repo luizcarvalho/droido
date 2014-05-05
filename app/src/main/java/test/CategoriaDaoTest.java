@@ -23,6 +23,7 @@ public class CategoriaDaoTest extends AndroidTestCase {
     MensagemDAO mensagemDao;
     MensagemCategoriaDAO mensagemCategoriaDao;
     private static final String TEST_FILE_PREFIX = "test_";
+    int quantidadeCategoriasEstaticas = 0;
 
 
     @Override
@@ -34,6 +35,7 @@ public class CategoriaDaoTest extends AndroidTestCase {
         //categoriaDao.deletarTudo();
         mensagemDao = MensagemDAO.getInstance(context);
         mensagemCategoriaDao = MensagemCategoriaDAO.getInstance(context);
+        quantidadeCategoriasEstaticas = categoriaDao.categoriasFixas().size();
     }
 
 
@@ -66,11 +68,12 @@ public class CategoriaDaoTest extends AndroidTestCase {
 
     @SmallTest
     public void testGetCategoriaWithSlug(){
+
         Categoria categoria = new Categoria();
         categoria.setNome("Nova Categoria");
         categoria.setSlug("nova-categoria");
         categoriaDao.salvar(categoria);
-        assertEquals(categoriaDao.getQuantidadeTotal(),1);
+        assertEquals(categoriaDao.getQuantidadeTotal(),1+quantidadeCategoriasEstaticas);
         Categoria categoria1 = categoriaDao.getCategoria("nova-categoria");
         assertEquals(categoria1.getNome(),categoria.getNome());
 
@@ -79,15 +82,15 @@ public class CategoriaDaoTest extends AndroidTestCase {
     public void testSetCategoriasStringInMensagem(){
         Mensagem mensagem = new Mensagem();
         mensagem.setCategoriasString("categoria1,categoria2,categoria3");
-        assertEquals(mensagem.getCategorias().size(),3);
-        assertEquals(mensagem.getCategorias().get(2).getSlug(),"categoria3");
+        assertEquals(3,mensagem.getCategorias().size());
+        assertEquals("categoria3", mensagem.getCategorias().get(2).getSlug());
     }
 
     @MediumTest
     public void testGetCategoriasBySlug(){
 
         List<Categoria> categorias = createListOfCategories();
-        assertEquals(3,categoriaDao.getQuantidadeTotal());
+        assertEquals(3+quantidadeCategoriasEstaticas,categoriaDao.getQuantidadeTotal());
 
         List<Categoria> categoriasRecuperadas = categoriaDao.findBySlugs(categorias);
         assertEquals(3,categoriasRecuperadas.size());

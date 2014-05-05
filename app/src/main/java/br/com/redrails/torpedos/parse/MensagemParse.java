@@ -25,6 +25,7 @@ public class MensagemParse {
         mensagem.setAutor(mensagemParse.getString(KEY_AUTOR));
         mensagem.setData(mensagemParse.getInt(KEY_DATA));
         mensagem.setAvaliacao(mensagemParse.getInt(KEY_AVALIACAO));
+        mensagem.setCategoriasString(mensagemParse.getString(KEY_CATEGORIAS));
 
         return mensagem;
     }

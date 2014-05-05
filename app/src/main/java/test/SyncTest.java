@@ -16,6 +16,7 @@ import java.util.List;
 import br.com.redrails.torpedos.daos.CategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
 import br.com.redrails.torpedos.daos.MensagemDAO;
+import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.models.Mensagem;
 import br.com.redrails.torpedos.parse.ParseHelper;
 
@@ -37,7 +38,7 @@ public class SyncTest extends AndroidTestCase {
 
         RenamingDelegatingContext context
                 = new RenamingDelegatingContext(getContext(), TEST_FILE_PREFIX);
-        Parse.initialize(context, "IjHMioV35jvHn4LUpn4Xm6aTh51qNmUKPieVqdT3", "S5LWQJYulqwvanhDlhq1gXRAhUhhhKezmDQ5fZp9");
+        Parse.initialize(context, "faW99J9Ipwv06eItZIhhXzTBhMYs9exZtlBW8ccf", "kEgPFQt1f143rUXrtlAgOwOoshbIfcahIqzE4eZe");
         categoriaDao = CategoriaDAO.getInstance(context);
         mensagemDao = MensagemDAO.getInstance(context);
         mensagemCategoriaDao = MensagemCategoriaDAO.getInstance(context);
@@ -81,6 +82,7 @@ public class SyncTest extends AndroidTestCase {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("MensagemParse");
         query.setLimit(3);
         List<ParseObject> result = query.find();
+        assertTrue(result.size()>0);
 
 
         parseHelper.updateMensagens(result);
@@ -95,6 +97,39 @@ public class SyncTest extends AndroidTestCase {
 
 
     }
+
+
+    @LargeTest
+    public void testUpdateCategoriaParse() throws ParseException {
+
+        long total = categoriaDao.getQuantidadeTotal();
+        assertTrue(total>0);
+        Categoria categoria = categoriaDao.first();
+        int id = categoria.getId();
+        String textoAntigo = "nome_nao_padrao";
+        categoria.setNome(textoAntigo);
+
+        categoriaDao.atualizar(categoria);
+        assertEquals(total, categoriaDao.getQuantidadeTotal());
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("CategoriaParse");
+        query.setLimit(3);
+        List<ParseObject> result = query.find();
+
+        assertTrue(result.size()>0);
+
+        parseHelper.updateCategorias(result);
+
+        assertEquals(total, categoriaDao.getQuantidadeTotal());
+        categoria = categoriaDao.getCategoria(id);
+
+
+        assertTrue(!textoAntigo.equalsIgnoreCase(categoria.getNome()));
+
+
+    }
+
+
 
     protected void tearDown() throws Exception {
         super.tearDown();

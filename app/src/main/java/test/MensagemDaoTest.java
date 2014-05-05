@@ -36,13 +36,15 @@ public class MensagemDaoTest extends AndroidTestCase {
 
     @MediumTest
     public void testMensagemCRUD() {
+        long mensagemId=0;
 
-
-        Mensagem mensagem = new Mensagem(1,"texto test",false,false,"Autor","1.slug",1,1);
+        Mensagem mensagem = new Mensagem(0,"texto test",false,false,"Autor","1.slug",1,1);
         MensagemDAO mensagemDAO =  MensagemDAO.getInstance(getContext());
         mensagemDAO.deletarTudo();
 
-        mensagemDAO.salvar(mensagem);
+        mensagemId = mensagemDAO.salvar(mensagem);
+
+        assertTrue(mensagemId!=0);
 
         List<Mensagem> mensagemsNaBase = mensagemDAO.recuperarTodas();
         assertFalse(mensagemsNaBase.isEmpty());
@@ -65,8 +67,6 @@ public class MensagemDaoTest extends AndroidTestCase {
         mensagemDAO.fecharConexao();
 
     }
-
-
 
 
 

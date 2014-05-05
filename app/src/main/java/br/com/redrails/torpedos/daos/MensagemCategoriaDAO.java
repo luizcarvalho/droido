@@ -36,6 +36,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
     private static MensagemCategoriaDAO instance;
     private static Context myContext;
     private CategoriaDAO categoriaDAO;
+    private MensagemDAO mensagemDAO;
 
 
     public static MensagemCategoriaDAO getInstance(Context context) {
@@ -49,6 +50,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
         DataBaseHelper persistenceHelper = DataBaseHelper.getInstance(context);
         dataBase = persistenceHelper.getWritableDatabase();
         categoriaDAO = CategoriaDAO.getInstance(context);
+        mensagemDAO = MensagemDAO.getInstance(context);
     }
 
     public void salvar(MensagemCategoria mensagemCategoria) {
@@ -99,6 +101,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
         if(!mensagem.getCategorias().isEmpty()){
 
             List<Categoria> categorias = categoriaDAO.findBySlugs(mensagem.getCategorias());
+            mensagem = mensagemDAO.getMensagemBySlug(mensagem.getSlug());
             MensagemCategoria mensagemCategoria;
 
             for(Categoria categoria : categorias){

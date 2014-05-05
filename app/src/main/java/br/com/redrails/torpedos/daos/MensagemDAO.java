@@ -89,20 +89,25 @@ public class MensagemDAO extends BaseDAO{
         dataBase = persistenceHelper.getWritableDatabase();
     }
 
-    public void salvar(Mensagem mensagem) {
+    public long salvar(Mensagem mensagem) {
+        long id=0;
         ContentValues values = gerarContentValeuesMenssagem(mensagem);
-        dataBase.insert(NOME_TABELA, null, values);
+        id = dataBase.insert(NOME_TABELA, null, values);
         reloadQuantidadeTotal();
+        return id;
     }
 
-    public void atualizarOuSalvar(Mensagem mensagem){
-        if(getMensagemBySlug(mensagem.getSlug())==null){
-            salvar(mensagem);
+    public long atualizarOuSalvar(Mensagem mensagem){
+        Mensagem mensagemReturn = getMensagemBySlug(mensagem.getSlug());
+        if(mensagemReturn==null){
             Log.d("Droido","Salvando: "+mensagem.getSlug());
+            return salvar(mensagem);
         }else{
             Log.d("Droido","Atualizando: "+mensagem.getSlug());
             atualizarPorSlug(mensagem);
+            return mensagemReturn.getId();
         }
+
     }
 
     public Mensagem getMensagemBySlug(String slug){

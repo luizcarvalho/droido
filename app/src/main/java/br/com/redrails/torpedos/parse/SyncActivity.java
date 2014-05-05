@@ -17,6 +17,8 @@ import com.parse.ParseQuery;
 import java.util.List;
 
 import br.com.redrails.torpedos.R;
+import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
+import br.com.redrails.torpedos.models.Mensagem;
 
 public class SyncActivity extends ActionBarActivity {
     TextView result;
@@ -66,6 +68,9 @@ public class SyncActivity extends ActionBarActivity {
                 } else {
                     mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
                 }
+
+
+
                 result.setText(result.getText()+"\n"+mensagem_result);
             }
         });
