@@ -18,6 +18,7 @@ public class MensagemParse {
     public static final String KEY_CATEGORIAS = "categorias";
 
 
+
     public static Mensagem toMensagem(com.parse.ParseObject mensagemParse){
         Mensagem mensagem = new Mensagem();
         mensagem.setTexto(mensagemParse.getString(KEY_TEXTO));
