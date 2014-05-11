@@ -73,13 +73,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
 
-        CategoriaDAO categoriaDao = CategoriaDAO.getInstance(this);
-        List<Categoria> categorias = categoriaDao.recuperarTodas();
-
-        dropdownAdapter = new ArrayAdapter<Categoria>(this,
-                android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
-                categorias);
-        dropdownAdapter.notifyDataSetChanged();//Notifica a interface que o adapter recebeu dados novos
+        reloadDropdown();
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);//Seta o Dropdown de Categorias no ActionBar
 
         mainContext = this;// Adicionar o Contexto MAIN para ser utilziado na questão do Listener da ListView
@@ -113,6 +107,15 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         loadMensagens();
         adapter.notifyDataSetChanged();
         lista.setSelectionAfterHeaderView();
+    }
+
+    public void reloadDropdown(){
+        CategoriaDAO categoriaDao = CategoriaDAO.getInstance(this);
+        List<Categoria> categorias = categoriaDao.recuperarTodas();
+        dropdownAdapter = new ArrayAdapter<Categoria>(this,
+                android.R.layout.simple_dropdown_item_1line, android.R.id.text1,
+                categorias);
+        dropdownAdapter.notifyDataSetChanged();//Notifica a interface que o adapter recebeu dados novos
     }
 
     //--------------------------------------------------------------------------------------------
@@ -609,6 +612,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         builder.show();
 
     }
+
 
     @Override
     public void onStart() {

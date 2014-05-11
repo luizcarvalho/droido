@@ -1,10 +1,11 @@
 package br.com.redrails.torpedos.parse;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,16 +16,20 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.com.redrails.torpedos.MainActivity;
 import br.com.redrails.torpedos.R;
-import br.com.redrails.torpedos.daos.MensagemCategoriaDAO;
-import br.com.redrails.torpedos.models.Mensagem;
 
 public class SyncActivity extends ActionBarActivity {
-    TextView result;
+    TextView syncResultLabel;
+    Button syncButton;
+    String URI = "br.com.redrails.torpedos";
+    String lastSyncLabel="lastsync";
+    Date lastSync;
+    SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +38,16 @@ public class SyncActivity extends ActionBarActivity {
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
+        try {
+            Parse.initialize(this, "IjHMioV35jvHn4LUpn4Xm6aTh51qNmUKPieVqdT3", "S5LWQJYulqwvanhDlhq1gXRAhUhhhKezmDQ5fZp9");
+        }catch(Exception e){
+            finish();
+        }
 
-        Parse.initialize(this, "IjHMioV35jvHn4LUpn4Xm6aTh51qNmUKPieVqdT3", "S5LWQJYulqwvanhDlhq1gXRAhUhhhKezmDQ5fZp9");
-        Button syncButton = (Button) findViewById(R.id.sync_action_button);
-        result = (TextView) findViewById(R.id.sync_result);
+        prefs = this.getSharedPreferences(URI, getApplicationContext().MODE_PRIVATE);
+
+        syncButton = (Button) findViewById(R.id.sync_action_button);
+        syncResultLabel = (TextView) findViewById(R.id.sync_result);
 
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,25 +58,21 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     void retrieveServerData(){
-        String lastSyncLabel = "lastsync";
+        initSync();
 
-        SharedPreferences prefs = this.getSharedPreferences("br.com.redrails.torpedos", getApplicationContext().MODE_PRIVATE);
-
-        Date lastSync = new Date(prefs.getLong(lastSyncLabel, 0));
         ParseHelper parseHelper = new ParseHelper(this);
-        retrieveCategorias(parseHelper, lastSync);
-        retrieveMensagens(parseHelper, lastSync);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(lastSyncLabel, new Date(System.currentTimeMillis()).getTime());
-        editor.commit();
+        retrieveCategorias(parseHelper);
+        retrieveMensagens(parseHelper);
+
+        finishSync();
 
     }
 
 
-    void retrieveMensagens(final ParseHelper parseHelper, Date lastUpdate){
+    boolean retrieveMensagens(final ParseHelper parseHelper){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("MensagemParse");
-        query.whereGreaterThan(ParseHelper.KEY_UPDATED_AT, lastUpdate);
+        query.whereGreaterThan(ParseHelper.KEY_UPDATED_AT, lastSync);
 
         query.findInBackground(new FindCallback<ParseObject>() {
 
@@ -74,22 +81,26 @@ public class SyncActivity extends ActionBarActivity {
                 String mensagem_result = "";
                 if (e == null) {
                     mensagem_result = mensagemList.size() +" "+getResources().getString(R.string.sync_received_message);
-                    parseHelper.updateMensagens(mensagemList);
+                    if(mensagemList.size()>0) {
+                        parseHelper.needUpdate =true;
+                        parseHelper.updateMensagens(mensagemList);
+                    }
                 } else {
                     mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getMessage();
                 }
 
 
 
-                result.setText(result.getText()+"\n"+mensagem_result);
+                syncResultLabel.setText(syncResultLabel.getText()+"\n"+mensagem_result);
             }
         });
+        return parseHelper.needUpdate;
     }
 
-    void retrieveCategorias(final ParseHelper parseHelper, Date lastUpdate){
+    void retrieveCategorias(final ParseHelper parseHelper){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CategoriaParse");
+        query.whereGreaterThan(ParseHelper.KEY_UPDATED_AT, lastSync);
 
-        query.whereGreaterThan(ParseHelper.KEY_UPDATED_AT, lastUpdate);
 
         query.findInBackground(new FindCallback<ParseObject>() {
 
@@ -97,24 +108,43 @@ public class SyncActivity extends ActionBarActivity {
             public void done(List<ParseObject> categoriaList, com.parse.ParseException e) {
                 String categoriaResult = "";
                 if (e == null) {
-                    categoriaResult = categoriaList.size() +" "+getResources().getString(R.string.sync_received_categories);
-                    parseHelper.updateCategorias(categoriaList);
+                    categoriaResult = categoriaList.size() + " " + getResources().getString(R.string.sync_received_categories);
+                    if (categoriaList.size() > 0){
+                        parseHelper.needUpdate=true;
+                        parseHelper.updateCategorias(categoriaList);
+                    }
                 } else {
                     categoriaResult = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
                 }
-                result.setText(result.getText()+"\n"+categoriaResult);
+                syncResultLabel.setText(syncResultLabel.getText()+"\n"+categoriaResult);
             }
         });
     }
 
+    void initSync(){
+        lastSync = new Date(prefs.getLong(lastSyncLabel, 0));
+        syncResultLabel.setText("Buscando mensagens...");
+        syncButton.setEnabled(false);
 
+    }
+
+    void finishSync(){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(lastSyncLabel, new Date(System.currentTimeMillis()).getTime());
+        editor.commit();
+    }
+
+    void goBackToMain(){
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
+    }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                goBackToMain();
                 return true;
         }
         return super.onOptionsItemSelected(item);

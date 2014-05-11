@@ -18,6 +18,7 @@ import br.com.redrails.torpedos.models.Mensagem;
  */
 public class ParseHelper {
     Context context;
+    boolean needUpdate = false;
     public static final String KEY_UPDATED_AT = "updatedAt";
 
     public ParseHelper(Context contexto){
