@@ -171,26 +171,26 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                    switch (menuItem.getItemId()) {
-                        case R.id.mensagem_favorito:
-                            toggleFavorite(rowView, position);
-                            return true;
-                        case R.id.mensagem_share:
-                            shareMessage(v, mensagem,position );
-                            return true;
-                        case R.id.mensagem_copiar:
-                            copiarMenssagem(mensagem.getTexto());
-                            return true;
-                        case R.id.mensagem_gostar:
-                            sendReport(mensagem, "gostar");
-                            return true;
-                        case R.id.mensagem_reportar:
-                            reportDialog(v,mensagem);
-                            return true;
+                switch (menuItem.getItemId()) {
+                    case R.id.mensagem_favorito:
+                        toggleFavorite(rowView, position);
+                        return true;
+                    case R.id.mensagem_share:
+                        shareMessage(v, mensagem, position);
+                        return true;
+                    case R.id.mensagem_copiar:
+                        copiarMenssagem(mensagem.getTexto());
+                        return true;
+                    case R.id.mensagem_gostar:
+                        sendReport(mensagem, "gostar");
+                        return true;
+                    case R.id.mensagem_reportar:
+                        reportDialog(v, mensagem);
+                        return true;
 
-                        default:
-                            return false;
-                    }
+                    default:
+                        return false;
+                }
 
             }
         });
@@ -604,7 +604,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         builder.setPositiveButton(R.string.novidade_dismiss, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                Intent syncIntent = new Intent(MainActivity.this, SyncActivity.class);
+                startActivity(syncIntent);
             }
         });
 

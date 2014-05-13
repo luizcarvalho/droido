@@ -201,7 +201,7 @@ public class CategoriaDAO extends BaseDAO{
         slugs.append("(");
         for(int i = 0; i < categorias.size(); i++) {
             slugs.append("'");
-            slugs.append(categorias.get(i).getSlug());
+            slugs.append(categorias.get(i).getSlug().replaceAll("\\s+",""));
             slugs.append("'");
 
             if (i < categorias.size()- 1) {

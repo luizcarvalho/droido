@@ -46,7 +46,7 @@
     <string name="novidades">     * Mensagens de Natal e Ano novo\n\n
      * Correção de problemas na inicialização\n\n
      * Outras mensagens\n\n</string>
-    <string name="novidade_dismiss">Legal!</string>
+    <string name="novidade_dismiss">Quero novas mensagens!</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="action_settings">Settings</string>
     <string name="message_author">Luiz Carvalho</string>
@@ -62,7 +62,7 @@
     <string name="app_author">\@Luizcarvalho</string>
     <string name="report_response">Informaremos isto aos nossos desenvolvedores, que terão o prazer de gastar sábados, domingos e feriados melhorando o Droido pra você!</string>
     <string name="title_activity_sync">SyncActivity</string>
-    <string name="sync_db_button_text">Sincronizar base de dados</string>
+    <string name="sync_db_button_text">Baixar novas mensagens</string>
     <string name="sync_default_result">Nenhuma dado recebido!</string>
     <string name="sync_connect_error">Infelizmente Não conseguimos conectar com nossos servidores. Tente novamente mais tarde.</string>
     <string name="sync_received_message">mensagens recebidas</string>

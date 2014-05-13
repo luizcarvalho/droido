@@ -80,6 +80,14 @@ public class MensagemCategoriaDAO extends BaseDAO{
         reloadQuantidadeTotal();
     }
 
+    public void deletarAllOf(int mensagemId) {
+        String[] valoresParaSubstituir = {
+                String.valueOf(mensagemId)
+        };
+        dataBase.delete(NOME_TABELA, COLUNA_MENSAGEM_ID + " =  ?", valoresParaSubstituir);
+        reloadQuantidadeTotal();
+    }
+
     public void deletarTudo(){
         dataBase.execSQL("DELETE FROM " + NOME_TABELA);
         reloadQuantidadeTotal();
@@ -104,6 +112,7 @@ public class MensagemCategoriaDAO extends BaseDAO{
             mensagem = mensagemDAO.getMensagemBySlug(mensagem.getSlug());
             MensagemCategoria mensagemCategoria;
 
+            deletarAllOf(mensagem.getId());
             for(Categoria categoria : categorias){
                 count+=1;
                 mensagemCategoria = new MensagemCategoria(0,categoria.getId(), mensagem.getId());

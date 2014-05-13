@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
@@ -29,6 +31,7 @@ public class SyncActivity extends ActionBarActivity {
     String lastSyncLabel="lastsync";
     Date lastSync;
     SharedPreferences prefs;
+    Integer successCount = 0;
 
 
     @Override
@@ -43,6 +46,7 @@ public class SyncActivity extends ActionBarActivity {
         }catch(Exception e){
             finish();
         }
+
 
         prefs = this.getSharedPreferences(URI, getApplicationContext().MODE_PRIVATE);
 
@@ -61,12 +65,7 @@ public class SyncActivity extends ActionBarActivity {
         initSync();
 
         ParseHelper parseHelper = new ParseHelper(this);
-
         retrieveCategorias(parseHelper);
-        retrieveMensagens(parseHelper);
-
-        finishSync();
-
     }
 
 
@@ -85,8 +84,12 @@ public class SyncActivity extends ActionBarActivity {
                         parseHelper.needUpdate =true;
                         parseHelper.updateMensagens(mensagemList);
                     }
+                    successCount++;
+                    finishSync();
                 } else {
-                    mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getMessage();
+                    successCount--;
+                    mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
+                    tryAgain();
                 }
 
 
@@ -97,7 +100,7 @@ public class SyncActivity extends ActionBarActivity {
         return parseHelper.needUpdate;
     }
 
-    void retrieveCategorias(final ParseHelper parseHelper){
+    boolean retrieveCategorias(final ParseHelper parseHelper){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CategoriaParse");
         query.whereGreaterThan(ParseHelper.KEY_UPDATED_AT, lastSync);
 
@@ -113,12 +116,17 @@ public class SyncActivity extends ActionBarActivity {
                         parseHelper.needUpdate=true;
                         parseHelper.updateCategorias(categoriaList);
                     }
+                    retrieveMensagens(parseHelper);
+                    successCount++;
                 } else {
                     categoriaResult = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
+                    successCount--;
+                    tryAgain();
                 }
                 syncResultLabel.setText(syncResultLabel.getText()+"\n"+categoriaResult);
             }
         });
+        return true;
     }
 
     void initSync(){
@@ -128,15 +136,47 @@ public class SyncActivity extends ActionBarActivity {
 
     }
 
+    boolean hasSuccess(){
+        if(successCount==2)
+           return true;
+        return false;
+    }
+
     void finishSync(){
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(lastSyncLabel, new Date(System.currentTimeMillis()).getTime());
-        editor.commit();
+
+        if(hasSuccess()) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putLong(lastSyncLabel, new Date(System.currentTimeMillis()).getTime());
+            editor.commit();
+            addButonToGoBack();
+        }
+    }
+
+    void addButonToGoBack(){
+        RelativeLayout mainLayout = (RelativeLayout)findViewById(R.id.activity_sync);
+        Button tryAgain = new Button(this);
+        tryAgain.setText("Ótimo! Carrege minhas novas mensagens!");
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.addRule(RelativeLayout.BELOW,syncResultLabel.getId());
+        mainLayout.addView(tryAgain, lp);
+
+
+        tryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBackToMain();
+            }
+        });
     }
 
     void goBackToMain(){
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
+    }
+
+    void tryAgain(){
+        syncButton.setEnabled(true);
+        syncButton.setText("Tentar de novo");
     }
 
 
