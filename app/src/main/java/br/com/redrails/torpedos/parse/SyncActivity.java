@@ -21,6 +21,7 @@ import com.parse.ParseQuery;
 import java.util.Date;
 import java.util.List;
 
+import br.com.redrails.torpedos.LoadScreenActivity;
 import br.com.redrails.torpedos.MainActivity;
 import br.com.redrails.torpedos.R;
 
@@ -157,7 +158,7 @@ public class SyncActivity extends ActionBarActivity {
         Button tryAgain = new Button(this);
         tryAgain.setText("Ótimo! Carrege minhas novas mensagens!");
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        lp.addRule(RelativeLayout.BELOW,syncResultLabel.getId());
+        lp.addRule(RelativeLayout.BELOW, syncResultLabel.getId());
         mainLayout.addView(tryAgain, lp);
 
 
@@ -170,7 +171,7 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     void goBackToMain(){
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        Intent i = new Intent(getApplicationContext(), LoadScreenActivity.class);
         startActivity(i);
     }
 
