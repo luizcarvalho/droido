@@ -19,8 +19,11 @@ import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.PushService;
 
 import java.util.Date;
 import java.util.List;
@@ -49,6 +52,9 @@ public class SyncActivity extends ActionBarActivity {
 
         try {
             Parse.initialize(this, "IjHMioV35jvHn4LUpn4Xm6aTh51qNmUKPieVqdT3", "S5LWQJYulqwvanhDlhq1gXRAhUhhhKezmDQ5fZp9");
+            ParseInstallation.getCurrentInstallation().saveInBackground();
+            PushService.setDefaultPushCallback(this, SyncActivity.class);
+            ParseAnalytics.trackAppOpened(getIntent());
         }catch(Exception e){
             finish();
         }
