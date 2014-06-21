@@ -1,11 +1,15 @@
 package br.com.redrails.torpedos.parse;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +37,7 @@ public class SyncActivity extends ActionBarActivity {
     Date lastSync;
     SharedPreferences prefs;
     Integer successCount = 0;
+    ProgressDialog progressBar;
 
 
     @Override
@@ -69,10 +74,19 @@ public class SyncActivity extends ActionBarActivity {
         retrieveCategorias(parseHelper);
     }
 
+    void showProgressBar(){
+        progressBar = new ProgressDialog(this);
+        progressBar.setCancelable(true);
+        progressBar.setMessage("Baixando mensagens, isso pode levar algum tempo..");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.show();
+    }
+
 
     boolean retrieveMensagens(final ParseHelper parseHelper){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("MensagemParse");
         query.whereGreaterThan(ParseHelper.KEY_UPDATED_AT, lastSync);
+        query.setLimit(1000);
 
         query.findInBackground(new FindCallback<ParseObject>() {
 
@@ -134,6 +148,7 @@ public class SyncActivity extends ActionBarActivity {
         lastSync = new Date(prefs.getLong(lastSyncLabel, 0));
         syncResultLabel.setText("Buscando mensagens...");
         syncButton.setEnabled(false);
+        showProgressBar();
 
     }
 
@@ -144,7 +159,7 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     void finishSync(){
-
+        progressBar.dismiss();
         if(hasSuccess()) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putLong(lastSyncLabel, new Date(System.currentTimeMillis()).getTime());
@@ -180,12 +195,22 @@ public class SyncActivity extends ActionBarActivity {
         syncButton.setText("Tentar de novo");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //getMenuInflater().inflate(R.menu.sync, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 goBackToMain();
+                return true;
+            case R.id.reset_counter:
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putLong(lastSyncLabel, 0);
+                editor.commit();
                 return true;
         }
         return super.onOptionsItemSelected(item);
