@@ -57,7 +57,7 @@ public class LoadScreenActivity extends Activity
                         publishProgress(1);
                         ed.putBoolean("newVersion", true);
                     }
-                    this.wait(1000);
+                    this.wait(100);
                     ed.putInt("currentVersion", dbVersion);
                     ed.commit();
                 }

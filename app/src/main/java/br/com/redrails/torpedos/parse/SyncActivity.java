@@ -1,14 +1,11 @@
 package br.com.redrails.torpedos.parse;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.PushService;
 
 import java.util.Date;
 import java.util.List;
@@ -50,14 +43,7 @@ public class SyncActivity extends ActionBarActivity {
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
-        try {
-            Parse.initialize(this, "IjHMioV35jvHn4LUpn4Xm6aTh51qNmUKPieVqdT3", "S5LWQJYulqwvanhDlhq1gXRAhUhhhKezmDQ5fZp9");
-            ParseInstallation.getCurrentInstallation().saveInBackground();
-            PushService.setDefaultPushCallback(this, SyncActivity.class);
-            ParseAnalytics.trackAppOpened(getIntent());
-        }catch(Exception e){
-            finish();
-        }
+
 
 
         prefs = this.getSharedPreferences(URI, getApplicationContext().MODE_PRIVATE);

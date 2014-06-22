@@ -8,6 +8,18 @@
         revision="19.1.0"
         sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
     <item
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/Parse-1.4.3-c59ce32a0b750a6b79ff295bf092c06a908c98dd.jar"
+        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/Parse-1.4.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="8daf146aea8cd5245bb90f802f2cd4b8dd855eca"/>
+    <item
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsServices-b1878b096ef71260e373b9c5f9c8a9149024e726.jar"
+        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/libGoogleAnalyticsServices.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="e887c6c9b31b39a39b0eaba981448b78902ea813"/>
+    <item
         dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-d70448e52d0de45dc33ce63701057b32d98a2efa.jar"
         jar="/home/luiz/vendor/android-studio/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
         jumboMode="false"
@@ -19,17 +31,5 @@
         jumboMode="false"
         revision="19.1.0"
         sha1="6262c554ef5744538d526465aa73704810705734"/>
-    <item
-        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsServices-b1878b096ef71260e373b9c5f9c8a9149024e726.jar"
-        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/libGoogleAnalyticsServices.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="e887c6c9b31b39a39b0eaba981448b78902ea813"/>
-    <item
-        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/Parse-1.4.2-faa9f84b2ad3da74f44d64d43771ae331bf26368.jar"
-        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/Parse-1.4.2.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="eff28d7e2ff7c6cf1d312079af5d4152bc5cb48b"/>
 
 </pre-dex-items>

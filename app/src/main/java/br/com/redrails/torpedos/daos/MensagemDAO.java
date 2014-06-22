@@ -61,7 +61,7 @@ public class MensagemDAO extends BaseDAO{
 
     public static MensagemDAO getInstance(Context context) {
         if(instance == null)
-            Log.w("RedRails","NOVA INSTANCIA");
+            //Log.w("RedRails","NOVA INSTANCIA");
             instance = new MensagemDAO(context);
         return instance;
     }
@@ -100,10 +100,10 @@ public class MensagemDAO extends BaseDAO{
     public long atualizarOuSalvar(Mensagem mensagem){
         Mensagem mensagemReturn = getMensagemBySlug(mensagem.getSlug());
         if(mensagemReturn==null){
-            Log.d("Droido","Salvando: "+mensagem.getSlug());
+            //Log.d("Droido","Salvando: "+mensagem.getSlug());
             return salvar(mensagem);
         }else{
-            Log.d("Droido","Atualizando: "+mensagem.getSlug());
+            //Log.d("Droido","Atualizando: "+mensagem.getSlug());
             atualizarPorSlug(mensagem);
             return mensagemReturn.getId();
         }
@@ -169,7 +169,7 @@ public class MensagemDAO extends BaseDAO{
         }
 
         String query = "SELECT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula()+paginacao;
-        Log.w("RedRails","Executando SQL: "+query);
+        //Log.w("RedRails","Executando SQL: "+query);
         return query;
     }
 
@@ -324,7 +324,7 @@ public class MensagemDAO extends BaseDAO{
                 mensagem.getAutor()+
                 "\"          ) ;";
 
-        Log.w("RedRails",query);
+        //Log.w("RedRails",query);
         dataBase.execSQL(query);
 
     }
@@ -469,7 +469,7 @@ public class MensagemDAO extends BaseDAO{
                 sql+=" WHERE ";
             }
             sql+=sqlDinamica+sqlEstatica;
-            Log.w("RedRails","SQL GERADA: "+sql);
+            //Log.w("RedRails","SQL GERADA: "+sql);
             return sql;
         }
 

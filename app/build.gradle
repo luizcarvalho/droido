@@ -22,19 +22,17 @@ repositories {
 android {
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
-
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 19
         testApplicationId 'br.com.redrails.torpedos.test'
     }
-
     signingConfigs {
         release {
-            storeFile file("../extra/rr-release-key.keystore")
-            storePassword "swordfish"
-            keyAlias "redrails"
-            keyPassword "swordfish"
+            storeFile file('../extra/rr-release-key.keystore')
+            storePassword 'swordfish'
+            keyAlias 'redrails'
+            keyPassword 'swordfish'
         }
     }
     buildTypes {
@@ -43,10 +41,10 @@ android {
         }
         debug {
             signingConfig signingConfigs.release
-
         }
     }
-
+    productFlavors {
+    }
 }
 
 
@@ -55,8 +53,7 @@ dependencies {
     compile 'com.android.support:support-v4:19.1.0'
     compile files('src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar')
     compile files('src/main/libs/libGoogleAnalyticsServices.jar')
-    compile files('src/main/libs/Parse-1.4.2.jar')
-
+    compile files('src/main/libs/Parse-1.4.3.jar')
 }
 
 task getHomeDir << {
