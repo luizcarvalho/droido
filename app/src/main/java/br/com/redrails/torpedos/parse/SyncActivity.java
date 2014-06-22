@@ -186,6 +186,7 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     void tryAgain(){
+        successCount=0;
         syncButton.setEnabled(true);
         syncButton.setText("Tentar de novo");
     }
