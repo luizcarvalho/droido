@@ -71,6 +71,7 @@ public class SyncActivity extends ActionBarActivity {
         progressBar.setCancelable(true);
         progressBar.setMessage("Baixando mensagens, isso pode levar algum tempo..");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setCancelable(false); //setcancelable(false);
         progressBar.show();
     }
 
@@ -96,6 +97,7 @@ public class SyncActivity extends ActionBarActivity {
                 } else {
                     successCount--;
                     mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
+                    finishSync();
                     tryAgain();
                 }
 
@@ -128,6 +130,7 @@ public class SyncActivity extends ActionBarActivity {
                 } else {
                     categoriaResult = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
                     successCount--;
+                    finishSync();
                     tryAgain();
                 }
                 syncResultLabel.setText(syncResultLabel.getText()+"\n"+categoriaResult);

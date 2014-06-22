@@ -4,15 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.redrails.torpedos.DataBaseHelper;
 import br.com.redrails.torpedos.models.Categoria;
-import br.com.redrails.torpedos.models.Mensagem;
+
 
 /**
  * Criado por luiz em 10/26/13.
@@ -50,7 +49,7 @@ public class CategoriaDAO extends BaseDAO{
     }
 
     public void salvar(Categoria categoria) {
-        Log.d("Droido","Salvando Categoria "+categoria.getSlug());
+        //Log.d("Droido","Salvando Categoria "+categoria.getSlug());
         ContentValues values = gerarContentValeuesCategoria(categoria);
         dataBase.insert(NOME_TABELA, null, values);
         reloadQuantidadeTotal();
@@ -99,7 +98,7 @@ public class CategoriaDAO extends BaseDAO{
             cursor = dataBase.rawQuery(query, null);
             categorias = converterCursorEmCategorias(cursor);
         }catch (Exception e){
-            Log.e("RedRails", "Erro: "+e.getMessage());
+            //Log.e("RedRails", "Erro: "+e.getMessage());
 
         }finally {
             if(cursor!=null){
@@ -131,7 +130,7 @@ public class CategoriaDAO extends BaseDAO{
             cursor = dataBase.rawQuery(queryReturnAll, null);
             categorias.addAll(converterCursorEmCategorias(cursor));
         }catch (Exception e){
-            Log.e("RedRails", "Erro: "+e.getMessage());
+            //Log.e("RedRails", "Erro: "+e.getMessage());
 
         }finally {
             if(cursor!=null){
@@ -148,7 +147,7 @@ public class CategoriaDAO extends BaseDAO{
         }
 
         String query = "SELECT "+retorno+" FROM " + NOME_TABELA;
-        Log.w("RedRails","Executando SQL: "+query);
+        //Log.w("RedRails","Executando SQL: "+query);
         return query;
     }
 
@@ -190,7 +189,7 @@ public class CategoriaDAO extends BaseDAO{
     public  List<Categoria> findBySlugs(List<Categoria> categorias) {
         String slugs = slugfyList(categorias);
         String sql = "SELECT * FROM categorias WHERE slug IN "+slugs;
-        Log.d("Droido",sql);
+        //Log.d("Droido",sql);
         Cursor cursor = dataBase.rawQuery(sql,null);
         return converterCursorEmCategorias(cursor);
     }
@@ -257,9 +256,9 @@ public class CategoriaDAO extends BaseDAO{
 
             if(getCategoriaBySlug(categoria.getSlug())==null){
                 salvar(categoria);
-                Log.d("Droido","Salvando: "+categoria.getSlug());
+                //Log.d("Droido","Salvando: "+categoria.getSlug());
             }else{
-                Log.d("Droido","Atualizando: "+categoria.getSlug());
+                //Log.d("Droido","Atualizando: "+categoria.getSlug());
                 atualizarPorSlug(categoria);
             }
     }
