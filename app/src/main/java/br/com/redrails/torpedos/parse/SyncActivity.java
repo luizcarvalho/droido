@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.redrails.torpedos.LoadScreenActivity;
-import br.com.redrails.torpedos.MainActivity;
 import br.com.redrails.torpedos.R;
 
 public class SyncActivity extends ActionBarActivity {
