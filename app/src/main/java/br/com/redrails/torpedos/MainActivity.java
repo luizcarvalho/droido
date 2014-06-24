@@ -1,5 +1,6 @@
 package br.com.redrails.torpedos;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -252,19 +254,34 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         Mensagem mensagem = adapter.getItem(position);
         ImageView sendIcon = (ImageView) v.findViewById(R.id.btn_sendcheck);
 
-        mensagem.toggleSended();
-        mensagemDao.atualizar(mensagem);
-
-        if(mensagem.getEnviada()){
-            sendReport(mensagem, "enviada");
-            sendIcon.setImageResource(R.drawable.ic_sended);
-            Toast.makeText(this, "Marcada como enviada", Toast.LENGTH_LONG).show();
+        if(!mensagem.getEnviada()){
+            marcarComoEnviada(mensagem,sendIcon);
         }else{
-            sendIcon.setImageResource(R.drawable.ic_unsended);
-            Toast.makeText(this, "Marcada como não enviada", Toast.LENGTH_LONG).show();
+            marcarNaoComoEnviada(mensagem,sendIcon);
         }
 
     }
+
+    private void marcarComoEnviada(Mensagem mensagem, ImageView sendIcon) {
+        if (!mensagem.getEnviada()){
+            sendIcon.setImageResource(R.drawable.ic_sended);
+            mensagem.setEnviada(true);
+            sendReport(mensagem, "enviada");
+            Toast.makeText(this, "Marcada como enviada", Toast.LENGTH_LONG).show();
+            mensagemDao.atualizar(mensagem);
+        }
+    }
+
+    private void marcarNaoComoEnviada(Mensagem mensagem, ImageView sendIcon){
+        if(mensagem.getEnviada()) {
+            sendIcon.setImageResource(R.drawable.ic_unsended);
+            mensagem.setEnviada(false);
+            Toast.makeText(this, "Marcada como não enviada", Toast.LENGTH_LONG).show();
+            mensagemDao.atualizar(mensagem);
+        }
+    }
+
+
 
     public void shareMessage(View v, Mensagem mensagem, int position){
         Intent sendIntent = new Intent();
@@ -287,11 +304,15 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setText(text);
         } else {
-            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = ClipData.newPlainText("simple text",text);
-            clipboard.setPrimaryClip(clip);
+            copiarMensagemHonney(text);
         }
+    }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void copiarMensagemHonney(String text){
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        android.content.ClipData clip = ClipData.newPlainText("simple text",text);
+        clipboard.setPrimaryClip(clip);
 
     }
 
@@ -432,7 +453,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             TextView menssagemView = (TextView) convertView.findViewById(R.id.mensagem);
             TextView autorText = (TextView) convertView.findViewById(R.id.author);
             ImageView mensagemOption = (ImageView) convertView.findViewById(R.id.mensagem_option);
-            ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sendcheck);
+            final ImageView sendedButton = (ImageView) convertView.findViewById(R.id.btn_sendcheck);
             menssagemView.setText(mensagem.getTexto());
             autorText.setText(mensagem.getAutor());
 
@@ -464,7 +485,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             menssagemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleSend(finalView, position);
+                    marcarComoEnviada(mensagem,sendedButton);
                     shareMessage(v, mensagem,position);
                 }
             });

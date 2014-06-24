@@ -28,6 +28,12 @@ android {
         testApplicationId 'br.com.redrails.torpedos.test'
     }
     signingConfigs {
+        debug {
+            storeFile file('../extra/rr-release-key.keystore')
+            storePassword 'swordfish'
+            keyAlias 'redrails'
+            keyPassword 'swordfish'
+        }
         release {
             storeFile file('../extra/rr-release-key.keystore')
             storePassword 'swordfish'
@@ -37,13 +43,20 @@ android {
     }
     buildTypes {
         release {
+            //runProguard true
+            //proguardFile getDefaultProguardFile('proguard-android.txt')
             signingConfig signingConfigs.release
+            debuggable false
         }
         debug {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
+            debuggable true
         }
     }
     productFlavors {
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
