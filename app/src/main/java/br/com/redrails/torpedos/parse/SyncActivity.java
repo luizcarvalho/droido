@@ -164,7 +164,7 @@ public class SyncActivity extends ActionBarActivity {
     void addButonToGoBack(){
         RelativeLayout mainLayout = (RelativeLayout)findViewById(R.id.activity_sync);
         Button tryAgain = new Button(this);
-        tryAgain.setText("Ótimo! Carrege minhas novas mensagens!");
+        tryAgain.setText(getString(R.string.reload_mensagens));
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lp.addRule(RelativeLayout.BELOW, syncResultLabel.getId());
         mainLayout.addView(tryAgain, lp);
