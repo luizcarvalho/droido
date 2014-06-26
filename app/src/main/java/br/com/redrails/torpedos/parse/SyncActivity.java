@@ -1,8 +1,11 @@
 package br.com.redrails.torpedos.parse;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -41,20 +44,21 @@ public class SyncActivity extends ActionBarActivity {
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
-
-
-
         prefs = this.getSharedPreferences(URI, getApplicationContext().MODE_PRIVATE);
-
         syncButton = (Button) findViewById(R.id.sync_action_button);
         syncResultLabel = (TextView) findViewById(R.id.sync_result);
-
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                retrieveServerData();
+                if(isOnline()) {
+                    retrieveServerData();
+                }else{
+                    syncResultLabel.setText(getString(R.string.need_connection));
+                    tryAgain();
+                }
             }
         });
+
     }
 
     void retrieveServerData(){
@@ -187,6 +191,16 @@ public class SyncActivity extends ActionBarActivity {
         successCount=0;
         syncButton.setEnabled(true);
         syncButton.setText("Tentar de novo");
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
