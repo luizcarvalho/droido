@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,9 @@ import com.parse.FindCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import br.com.redrails.torpedos.LoadScreenActivity;
@@ -62,10 +65,14 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     void retrieveServerData(){
-        initSync();
-
-        ParseHelper parseHelper = new ParseHelper(this);
-        retrieveCategorias(parseHelper);
+        if(!recentTry()) {
+            initSync();
+            ParseHelper parseHelper = new ParseHelper(this);
+            retrieveCategorias(parseHelper);
+        }else{
+            syncResultLabel.setText("Espere um tempo antes de tentar atualizar novamente!");
+            tryAgain();
+        }
     }
 
     void showProgressBar(){
@@ -141,12 +148,19 @@ public class SyncActivity extends ActionBarActivity {
         return true;
     }
 
+    boolean recentTry(){
+        long delay = 300000; // 5 min
+        long lastSyncLong = prefs.getLong(lastSyncLabel, 0);
+        long nowLong = new Date(System.currentTimeMillis()).getTime();
+        return (nowLong-delay)<lastSyncLong;
+
+    }
+
     void initSync(){
         lastSync = new Date(prefs.getLong(lastSyncLabel, 0));
         syncResultLabel.setText("Buscando mensagens...");
         syncButton.setEnabled(false);
         showProgressBar();
-
     }
 
     boolean hasSuccess(){
