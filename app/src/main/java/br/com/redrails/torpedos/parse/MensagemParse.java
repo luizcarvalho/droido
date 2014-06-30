@@ -25,10 +25,16 @@ public class MensagemParse {
         mensagem.setSlug(mensagemParse.getString(KEY_SLUG));
         mensagem.setAutor(mensagemParse.getString(KEY_AUTOR));
         mensagem.setData(mensagemParse.getInt(KEY_DATA));
-        mensagem.setAvaliacao(mensagemParse.getInt(KEY_AVALIACAO));
+        mensagem.setAvaliacao(convertAvaliacao(mensagemParse.getInt(KEY_AVALIACAO)));
         mensagem.setCategoriasString(mensagemParse.getString(KEY_CATEGORIAS));
 
         return mensagem;
+    }
+
+    private static Float convertAvaliacao(Integer avaliacao){
+        Float delta = 0.5f;
+        Float avaliacaoConvertida = avaliacao/20.0f;
+        return Math.round(avaliacaoConvertida / delta) * delta;
     }
 
 }

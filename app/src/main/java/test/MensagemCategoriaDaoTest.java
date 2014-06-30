@@ -53,7 +53,7 @@ public class MensagemCategoriaDaoTest extends AndroidTestCase {
 
         assertEquals(categoria1.getSlug(), categoriaDb1.getSlug());
 
-        Mensagem mensagem1 = new Mensagem(1,"texto",false, false, "autor","1.droid",1,1);
+        Mensagem mensagem1 = new Mensagem(1,"texto",false, false, "autor","1.droid",1,1f);
         mensagemDao.salvar(mensagem1);
         Mensagem mensagem = mensagemDao.getMensagemBySlug(mensagem1.getSlug());
         assertEquals(mensagem1.getSlug(), mensagem.getSlug());

@@ -255,10 +255,10 @@ public class MensagemDAO extends BaseDAO{
                     boolean enviada = cursor.getString(indexEnviada).equalsIgnoreCase("true");
                     String autor = cursor.getString(indexAutor);
                     String slug = cursor.getString(indexSlug);
-                    Integer avalicao = cursor.getInt(indexAvaliacao);
+                    Float avalicao = cursor.getFloat(indexAvaliacao);
                     Integer data = cursor.getInt(indexData);
 
-                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor, slug, avalicao, data);
+                    Mensagem mensagem = new Mensagem(id,texto, favoritada, enviada, autor, slug, data, avalicao);
 
                     mensagens.add(mensagem);
 
@@ -285,6 +285,7 @@ public class MensagemDAO extends BaseDAO{
         values = setValues(values, COLUNA_FAVORITADA, String.valueOf(mensagem.getFavoritada()));
         values = setValues(values, COLUNA_ENVIADA, String.valueOf(mensagem.getEnviada()));
         values = setValues(values, COLUNA_AUTOR, String.valueOf(mensagem.getAutor()));
+        values = setValues(values, COLUNA_AVALIACAO, String.valueOf(mensagem.getAvaliacao()));
 
         return values;
     }

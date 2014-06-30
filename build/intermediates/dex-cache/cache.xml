@@ -2,32 +2,32 @@
 <pre-dex-items>
 
     <item
-        dex="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/Parse-1.4.3-d75c082acacaef1847060d50006bc8d7ada9298e.jar"
-        jar="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/src/main/libs/Parse-1.4.3.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="8daf146aea8cd5245bb90f802f2cd4b8dd855eca"/>
-    <item
-        dex="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/GoogleAdMobAdsSdk-6.4.1-f9bc30e1a2e99622a708511ff261fd3017f95bd3.jar"
-        jar="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="6262c554ef5744538d526465aa73704810705734"/>
-    <item
-        dex="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-36d0e43edea635766d340138afe3a1c01eff9cc8.jar"
-        jar="/home/desenvolvimento/vendor/android-studio/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
-    <item
-        dex="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/classes-0aab2aa9e4330defbdad96544ebeac9030fb943d.jar"
-        jar="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/classes-dde45b46bcdffbb8a8a89d5ecdf6debfd216aedc.jar"
+        jar="/home/luiz/Dropbox/projetos/droido.torpedos/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
     <item
-        dex="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsServices-ba1f8b9a6f9f2452712d5fc609242bdff2cee76a.jar"
-        jar="/home/desenvolvimento/Dropbox/projetos/droido.torpedos/app/src/main/libs/libGoogleAnalyticsServices.jar"
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-d70448e52d0de45dc33ce63701057b32d98a2efa.jar"
+        jar="/home/luiz/vendor/android-studio/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+    <item
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/GoogleAdMobAdsSdk-6.4.1-d4c905a3419a9480b0361de2019c55c4cabf3451.jar"
+        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="6262c554ef5744538d526465aa73704810705734"/>
+    <item
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/Parse-1.4.3-c59ce32a0b750a6b79ff295bf092c06a908c98dd.jar"
+        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/Parse-1.4.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="8daf146aea8cd5245bb90f802f2cd4b8dd855eca"/>
+    <item
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsServices-b1878b096ef71260e373b9c5f9c8a9149024e726.jar"
+        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/libGoogleAnalyticsServices.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="e887c6c9b31b39a39b0eaba981448b78902ea813"/>

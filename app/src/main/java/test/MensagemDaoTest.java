@@ -38,7 +38,7 @@ public class MensagemDaoTest extends AndroidTestCase {
     public void testMensagemCRUD() {
         long mensagemId=0;
 
-        Mensagem mensagem = new Mensagem(0,"texto test",false,false,"Autor","1.slug",1,1);
+        Mensagem mensagem = new Mensagem(0,"texto test",false,false,"Autor","1.slug",1,1f);
         MensagemDAO mensagemDAO =  MensagemDAO.getInstance(getContext());
         mensagemDAO.deletarTudo();
 
@@ -116,7 +116,7 @@ public class MensagemDaoTest extends AndroidTestCase {
     public void notestSaveMensagemWithCategorias(){
         categoriaDao.deletarTudo();
         mensagemDao.deletarTudo();
-        Mensagem mensagem = new Mensagem(0,"ok",false,false,"me","1.slug",123,10);
+        Mensagem mensagem = new Mensagem(0,"ok",false,false,"me","1.slug",123,10f);
 
         Categoria categoria1 = new Categoria(1,"categoria 1","categoria1");
         Categoria categoria2 = new Categoria(2,"categoria 2","categoria2");
