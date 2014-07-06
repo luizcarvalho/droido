@@ -6,24 +6,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.google.ads.*;
 
 import com.parse.FindCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import br.com.redrails.torpedos.LoadScreenActivity;
@@ -46,6 +46,9 @@ public class SyncActivity extends ActionBarActivity {
         setContentView(R.layout.activity_sync);
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
+
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        adView.loadAd(new AdRequest());
 
         prefs = this.getSharedPreferences(URI, getApplicationContext().MODE_PRIVATE);
         syncButton = (Button) findViewById(R.id.sync_action_button);
@@ -97,12 +100,14 @@ public class SyncActivity extends ActionBarActivity {
                 String mensagem_result = "";
                 if (e == null) {
                     mensagem_result = mensagemList.size() +" "+getResources().getString(R.string.sync_received_message);
+                    successCount++;
                     if(mensagemList.size()>0) {
                         parseHelper.needUpdate =true;
-                        parseHelper.updateMensagens(mensagemList);
+                        new UpdateMessages().execute(mensagemList);
+                    }else{
+                        finishSync();
                     }
-                    successCount++;
-                    finishSync();
+
                 } else {
                     successCount--;
                     mensagem_result = "Erro: "+getResources().getString(R.string.sync_connect_error) + e.getCode();
@@ -117,6 +122,7 @@ public class SyncActivity extends ActionBarActivity {
         });
         return parseHelper.needUpdate;
     }
+
 
     boolean retrieveCategorias(final ParseHelper parseHelper){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CategoriaParse");
@@ -237,5 +243,32 @@ public class SyncActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    private class UpdateMessages extends AsyncTask<List<ParseObject>, Void, Void>{
+
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setMessage("Atualizando suas mensagens!");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(List<ParseObject>... params) {
+            ParseHelper parseHelper = new ParseHelper(SyncActivity.this);
+            parseHelper.updateMensagens(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            finishSync();
+            super.onPostExecute(aVoid);
+        }
+
+
+    }
+
 
 }

@@ -1,0 +1,2 @@
+- Adicionar mensagem de anti-span na tela de sync para evitar q usuario clique no botão
+- Adicionar Ads na página de Sync

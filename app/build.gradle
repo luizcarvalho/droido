@@ -43,7 +43,7 @@ android {
     }
     buildTypes {
         release {
-            //runProguard true
+            //  runProguard true
             //proguardFile getDefaultProguardFile('proguard-android.txt')
             signingConfig signingConfigs.release
             debuggable false
@@ -62,11 +62,12 @@ android {
 
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.1.0'
-    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:support-v4:+'
     compile files('src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar')
     compile files('src/main/libs/libGoogleAnalyticsServices.jar')
     compile files('src/main/libs/Parse-1.4.3.jar')
+    //compile 'com.google.android.gms:play-services:+'
 }
 
 task getHomeDir << {

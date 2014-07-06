@@ -66,6 +66,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     int quantidade_restante = 0;
     int pagina_atual = 1;//Controle de páginas Setado como 20 no MensagemDAO
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +107,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         quantidade_carregada=0;
         quantidade_restante=0;
         mArrayList.clear();
+
         loadMensagens();
         adapter.notifyDataSetChanged();
         lista.setSelectionAfterHeaderView();
@@ -555,7 +557,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         //Se carregou todos os itens
         if(adapter.getCount() == mensagemDao.getQuantidadeTotal()){
             if(adapter.getCount()==0){
-                footer.setText("Não há mensagens aqui ainda!");
+                footer.setText("Não há mensagens aqui. Clique aqui e verifique se existem novas!");
+                footer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent syncIntent = new Intent(MainActivity.this, SyncActivity.class);
+                        startActivity(syncIntent);
+                    }
+                });
             }else{
                 lista.setOnScrollListener(null);//Para a escuta do scroll
                 lista.removeFooterView(footer);// remove o footer

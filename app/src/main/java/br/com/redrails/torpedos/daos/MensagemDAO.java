@@ -4,9 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import br.com.redrails.torpedos.DataBaseHelper;
 import br.com.redrails.torpedos.models.Categoria;
@@ -110,7 +112,7 @@ public class MensagemDAO extends BaseDAO{
     }
 
     public Mensagem getMensagemBySlug(String slug){
-        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens WHERE slug=? LIMIT 1", new String[]{String.valueOf(slug)});
+        Cursor cursor = dataBase.rawQuery("SELECT DISTINCT * FROM mensagens WHERE slug=? LIMIT 1", new String[]{String.valueOf(slug)});
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
         if(!mensagem.isEmpty()){
@@ -120,7 +122,7 @@ public class MensagemDAO extends BaseDAO{
     }
 
     public Mensagem getMensagem(int id){
-        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens WHERE _id=? LIMIT 1",new String[]{String.valueOf(id)});
+        Cursor cursor = dataBase.rawQuery("SELECT DISTINCT * FROM mensagens WHERE _id=? LIMIT 1",new String[]{String.valueOf(id)});
 
         /*Cursor cursor = dataBase.query(NOME_TABELA, new String[] { COLUNA_ID,
                 COLUNA_TEXTO, COLUNA_ENVIADA, COLUNA_FAVORITADA, COLUNA_AUTOR }, COLUNA_ID + "=?",
@@ -135,7 +137,7 @@ public class MensagemDAO extends BaseDAO{
     }
 
     public Mensagem getMensagemByOrder(String order){
-        Cursor cursor = dataBase.rawQuery("SELECT * FROM mensagens ORDER BY _id "+order+" LIMIT 1", null);
+        Cursor cursor = dataBase.rawQuery("SELECT DISTINCT * FROM mensagens ORDER BY _id "+order+" LIMIT 1", null);
         List<Mensagem> mensagem = converterCursorEmMensagens(cursor);
         // return contact
         if(!mensagem.isEmpty()){
@@ -154,9 +156,8 @@ public class MensagemDAO extends BaseDAO{
 
 
     public List<Mensagem> recuperarTodas() {
-        String queryReturnAll = "SELECT * FROM " + NOME_TABELA;
+        String queryReturnAll = "SELECT DISTINCT * FROM " + NOME_TABELA;
         Cursor cursor = dataBase.rawQuery(queryReturnAll, null);
-
         return converterCursorEmMensagens(cursor);
     }
 
@@ -167,13 +168,14 @@ public class MensagemDAO extends BaseDAO{
             retorno = " COUNT(*) ";
         }
 
-        String query = "SELECT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula()+paginacao;
+        String query = "SELECT DISTINCT "+retorno+" FROM " + NOME_TABELA +filtro.getClausula()+paginacao;
         //Log.w("RedRails","Executando SQL: "+query);
         return query;
     }
 
 
     public List<Mensagem> getMensagens(int pagina) {
+        Log.w("RedRails", "Executando SQL: " + parametrize(BUSCA_SELECT,pagina));
         Cursor cursor = dataBase.rawQuery(parametrize(BUSCA_SELECT,pagina), null);
         return converterCursorEmMensagens(cursor);
     }
@@ -339,6 +341,8 @@ public class MensagemDAO extends BaseDAO{
     public class Filtro{
         private String busca;
         private int ordem = ORDEM_ALEATORIA;
+        private int randonOrdemAtual=0;
+        private boolean randonOrdemDirectionAsc=true;
         private ArrayList<Categoria> categorias = new ArrayList<Categoria>();
         private ArrayList<Categoria> staticCategorias = new ArrayList<Categoria>();
         boolean hasClausula=false;
@@ -392,12 +396,29 @@ public class MensagemDAO extends BaseDAO{
                 case ORDEM_AVALIACAO:
                     return ordemClausula+" avaliacao DESC ";
                 case ORDEM_ALEATORIA:
-                    return ordemClausula+" RANDOM()  ";
+                    return ordemClausula+randonOrder();
                 default:
-                    return ordemClausula+" RANDOM()  ";
-
+                    return ordemClausula+randonOrder();
             }
 
+        }
+
+        private String randonOrder(){
+            ArrayList<String> orders= new ArrayList<String>();
+            orders.add(COLUNA_AUTOR);
+            orders.add(COLUNA_AVALIACAO);
+            orders.add(COLUNA_DATA);
+            orders.add(COLUNA_ENVIADA);
+            orders.add(COLUNA_FAVORITADA);
+            orders.add(COLUNA_SLUG);
+            orders.add(COLUNA_TEXTO);
+            if(randonOrdemAtual==0){
+                Random rand = new Random();
+                randonOrdemAtual = rand.nextInt(orders.size());
+                randonOrdemDirectionAsc = rand.nextBoolean();
+            }
+
+            return " "+orders.get(randonOrdemAtual)+" "+(randonOrdemDirectionAsc ? " ASC ": " DESC ") ;
         }
 
 

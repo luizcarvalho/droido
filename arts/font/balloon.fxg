@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Graphic version="2.0" viewHeight="400" viewWidth="400" ATE:version="1.0.0" flm:version="1.0.0" d:id="1" d:using="" xmlns="http://ns.adobe.com/fxg/2008" xmlns:ATE="http://ns.adobe.com/ate/2009" xmlns:d="http://ns.adobe.com/fxg/2008/dt" xmlns:flm="http://ns.adobe.com/flame/2008">
+  <Library/>
+  <Group blendMode="normal" d:type="layer" d:userLabel="Camada 1">
+    <Group>
+      <Path flm:isDrawingObject="false" data="M366.05 30.55Q371.4 35.9 371.4 43.65L371.4 303.8 201.5 372.15 201.5 303.8 50.3 303.8Q42.55 303.8 37.2 298.35 31.75 293 31.75 285.25L31.75 43.65Q31.75 35.9 37.2 30.55 42.55 25.1 50.3 25.1L352.85 25.1Q360.6 25.1 366.05 30.55Z">
+        <fill>
+          <SolidColor/>
+        </fill>
+      </Path>
+    </Group>
+  </Group>
+  <Private>
+      <xfl:PrivateElement d:ref="#1" xmlns:xfl="http://ns.adobe.com/xfl/2008/">
+        <xfl:publishSettings xfl:source=""/>
+        <xfl:mobileSettings xfl:source=""/>
+        <xfl:as3ExportItems/>
+      </xfl:PrivateElement>
+    </Private>
+  </Graphic>
