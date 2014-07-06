@@ -9,7 +9,6 @@ import android.database.DatabaseUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.redrails.torpedos.DataBaseHelper;
 import br.com.redrails.torpedos.models.Categoria;
 
 

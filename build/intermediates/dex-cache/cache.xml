@@ -14,11 +14,11 @@
         revision="19.1.0"
         sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
     <item
-        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/GoogleAdMobAdsSdk-6.4.1-d4c905a3419a9480b0361de2019c55c4cabf3451.jar"
-        jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar"
+        dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/classes-0314c8cfa610654f4220c06a7aec70f409b34b73.jar"
+        jar="/home/luiz/Dropbox/projetos/droido.torpedos/build/intermediates/exploded-aar/com.google.android.gms/play-services/4.3.23/classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="6262c554ef5744538d526465aa73704810705734"/>
+        sha1="7676c0cb230efa6ac41c47867d372ed5913029d4"/>
     <item
         dex="/home/luiz/Dropbox/projetos/droido.torpedos/app/build/intermediates/pre-dexed/debug/Parse-1.4.3-c59ce32a0b750a6b79ff295bf092c06a908c98dd.jar"
         jar="/home/luiz/Dropbox/projetos/droido.torpedos/app/src/main/libs/Parse-1.4.3.jar"

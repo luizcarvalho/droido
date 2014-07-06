@@ -30,7 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.ads.*;
+import com.google.android.gms.ads.*;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 
@@ -56,7 +56,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     //private MessageLoadTask task; //Controle de exibição das mensagens em thread
     private TextView footer; //Adicionar o "carregando" no final da ListView
     MensagemDAO mensagemDao;//Gerencia todos os métodos do banco de dados
-    Context mainContext;//Usado para 
+    Context mainContext;//Usado para
+    AdView adView;
 
     ArrayAdapter<Categoria> dropdownAdapter;//Adapter para o Dropdown menu de Categorias
 
@@ -94,6 +95,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         adapter = new MessageAdapter(this, R.layout.row);
         adapter.messageArrayList = mArrayList;
         lista.setAdapter(adapter);
+        adView = (AdView)this.findViewById(R.id.adView);
 
         reload();
         firstRunActions(this);
@@ -291,8 +293,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getTexto());
         sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "- ( http://goo.gl/xninpd )");
 
-
-        copiarMenssagem(mensagem.getTexto() + "\n\n - ( http://goo.gl/xninpd )");
+        copiarMenssagem(mensagem.getTexto());
+        copiarMenssagem(mensagem.getTexto());
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
 
@@ -575,8 +577,19 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 lista.setOnScrollListener((AbsListView.OnScrollListener) mainContext);
                 lista.addFooterView(footer);
             }
-        AdView adView = (AdView)this.findViewById(R.id.adView);
-        adView.loadAd(new AdRequest());
+
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice("502D84F4ECF3CB4A69829D7372AA0B5B")
+                    .build();
+            adView.loadAd(adRequest);
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    adView.setVisibility(View.VISIBLE);
+                }
+            });
+
             //SHOW MORE APPS
             //header.setText("Loaded items - "+adapter.getCount()+" out of "+TOTAL_ITEMS);
         }
@@ -644,6 +657,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent interstitialAdIntent = new Intent(MainActivity.this, InterstitialExitAd.class);
+        startActivity(interstitialAdIntent);
+    }
 
     @Override
     public void onStart() {
@@ -655,6 +674,23 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public void onStop() {
         super.onStop();
         EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+    }
+    @Override
+    public void onPause() {
+        adView.pause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adView.resume();
+    }
+
+    @Override
+    public void onDestroy() {
+        adView.destroy();
+        super.onDestroy();
     }
 
  }

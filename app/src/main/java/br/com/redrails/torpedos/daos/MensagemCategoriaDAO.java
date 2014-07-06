@@ -7,7 +7,6 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.redrails.torpedos.DataBaseHelper;
 import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.models.MensagemCategoria;
 import br.com.redrails.torpedos.models.Mensagem;

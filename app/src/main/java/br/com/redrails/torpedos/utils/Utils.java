@@ -1,4 +1,4 @@
-package br.com.redrails.torpedos;
+package br.com.redrails.torpedos.utils;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,39 +1,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#e3e3e3"
     android:orientation="vertical"
     tools:context=".MainActivity"
     android:id="@+id/mainLayout"
-    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads">
+    >
 
 
 
 
     <ListView
         android:id="@+id/lista"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:context=".MainActivity"
         android:divider="@null"
         android:layout_above="@+id/adView"
         />
 
 
-
-        <com.google.ads.AdView android:id="@+id/adView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            ads:adUnitId="ca-app-pub-6662263716470706/5987486187"
-            ads:adSize="BANNER"
-            ads:loadAdOnCreate="true"
-            android:layout_alignParentBottom="true"
-            />
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adUnitId="ca-app-pub-6662263716470706/5987486187"
+        ads:adSize="SMART_BANNER"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        />
 
     <TextView
         android:id="@+id/notificacao"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center"
         android:layout_alignParentTop="true"

@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import br.com.redrails.torpedos.DataBaseHelper;
 import br.com.redrails.torpedos.models.Categoria;
 import br.com.redrails.torpedos.models.Mensagem;
-import br.com.redrails.torpedos.models.MensagemCategoria;
 
 /**
  * Criado por luiz em 10/26/13.

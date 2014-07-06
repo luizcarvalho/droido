@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import br.com.redrails.torpedos.daos.DataBaseHelper;
 import br.com.redrails.torpedos.daos.MensagemDAO;
 
 public class LoadScreenActivity extends Activity

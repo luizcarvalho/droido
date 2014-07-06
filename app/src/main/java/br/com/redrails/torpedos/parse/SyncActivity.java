@@ -17,8 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.google.ads.*;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.ads.*;
 import com.parse.FindCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -48,11 +49,20 @@ public class SyncActivity extends ActionBarActivity {
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
         AdView adView = (AdView)this.findViewById(R.id.adView);
-        adView.loadAd(new AdRequest());
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("502D84F4ECF3CB4A69829D7372AA0B5B")
+                .build();
+        adView.loadAd(adRequest);
 
         prefs = this.getSharedPreferences(URI, getApplicationContext().MODE_PRIVATE);
         syncButton = (Button) findViewById(R.id.sync_action_button);
         syncResultLabel = (TextView) findViewById(R.id.sync_result);
+
+        if(recentTry()){
+            syncResultLabel.setText("Você tentou atualizar a pouco tempo. Tente novamente daqui a pouco! :)");
+        }
+
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -268,6 +278,18 @@ public class SyncActivity extends ActionBarActivity {
         }
 
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 
 

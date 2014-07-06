@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">Droido - Mensagens SMS prontas</string>
-    <string name="version_name">5.2</string>
-    <string name="version_code">36</string>
-    <string name="app_version">Versão: 5.2.36</string>
+    <string name="version_name">5.3</string>
+    <string name="version_code">37</string>
+    <string name="app_version">Versão: 5.3.37</string>
     <string name="footer_loading">Carregando...</string>
     <string name="row_options">Opções</string>
     <!-- ACTION BAR -->
@@ -43,7 +43,11 @@
     <string name="success_clipboarded">Sua mensagem foi copiada para área de transferêcia caso queira colá-la em algum lugar :)</string>
     <string name="mensagem_btn_fav">Favoritar</string>
     <string name="novidades_titulo">O que há de novo?</string>
-    <string name="novidades">     * Novo sistema de atualização de mensagens, agora você receberá novas mensagens sem precisar atualizar o aplicativo\n\n
+    <string name="novidades">
+     * Corrigido problema de travamento ao baixar novas mensagens\n
+     * Resolvido problema de mensagens repetidas\n
+     * Melhoria no sistema de syncronismo\n
+     * Novo sistema de atualização de mensagens, agora você receberá novas mensagens sem precisar atualizar o aplicativo\n\n
      * Notificações de novas mensagens!\n\n
      * Aplicativo iniciando até 10 vezes mais rápido!\n\n
      * Alguns problemas resolvidos\n\n

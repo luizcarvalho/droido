@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/interstitial"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+    >
+
+
+    <ImageView
+        android:id="@+id/droido_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/working1"
+        />
+    <TextView
+        android:id="@+id/seeyoulater"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/droido_image"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp"
+        android:gravity="center"
+        android:text="Obrigado por usarem o Droido Mensagens"/>
+
+    <LinearLayout
+        android:id="@+id/lin_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:layout_below="@id/seeyoulater"
+        >
+
+        <Button
+            android:id="@+id/continuar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Continuar?">
+        </Button>
+        <Button
+            android:id="@+id/sair_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sair?">
+        </Button>
+
+    </LinearLayout>
+
+</RelativeLayout>

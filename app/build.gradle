@@ -23,7 +23,7 @@ android {
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
     defaultConfig {
-        minSdkVersion 7
+        minSdkVersion 9
         targetSdkVersion 19
         testApplicationId 'br.com.redrails.torpedos.test'
     }
@@ -64,10 +64,9 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.android.support:support-v4:+'
-    compile files('src/main/libs/GoogleAdMobAdsSdk-6.4.1.jar')
     compile files('src/main/libs/libGoogleAnalyticsServices.jar')
     compile files('src/main/libs/Parse-1.4.3.jar')
-    //compile 'com.google.android.gms:play-services:+'
+    compile 'com.google.android.gms:play-services:+'
 }
 
 task getHomeDir << {
