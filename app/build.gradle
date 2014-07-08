@@ -43,8 +43,8 @@ android {
     }
     buildTypes {
         release {
-            //  runProguard true
-            //proguardFile getDefaultProguardFile('proguard-android.txt')
+            runProguard true
+            proguardFile getDefaultProguardFile('proguard-project.txt')
             signingConfig signingConfigs.release
             debuggable false
         }

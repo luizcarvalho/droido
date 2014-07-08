@@ -40,14 +40,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Continuar?">
+            android:text="Continuar">
         </Button>
         <Button
             android:id="@+id/sair_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Sair?">
+            android:text="Sair">
         </Button>
 
     </LinearLayout>
