@@ -82,8 +82,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         mainContext = this;// Adicionar o Contexto MAIN para ser utilziado na questão do Listener da ListView
 
+
+        Intent myIntent = getIntent(); // gets the previously created intent
+        Integer ordem = myIntent.getIntExtra("ordem",MensagemDAO.ORDEM_ALEATORIA);
+
+
         mensagemDao = MensagemDAO.getInstance(this);
         TOTAL_ITEMS = (int) mensagemDao.getQuantidadeTotal();//Adicionar a quantidade total de itens máximo que pode ser carregado
+        mensagemDao.filtro.setOrdem(ordem);
 
         
         lista = (ListView) findViewById(R.id.lista);//Lista de Mensagens do ListView

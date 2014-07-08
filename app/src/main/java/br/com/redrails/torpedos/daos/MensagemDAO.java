@@ -286,6 +286,7 @@ public class MensagemDAO extends BaseDAO{
         values = setValues(values, COLUNA_ENVIADA, String.valueOf(mensagem.getEnviada()));
         values = setValues(values, COLUNA_AUTOR, String.valueOf(mensagem.getAutor()));
         values = setValues(values, COLUNA_AVALIACAO, String.valueOf(mensagem.getAvaliacao()));
+        values = setValues(values, COLUNA_DATA, String.valueOf(mensagem.getData()));
 
         return values;
     }

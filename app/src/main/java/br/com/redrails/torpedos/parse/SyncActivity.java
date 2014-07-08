@@ -28,7 +28,9 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.redrails.torpedos.LoadScreenActivity;
+import br.com.redrails.torpedos.MainActivity;
 import br.com.redrails.torpedos.R;
+import br.com.redrails.torpedos.daos.MensagemDAO;
 
 public class SyncActivity extends ActionBarActivity {
     TextView syncResultLabel;
@@ -165,7 +167,8 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     boolean recentTry(){
-        long delay = 300000; // 5 min
+        //long delay = 300000; // 5 min
+        long delay = 0;
         long lastSyncLong = prefs.getLong(lastSyncLabel, 0);
         long nowLong = new Date(System.currentTimeMillis()).getTime();
         return (nowLong-delay)<lastSyncLong;
@@ -213,7 +216,8 @@ public class SyncActivity extends ActionBarActivity {
     }
 
     void goBackToMain(){
-        Intent i = new Intent(getApplicationContext(), LoadScreenActivity.class);
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        i.putExtra("ordem", MensagemDAO.ORDEM_DATA);
         startActivity(i);
     }
 
