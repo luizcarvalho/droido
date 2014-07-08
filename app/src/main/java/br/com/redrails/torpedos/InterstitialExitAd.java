@@ -63,6 +63,11 @@ public class InterstitialExitAd extends Activity {
                 String message = getErrorReason(errorCode);
                 Toast.makeText(InterstitialExitAd.this, message, Toast.LENGTH_SHORT).show();
             }
+            @Override
+            public void onAdClosed() {
+                finish();
+            }
+
         });
         loadInterstitial();
     }
