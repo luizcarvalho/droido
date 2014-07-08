@@ -19,6 +19,10 @@
 #   public *;
 #}
 
+-dontwarn com.parse.**
+-keep class com.parse.** { *; }
+-keepattributes *Annotation*
+
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
