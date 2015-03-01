@@ -6,7 +6,7 @@
         android:title="@string/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@drawable/ic_action_search"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_menu"
@@ -24,7 +24,7 @@
         />
     <item
         android:id="@+id/menu_atualizar"
-        android:title="Baixar mensagens"
+        android:title="@string/baixar_mensagens"
         android:icon="@drawable/ic_more_app"
         app:showAsAction="never"
         />

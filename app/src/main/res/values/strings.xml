@@ -70,5 +70,6 @@
     <string name="sync_received_categories"> categorias recebidas</string>
     <string name="reload_mensagens">Ok! Recarrege minhas mensagens!</string>
     <string name="need_connection">Você precisa de internet para baixar novas mensagens!</string>
+    <string name="baixar_mensagens">Baixar mensagens</string>
 
 </resources>
