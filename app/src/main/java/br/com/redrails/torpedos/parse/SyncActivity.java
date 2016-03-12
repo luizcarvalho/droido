@@ -28,7 +28,7 @@ import com.parse.ParseQuery;
 import java.util.Date;
 import java.util.List;
 
-import br.com.redrails.torpedos.AnalyticsApplication;
+import br.com.redrails.torpedos.MainApplication;
 import br.com.redrails.torpedos.MainActivity;
 import br.com.redrails.torpedos.R;
 import br.com.redrails.torpedos.daos.MensagemDAO;
@@ -52,7 +52,7 @@ public class SyncActivity extends ActionBarActivity {
         setContentView(R.layout.activity_sync);
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        MainApplication application = (MainApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
         AdView adView = (AdView)this.findViewById(R.id.adView);

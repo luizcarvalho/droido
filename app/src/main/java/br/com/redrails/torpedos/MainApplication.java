@@ -13,7 +13,7 @@ import com.parse.ParseInstallation;
  * This is a subclass of {@link Application} used to provide shared objects for this app, such as
  * the {@link Tracker}.
  */
-public class AnalyticsApplication extends Application {
+public class MainApplication extends Application {
     private Tracker mTracker;
 
 

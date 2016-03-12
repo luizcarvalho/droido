@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
 
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        MainApplication application = (MainApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
         reloadDropdown();
