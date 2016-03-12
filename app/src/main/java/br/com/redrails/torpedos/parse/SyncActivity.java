@@ -18,8 +18,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.ads.*;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.parse.FindCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -27,7 +28,7 @@ import com.parse.ParseQuery;
 import java.util.Date;
 import java.util.List;
 
-import br.com.redrails.torpedos.LoadScreenActivity;
+import br.com.redrails.torpedos.AnalyticsApplication;
 import br.com.redrails.torpedos.MainActivity;
 import br.com.redrails.torpedos.R;
 import br.com.redrails.torpedos.daos.MensagemDAO;
@@ -41,6 +42,8 @@ public class SyncActivity extends ActionBarActivity {
     SharedPreferences prefs;
     Integer successCount = 0;
     ProgressDialog progressBar;
+    private Tracker mTracker;
+
 
 
     @Override
@@ -49,6 +52,8 @@ public class SyncActivity extends ActionBarActivity {
         setContentView(R.layout.activity_sync);
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         AdView adView = (AdView)this.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
@@ -287,13 +292,8 @@ public class SyncActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+        mTracker.setScreenName("SyncActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
 

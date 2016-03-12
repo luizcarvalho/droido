@@ -31,8 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.*;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     int quantidade_carregada= 0;//Quantidade de itens que foi carregado até o momento
     int quantidade_restante = 0;
     int pagina_atual = 1;//Controle de páginas Setado como 20 no MensagemDAO
-
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mActionBar.setDisplayShowTitleEnabled(false);//Desativa o Título
         mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
+
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         reloadDropdown();
         mActionBar.setListNavigationCallbacks(dropdownAdapter, this);//Seta o Dropdown de Categorias no ActionBar
@@ -212,15 +215,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     }
 
     public void sendReport(Mensagem mensagem, String evento){
-        EasyTracker easyTracker = EasyTracker.getInstance(this);
-
-        easyTracker.send(MapBuilder
-                .createEvent("mensagem_action",     // Event category (required)
-                        evento,  // Event action (required)
-                        mensagem.getSlug(),   // Event label
-                        null)            // Event value
-                .build()
-        );
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("mensagem_action")
+                .setAction(evento)
+                .setLabel(mensagem.getSlug())
+                .build());
     }
 
     public void reportDialog(final View v, final Mensagem mensagem){
@@ -670,17 +669,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         startActivity(interstitialAdIntent);
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+        mTracker.setScreenName("SyncActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
-    }
     @Override
     public void onPause() {
         adView.pause();
