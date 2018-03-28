@@ -73,6 +73,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ActionBar mActionBar = getSupportActionBar();
+        assert mActionBar != null;
         mActionBar.setDisplayShowTitleEnabled(false);//Desativa o Título
         mActionBar.setDisplayShowHomeEnabled(true);//Define que o icone HOME apareça
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);//Permite a utilização do Dropdown List para Categorias
@@ -97,7 +98,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         
         lista = (ListView) findViewById(R.id.lista);//Lista de Mensagens do ListView
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        footer = (TextView) inflater.inflate(R.layout.footer, null); //Carregando...
+        footer = (TextView) inflater.inflate(R.layout.footer,lista, false); //Carregando...
         lista.addFooterView(footer);
         lista.setOnScrollListener(this);//Adicionar o Listener implementado no MainActivity
 
@@ -145,27 +146,27 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.ordem_avaliacao:
-                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_AVALIACAO);
+                        mensagemDao.filtro.setOrdem(MensagemDAO.ORDEM_AVALIACAO);
                         reload();
                         return true;
                     case R.id.ordem_enviadas:
-                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_ENVIADAS);
+                        mensagemDao.filtro.setOrdem(MensagemDAO.ORDEM_ENVIADAS);
                         reload();
                         return true;
                     case R.id.ordem_favoritos:
-                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_FAVORITOS);
+                        mensagemDao.filtro.setOrdem(MensagemDAO.ORDEM_FAVORITOS);
                         reload();
                         return true;
                     case R.id.ordem_novas:
-                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_DATA);
+                        mensagemDao.filtro.setOrdem(MensagemDAO.ORDEM_DATA);
                         reload();
                         return true;
                     case R.id.ordem_nao_enviadas:
-                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_NAO_ENVIADAS);
+                        mensagemDao.filtro.setOrdem(MensagemDAO.ORDEM_NAO_ENVIADAS);
                         reload();
                         return true;
                     case R.id.ordem_aleatoria:
-                        mensagemDao.filtro.setOrdem(mensagemDao.ORDEM_ALEATORIA);
+                        mensagemDao.filtro.setOrdem(MensagemDAO.ORDEM_ALEATORIA);
                         reload();
                         return true;
                 }
@@ -191,7 +192,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                         toggleFavorite(rowView, position);
                         return true;
                     case R.id.mensagem_share:
-                        shareMessage(v, mensagem, position);
+                        shareMessage(mensagem);
                         return true;
                     case R.id.mensagem_copiar:
                         copiarMenssagem(mensagem.getTexto());
@@ -292,7 +293,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
 
 
-    public void shareMessage(View v, Mensagem mensagem, int position){
+    public void shareMessage(Mensagem mensagem){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mensagem.getTexto());
@@ -435,7 +436,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     class MessageAdapter extends ArrayAdapter<Mensagem> {
         LayoutInflater inflater;
-        public ArrayList<Mensagem> messageArrayList = new ArrayList<Mensagem>();
+        public ArrayList<Mensagem> messageArrayList = new ArrayList<>();
 
         public MessageAdapter(Context context, int rowResourceId) {
             super(context, rowResourceId);
@@ -456,8 +457,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            final View finalView = inflater.inflate(R.layout.row, null);
-            convertView = finalView;
+            // Utilizar RecycleVIew com ViewHolder
+            convertView = inflater.inflate(R.layout.row, parent, false);
+
             final Mensagem mensagem = messageArrayList.get(position);
             TextView menssagemView = (TextView) convertView.findViewById(R.id.mensagem);
             TextView autorText = (TextView) convertView.findViewById(R.id.author);
@@ -495,10 +497,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 @Override
                 public void onClick(View v) {
                     marcarComoEnviada(mensagem,sendedButton);
-                    shareMessage(v, mensagem,position);
+                    shareMessage(mensagem);
                 }
             });
-
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
